@@ -1,26 +1,29 @@
 #ifndef __DH_SERIAL_H__
 #define __DH_SERIAL_H__
 
+#include <HardwareSerial.h> //ESP-lib
+
 #include <inttypes.h>
 #include <stdlib.h>
 #include <string>
 
-namespace radiator {
-
-class SerialPort
+namespace radiator
 {
-public:
-   SerialPort(std::string devicename);
-   virtual ~SerialPort();
 
-   int write(const uint8_t *data, size_t len);
-   int read(uint8_t *data, size_t maxlen);
+  class SerialPort
+  {
+  public:
+    SerialPort(std::string devicename);
+    virtual ~SerialPort();
 
-   int waitForInput(int timeout_msec);
+    int write(const uint8_t *data, size_t len);
+    int read(uint8_t *data, size_t maxlen);
 
-protected:
-   int fd;
-};
+    int waitForInput(int timeout_msec);
+
+  protected:
+    HardwareSerial *Serial_to_Radiator = NULL;
+  };
 
 }
 
