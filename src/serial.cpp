@@ -10,6 +10,8 @@
 
 namespace radiator
 {
+  // #define SERIAL_TO_RADIATOR_RX 16 // ESP32-standard: 16
+  // #define SERIAL_TO_RADIATOR_TX 17 // ESP32-standard: 17
 
   /*
    * Constructor.
@@ -17,7 +19,7 @@ namespace radiator
    * Opens and initializes the serial port.
    *
    * @param devicename The filename of the serial port device.
-   * @return The file descriptor on success or -1 on error.
+   * @return void
    */
   SerialPort::SerialPort(std::string devicename)
   {
@@ -29,12 +31,17 @@ namespace radiator
       Serial_to_Radiator = &Serial2;
     else
     {
-      ::perror(strcat("open_port: Unable to open serial port", devicename.c_str()));
-      throw strcat("Unable to open serial port", devicename.c_str());
+      ::perror("open_port: Unable to open serial port");
+      throw("Unable to open serial port");
     }
 
+#if defined(SERIAL_TO_RADIATOR_RX) && defined(SERIAL_TO_RADIATOR_TX)
+    Serial_to_Radiator->begin(9600, SERIAL_8N1, SERIAL_TO_RADIATOR_RX, SERIAL_TO_RADIATOR_TX);
+#else
     Serial_to_Radiator->begin(9600);
-    // Serial_to_Radiator->begin(9600, SERIAL_8N1, SERIAL_TO_RADIATOR_RX, SERIAL_TO_RADIATOR_TX);
+#endif
+
+    std::cout << millis() << " ms: Opened serial port " << devicename << " with 9600 baud and SERIAL_8N1 for connection to radiator Froeling P2/S3100 -> wait for answer ..." << std::endl;
   }
 
   /**
@@ -114,16 +121,10 @@ namespace radiator
     auto _start = millis();
     auto _end = _start + timeout_msec;
 
-    // std::cout << "wait " << timeout_msec / 1000 << " sec for answer from device" << std::endl;
-
     while (millis() < _end)
     {
-      // std::cout << ".";
-      // auto _bytes = Serial_to_Radiator->available();
-      // if (_bytes)
       if (Serial_to_Radiator->available())
       {
-        // std::cout << _bytes << " bytes AVAILABLE" << std::endl;
         return 1;
       }
       vTaskDelay(pdMS_TO_TICKS(5));

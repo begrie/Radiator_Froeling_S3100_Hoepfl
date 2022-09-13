@@ -51,6 +51,12 @@
     "stdexcept": "cpp",
     "streambuf": "cpp",
     "cinttypes": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "bitset": "cpp",
+    "regex": "cpp",
+    "filesystem": "cpp",
+    "chrono": "cpp",
+    "codecvt": "cpp",
+    "ratio": "cpp"
   }
 }

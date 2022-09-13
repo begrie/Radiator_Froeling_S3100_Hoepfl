@@ -128,6 +128,13 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/variants/esp32/pins_arduino.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LittleFS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/FS/src/FS.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src/SPIFFS.h \
+ lib/FS_Filehelper/FS_Filehelper.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LITTLEFS.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SD/src/SD.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SD/src/sd_defines.h \
  src/debug.h src/device.h src/serial.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/HardwareSerial.h \
  src/surveillance.h src/output.h
