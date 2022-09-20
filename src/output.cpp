@@ -15,9 +15,9 @@ namespace radiator
   {
     outputPath.empty() ? toFile = false : toFile = true;
 
-    LOG_info << "Output to console " << (toConsole ? "ON" : "OFF") << std::endl;
-    LOG_info << "Output to MQTT " << (toMQTT ? "ON" : "OFF") << std::endl;
-    LOG_info << "Output to file " << (toFile ? "ON" : "OFF") << std::endl;
+    LOG_info << millis() << " ms: Output to\tconsole: \t" << (toConsole ? "ON" : "OFF") << std::endl;
+    LOG_info << "                     \tfile: \t\t" << (toFile ? "ON" : "OFF") << std::endl;
+    LOG_info << "                     \tMQTT: \t\t" << (toMQTT ? "ON" : "OFF") << std::endl;
 
     if (toFile)
     {
@@ -28,14 +28,14 @@ namespace radiator
       std::ofstream testForDirectory(outputPath + "dirtest.tst");
       if (!testForDirectory)
       {
-        LOG_error << "Output path  " << outputPath << "  CAN NOT BE OPENED -> NO VALUES WILL BE SAVED TO FILE" << std::endl;
+        LOG_error << millis() << " ms: Output path  " << outputPath << "  CAN NOT BE OPENED -> NO VALUES WILL BE SAVED TO FILE" << std::endl;
         // toFile = false;
         // return;
         ::perror("OutputHandler: Unable to open file for output");
         throw("Unable to open file for output");
       }
 
-      LOG_info << "Files are saved to path   " << outputPath << std::endl;
+      LOG_info << millis() << " ms: Files are saved to path   " << outputPath << std::endl;
     }
   }
 
@@ -563,7 +563,7 @@ namespace radiator
   void OutputHandler::outputErrorToBuzzer()
   {
     static TaskHandle_t Handle_xTaskBuzzer;
-    static bool quitButtonWasPressed = false;
+    static volatile bool quitButtonWasPressed = false;
 
     if (!Handle_xTaskBuzzer)
     {
@@ -577,12 +577,16 @@ namespace radiator
         const auto quitButtonPin = QUIT_BUZZER_BUTTON_PIN;
         pinMode(quitButtonPin, INPUT_PULLUP);
         quitButtonWasPressed = false;
+
+        detachInterrupt(quitButtonPin); // button is used twice: also for starting WiFi config
+                                        // -> detach ISR for WiFi config start
         attachInterrupt(
             quitButtonPin,
             []() IRAM_ATTR
             {
               quitButtonWasPressed = true;
               detachInterrupt(quitButtonPin);
+              // attachInterrupt(quitButtonPin, ISR..., CHANGE); // reattach for starting WiFi config
             },
             CHANGE);
 
@@ -600,14 +604,14 @@ namespace radiator
 
       // Create RTOS task
       BaseType_t _Result = xTaskCreatePinnedToCore(
-          xTaskBuzzer,                      // Task function
-          "xTask_Watchdog_and_Maintenance", // String with name of task
-          3072,                             // Stack size in bytes
-          NULL,                             // Parameter passed as input of the task
-          uxTaskPriorityGet(NULL),          // Priority of the task: higher values -> higher priority
-                                            // with uxTaskPriorityGet(NULL)-> same priority as current task
-          &Handle_xTaskBuzzer,              // Task handle (Typ: TaskHandle_t)
-          1);                               // Core 0 or 1 (Arduino code by default on Core 1)
+          xTaskBuzzer,             // Task function
+          "xTaskBuzzer",           // String with name of task
+          3072,                    // Stack size in bytes
+          NULL,                    // Parameter passed as input of the task
+          uxTaskPriorityGet(NULL), // Priority of the task: higher values -> higher priority
+                                   // with uxTaskPriorityGet(NULL)-> same priority as current task
+          &Handle_xTaskBuzzer,     // Task handle (Typ: TaskHandle_t)
+          1);                      // Core 0 or 1 (Arduino code by default on Core 1)
 
       if (_Result != pdPASS)
         LOG_error << "outputErrorToBuzzer: Error creating xTask";

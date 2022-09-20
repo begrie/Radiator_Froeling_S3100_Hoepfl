@@ -2,7 +2,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/main.cpp \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/freertos/FreeRTOS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos/FreeRTOSConfig.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/qspi_qspi/include/sdkconfig.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include/sdkconfig.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_common/include/esp_compiler.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/port/xtensa/include/freertos/FreeRTOSConfig_arch.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/port/xtensa/include/freertos/xtensa_config.h \
@@ -87,6 +87,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-matrix.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-uart.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-gpio.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/variants/esp32/pins_arduino.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-touch.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-dac.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/driver/include/driver/gpio.h \
@@ -102,6 +103,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-timer.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-bt.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-psram.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-rgb-led.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-cpu.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp8266-compat.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/stdlib_noniso.h \
@@ -130,5 +132,4 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/hal/include/hal/esp_flash_err.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/variants/esp32/pins_arduino.h
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h

@@ -82,6 +82,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-matrix.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-uart.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-gpio.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/variants/esp32/pins_arduino.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-touch.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-dac.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/driver/include/driver/gpio.h \
@@ -96,6 +97,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-timer.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-bt.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-psram.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-rgb-led.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-cpu.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/include/soc/i2c_periph.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/i2c_reg.h \

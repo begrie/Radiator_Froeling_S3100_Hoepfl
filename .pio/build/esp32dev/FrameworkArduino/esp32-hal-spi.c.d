@@ -1,7 +1,7 @@
 .pio/build/esp32dev/FrameworkArduino/esp32-hal-spi.c.o: \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.c \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/qspi_qspi/include/sdkconfig.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include/sdkconfig.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_system/include/esp_system.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_common/include/esp_err.h \
@@ -83,6 +83,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-matrix.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-uart.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-gpio.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/variants/esp32/pins_arduino.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-touch.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-dac.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/driver/include/driver/gpio.h \
@@ -97,6 +98,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-timer.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-bt.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-psram.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-rgb-led.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-cpu.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/spi_reg.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/spi_struct.h \

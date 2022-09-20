@@ -1,6 +1,6 @@
 .pio/build/esp32dev/FrameworkArduino/esp32-hal-misc.c.o: \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-misc.c \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/qspi_qspi/include/sdkconfig.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/dio_qspi/include/sdkconfig.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/freertos/FreeRTOS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos/FreeRTOSConfig.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_common/include/esp_compiler.h \
@@ -75,6 +75,10 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/nvs_flash/include/nvs.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/log/include/esp_log.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/log/include/esp_log_internal.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/app_update/include/esp_ota_ops.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bootloader_support/include/esp_image_format.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bootloader_support/include/esp_flash_partitions.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bootloader_support/include/esp_app_format.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/bt/include/esp32/include/esp_bt.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_system/include/esp_task.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos/FreeRTOSConfig.h \
@@ -109,6 +113,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-matrix.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-uart.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-gpio.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/variants/esp32/pins_arduino.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-touch.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-dac.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/driver/include/driver/gpio.h \
@@ -123,6 +128,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-timer.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-bt.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-psram.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-rgb-led.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-cpu.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp32/rom/rtc.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp32/rom/ets_sys.h

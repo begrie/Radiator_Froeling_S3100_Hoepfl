@@ -38,6 +38,9 @@ namespace radiator
    */
   void Surveillance::main_loop()
   {
+    std::cout << "\n"
+              << millis() << " ms: Still alive: ";
+
     // Log in.
     this->state = ST_RA_SENT;
     LOG_info << millis() << " ms: Send login command 'Ra' to radiator device" << std::endl;
@@ -47,9 +50,14 @@ namespace radiator
       return;
     }
 
+    uint8_t aliveSign;
+
     // Handle incomming packets.
     while (this->state != ST_ERROR)
     {
+      std::cout << aliveSign << std::endl;         //"still alive" signal on console -> espc. when all messages to std::cerr are redirected/written to syslogfile
+      aliveSign > 9 ? aliveSign = 0 : aliveSign++; // std::cout << '.' << std::endl; //"still alive" signal on console -> espc. when all messages to std::cerr are redirected/written to syslogfile
+
       uint8_t buffer[2 + 1 + 255 + 2];
       int len = this->fd.read_cmd(buffer, timeout);
 
@@ -100,14 +108,14 @@ namespace radiator
         }
         else
         {
-          LOG_error << "Invalid response, checksum error." << std::endl;
+          LOG_error << millis() << " ms: Invalid response, checksum error." << std::endl;
           this->state = ST_ERROR;
         }
       }
       }
     }
 
-    LOG_error << "Protocol error" << std::endl;
+    LOG_error << millis() << " ms: Protocol error" << std::endl;
   }
 
   /**
@@ -172,7 +180,7 @@ namespace radiator
         break;
       default:
         LOG_info
-            << "Unknown command `"
+            << millis() << " ms: Unknown command `"
             << (::isprint(command[0]) ? (char)command[0] : '.')
             << (::isprint(command[1]) ? (char)command[1] : '.')
             << std::hex
@@ -186,7 +194,7 @@ namespace radiator
     else
     {
       LOG_info
-          << "Unknown command `"
+          << millis() << " ms: Unknown command `"
           << (::isprint(command[0]) ? (char)command[0] : '.')
           << (::isprint(command[1]) ? (char)command[1] : '.')
           << std::hex

@@ -82,6 +82,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-matrix.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-uart.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-gpio.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/variants/esp32/pins_arduino.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-touch.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-dac.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/driver/include/driver/gpio.h \
@@ -97,6 +98,7 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-timer.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-bt.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-psram.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-rgb-led.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-cpu.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp8266-compat.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/stdlib_noniso.h \
@@ -125,7 +127,6 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/variants/esp32/pins_arduino.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LittleFS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/FS/src/FS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src/SPIFFS.h \
@@ -135,6 +136,75 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SD/src/sd_defines.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFi.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Print.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/IPv6Address.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiType.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_wifi/include/esp_wifi_types.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_wifi/include/esp_private/esp_wifi_types_private.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/esp_interface.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_event/include/esp_event_base.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiSTA.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiGeneric.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_event/include/esp_event.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_event/include/esp_event_base.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_event/include/esp_event_legacy.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_netif/include/esp_netif.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_netif/include/esp_netif_ip_addr.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_netif/include/esp_netif_types.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_netif/include/esp_netif_defaults.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_eth/include/esp_eth_netif_glue.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_eth/include/esp_eth.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_eth/include/esp_eth_com.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/hal/include/hal/eth_types.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_eth/include/esp_eth_mac.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_eth/include/esp_eth_phy.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/tcpip_adapter/include/tcpip_adapter.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/tcpip_adapter/include/tcpip_adapter_types.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/ip_addr.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/opt.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/port/esp32/include/lwipopts.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include/sys/ioctl.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_system/include/esp_task.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/esp_additions/freertos/FreeRTOSConfig.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/port/esp32/include/netif/dhcp_state.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/port/esp32/include/sntp/sntp_get_set_time.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/debug.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/arch.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/port/esp32/include/arch/cc.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/port/esp32/include/arch/sys_arch.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/port/esp32/include/arch/vfs_lwip.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/def.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/ip4_addr.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/ip6_addr.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/def.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/ip6_zone.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/include/apps/dhcpserver/dhcpserver.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_netif/include/esp_netif_sta_list.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_wifi/include/esp_smartconfig.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/wifi_provisioning/include/wifi_provisioning/manager.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/protocomm/include/common/protocomm.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/protocomm/include/security/protocomm_security.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/wifi_provisioning/include/wifi_provisioning/wifi_config.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiAP.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiScan.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiClient.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Client.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiServer.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Server.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiUdp.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Udp.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/cbuf.h \
+ .pio/libdeps/esp32dev/AsyncTCP/src/AsyncTCP.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/pbuf.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/err.h \
+ .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/ESPAsyncWebServer.h \
+ .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/StringArray.h \
+ .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/WebResponseImpl.h \
+ .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/WebHandlerImpl.h \
+ .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/AsyncWebSocket.h \
+ .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/AsyncWebSynchronization.h \
+ .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/AsyncEventSource.h \
  src/debug.h src/device.h src/serial.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/HardwareSerial.h \
  src/surveillance.h src/output.h

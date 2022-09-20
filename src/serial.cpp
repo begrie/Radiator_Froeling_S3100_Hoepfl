@@ -41,7 +41,7 @@ namespace radiator
     Serial_to_Radiator->begin(9600);
 #endif
 
-    std::cout << millis() << " ms: Opened serial port " << devicename << " with 9600 baud and SERIAL_8N1 for connection to radiator Froeling P2/S3100 -> wait for answer ..." << std::endl;
+    std::cerr << millis() << " ms: Opened serial port " << devicename << " with 9600 baud and SERIAL_8N1 for connection to radiator Froeling P2/S3100 -> wait for answer ..." << std::endl;
   }
 
   /**

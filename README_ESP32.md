@@ -27,7 +27,7 @@ Die ESP32 Lösung besteht nur noch aus dem C++ Sourcecode, bei dem ich im wesent
 * Schaltplan zur Konfiguration im Sourcecode:
     ![Schaltplan](Schaltplan.jpg)
 
-* Fotos zur Umsetzung
+* Fotos zur Umsetzung:
     ![Foto Platine oben](Platine_Oben.jpg)
     ![Foto Platine unten](Platine_Unten.jpg)
     ![Foto Heizung](Heizung1.jpg)
