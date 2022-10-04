@@ -57,6 +57,10 @@
     "filesystem": "cpp",
     "chrono": "cpp",
     "codecvt": "cpp",
-    "ratio": "cpp"
+    "ratio": "cpp",
+    "condition_variable": "cpp",
+    "csignal": "cpp",
+    "mutex": "cpp",
+    "thread": "cpp"
   }
 }

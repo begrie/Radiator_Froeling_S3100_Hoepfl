@@ -1,4 +1,5 @@
 .pio/build/esp32dev/src/main.cpp.o: src/main.cpp \
+ lib/FS_Filehelper/FS_Filehelper.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp_arduino_version.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/freertos/FreeRTOS.h \
@@ -127,15 +128,18 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LittleFS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/FS/src/FS.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src/SPIFFS.h \
- lib/FS_Filehelper/FS_Filehelper.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LITTLEFS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SD/src/SD.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SD/src/sd_defines.h \
+ src/config.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LittleFS.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src/SPIFFS.h \
+ src/debug.h src/device.h src/serial.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/HardwareSerial.h \
+ src/surveillance.h src/output.h src/network.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFi.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Print.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/IPv6Address.h \
@@ -205,6 +209,33 @@
  .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/AsyncWebSocket.h \
  .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/AsyncWebSynchronization.h \
  .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/AsyncEventSource.h \
- src/debug.h src/device.h src/serial.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/HardwareSerial.h \
- src/surveillance.h src/output.h
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient.h \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Flags.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/ParsingInformation.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/MessageProperties.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Helpers.hpp \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-log.h \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Callbacks.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/DisconnectReasons.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Errors.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Storage.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Packet.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/ConnAckPacket.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/PingRespPacket.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/SubAckPacket.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/UnsubAckPacket.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/PublishPacket.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/PubRelPacket.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/PubAckPacket.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/PubRecPacket.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/PubCompPacket.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/Connect.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/OutPacket.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/PingReq.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/PubAck.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/Disconn.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/Subscribe.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/Unsubscribe.hpp \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/Publish.hpp \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/Ticker/src/Ticker.h

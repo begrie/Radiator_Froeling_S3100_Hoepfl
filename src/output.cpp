@@ -1,9 +1,7 @@
 #include "output.h"
-
 #include "debug.h"
 
 #include <fstream>
-// #include <iostream>
 #include <iomanip>
 
 #include <regex>
@@ -36,6 +34,10 @@ namespace radiator
       }
 
       LOG_info << millis() << " ms: Files are saved to path   " << outputPath << std::endl;
+    }
+
+    if (toMQTT)
+    {
     }
   }
 
@@ -98,6 +100,9 @@ namespace radiator
 
     if (toFile)
       handleValuesFileOutput(surveillance);
+
+    if (toMQTT)
+      handleValuesMQTTOutput(surveillance);
   }
 
   /*********************************************************************
@@ -132,9 +137,7 @@ namespace radiator
     if (toFile)
     {
       if (handleFiles(deriveFilename(outStrStream.str())))
-      {
         outputToFile(outStrStream.str());
-      }
       else
         LOG_error << "ERROR saving to File" << std::endl;
     }
@@ -206,6 +209,81 @@ namespace radiator
     }
     outStrStream << std::endl;
 
+    return outStrStream.str();
+  }
+
+  /*********************************************************************
+   * @brief 	format received value data to string for output as JSON
+   * @param  	instance of Surveillance working class
+   * @param 	string with date and time e.g.  22-09-01; 12:21:35
+   * @param 	list with values from radiator
+   * @return 	JSON-formatted string with received values
+   *          e.g.:  {
+   *                   "date": "22-09-01",
+   *                   "time": "12:21:35",
+   *                   "00": "Ausgeschaltet",
+   *                   "01": "Brenner Aus",
+   *                   "Zustand": "1",
+   *                   "ROST": "0",
+   *                   "Kesseltemp": "18°",
+   *                   "Abgastemp.": "21°",
+   *                   "Abgas. SW": "31°",
+   *                   "KessStellGr": "50%",
+   *                   "Saugzug": "0%",
+   *                   "Zuluftgebl": "0%",
+   *                   "Einschub": "0%",
+   *                   "Fuellst.:": "99.9%",
+   *                   "Feuerraumt": "347°",
+   *                   "Puffert.ob": "18°",
+   *                   "Puffert.un": "19°",
+   *                   "Puffer Pu.": "0%",
+   *                   "Außentemp": "17°",
+   *                   "Vorlauft.1sw": "0°",
+   *                   "Vorlauft.1": "20°",
+   *                   "Vorlauft.2sw": "0°",
+   *                   "Vorlauft.2": "20°",
+   *                   "KTY6_H2": "127°",
+   *                   "KTY7_H2": "127°",
+   *                   "Brenn.ST": "10461",
+   *                   "Laufzeit:": "15878h",
+   *                   "Boardtemp.": "21°",
+   *                   "Die Kesseltemp. soll sein": "75°"
+   *                 }
+   *********************************************************************/
+  std::string OutputHandler::formatValueDataAsJSON(
+      Surveillance &surveillance,
+      std::string timeStringForValues,
+      std::list<VALUE_DATA> values)
+  {
+    std::ostringstream outStrStream;
+    outStrStream << "{";
+
+    auto date = timeStringForValues.substr(0, timeStringForValues.find(DELIMITER_FOR_CSV_FILE));
+    auto time = timeStringForValues.substr(timeStringForValues.find(DELIMITER_FOR_CSV_FILE) + 1);
+    LOG_info << "date=" << date << ", time=" << time << std::endl;
+
+    outStrStream << "\"date\": \"" << date << "\", \"time\": \"" << time << "\",";
+
+    auto parameterNames = surveillance.getParameterNames();
+    for (auto iter = values.begin();
+         iter != values.end();
+         ++iter)
+    {
+      outStrStream << '"';
+      if (iter->name.empty()) // first two value items have no names
+      {
+        outStrStream << std::dec << std::setw(2) << std::setfill('0') << iter->index;
+      }
+      else
+      {
+        outStrStream << iter->name;
+      }
+      outStrStream << "\": \"" << iter->value << "\",";
+    }
+    outStrStream.seekp(-1, outStrStream.cur); // remove last ","
+    outStrStream << "}" << std::endl;
+
+    LOG_info << "outStrStream.str()=" << outStrStream.str() << std::endl;
     return outStrStream.str();
   }
 
@@ -560,6 +638,56 @@ namespace radiator
     }
   }
 
+  /*********************************************************************
+   * @brief 	handle output of values to MQTT broker
+   *          -> inclusive check of fileOutputIntervallSec
+   * @param 	used instance of Surveillance -> for access to parameter names
+   * @return 	void
+   *********************************************************************/
+  void OutputHandler::handleValuesMQTTOutput(Surveillance &surveillance)
+  {
+    if (!toMQTT)
+    {
+      LOG_info << "Output to MQTT is disabled" << std::endl;
+      return;
+    }
+
+    static ulong nextMQTTOutputSec = 0;
+
+    if (millis() / 1000 < nextMQTTOutputSec)
+    {
+      LOG_info << millis() << " ms: NO MQTT output (next in "
+               << (nextMQTTOutputSec - (millis() / 1000))
+               << " seconds)" << std::endl;
+      return;
+    }
+
+    nextMQTTOutputSec = millis() / 1000 + MQTTOutputIntervallSec;
+
+    auto valuesAtTimeForMQTT = getLastValuesAtTime(FilterMethod_t::DROP);
+    auto timeStringForValues = std::get<1>(valuesAtTimeForMQTT);
+    auto valuesForMQTT = std::get<2>(valuesAtTimeForMQTT);
+    auto outputForMQTT = formatValueDataAsJSON(surveillance, timeStringForValues, valuesForMQTT);
+
+    outputToMQTT(outputForMQTT);
+  }
+
+  /*********************************************************************
+   * @brief 	output string to MQTT as payload
+   * @param 	payload message
+   * @return 	void
+   *********************************************************************/
+  void OutputHandler::outputToMQTT(std::string output)
+  {
+    radiator::NetworkHandler::publishToMQTT(output);
+  }
+
+  /*********************************************************************
+   * @brief 	output acoustic error message to connected buzzer
+   *          -> with quit by button
+   * @param 	void
+   * @return 	void
+   *********************************************************************/
   void OutputHandler::outputErrorToBuzzer()
   {
     static TaskHandle_t Handle_xTaskBuzzer;

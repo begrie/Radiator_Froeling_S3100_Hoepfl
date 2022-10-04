@@ -39,7 +39,7 @@ namespace radiator
   void Surveillance::main_loop()
   {
     std::cout << "\n"
-              << millis() << " ms: Still alive: ";
+              << millis() << " ms: Still alive ... " << std::endl;
 
     // Log in.
     this->state = ST_RA_SENT;
@@ -115,7 +115,7 @@ namespace radiator
       }
     }
 
-    LOG_error << millis() << " ms: Protocol error" << std::endl;
+    LOG_error << millis() << " ms: Froeling P2/S3100 protocol error" << std::endl;
   }
 
   /**
