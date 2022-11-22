@@ -55,8 +55,8 @@ namespace radiator
     // Handle incomming packets.
     while (this->state != ST_ERROR)
     {
-      std::cout << aliveSign << std::endl;         //"still alive" signal on console -> espc. when all messages to std::cerr are redirected/written to syslogfile
-      aliveSign > 9 ? aliveSign = 0 : aliveSign++; // std::cout << '.' << std::endl; //"still alive" signal on console -> espc. when all messages to std::cerr are redirected/written to syslogfile
+      // std::cout << aliveSign << std::endl;         //"still alive" signal on console -> espc. when all messages to std::cerr are redirected/written to syslogfile
+      aliveSign > 9 ? aliveSign = 0 : aliveSign++;
 
       uint8_t buffer[2 + 1 + 255 + 2];
       int len = this->fd.read_cmd(buffer, timeout);

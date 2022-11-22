@@ -1,5 +1,4 @@
-.pio/build/esp32dev/src/main.cpp.o: src/main.cpp \
- lib/FS_Filehelper/FS_Filehelper.h \
+.pio/build/esp32dev/src/main.cpp.o: src/main.cpp src/config.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp_arduino_version.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/freertos/include/freertos/FreeRTOS.h \
@@ -128,15 +127,13 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LittleFS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/FS/src/FS.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LITTLEFS.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src/SPIFFS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SD/src/SD.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SD/src/sd_defines.h \
- src/config.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LittleFS.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src/SPIFFS.h \
  src/debug.h src/device.h src/serial.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/HardwareSerial.h \
  src/surveillance.h src/output.h src/network.h \
@@ -238,4 +235,8 @@
  .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/Subscribe.hpp \
  .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/Unsubscribe.hpp \
  .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Packets/Out/Publish.hpp \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/Ticker/src/Ticker.h
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/Ticker/src/Ticker.h \
+ src/files.h lib/FS_Filehelper/FS_Filehelper.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LITTLEFS.h \
+ src/externalsensors.h .pio/libdeps/esp32dev/DHT\ sensor\ library/DHT.h \
+ lib/ESP32_Servo/ESP32_Servo.h

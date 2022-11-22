@@ -133,6 +133,4 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/FS/src/FSImpl.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LittleFS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/FS/src/FS.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_littlefs/include/esp_littlefs.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_littlefs/src/littlefs/lfs.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_littlefs/src/littlefs/lfs_util.h
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_littlefs/include/esp_littlefs.h

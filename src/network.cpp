@@ -13,6 +13,7 @@
 AsyncMqttClient radiator::NetworkHandler::mqttClient;
 bool radiator::NetworkHandler::outputToMQTT = OUTPUT_TO_MQTT;
 Ticker radiator::NetworkHandler::tickerReconnectMQTT;
+Ticker radiator::NetworkHandler::tickerSendSysinfoToMQTT;
 std::string radiator::NetworkHandler::mqttTopic = MQTT_TOPIC;
 std::string radiator::NetworkHandler::mqttBroker = MQTT_BROKER;
 
@@ -89,7 +90,9 @@ bool radiator::NetworkHandler::configureWiFiAndMQTT()
 
     do
     {
-      std::cout << "\t-> Select network by [number] \n\t-> or 0 to turn WiFi off \n\t-> or -1 to skip and proceed with MQTT (actual WiFi settings will be used):    " << std::endl;
+      std::cout << "\t-> Select network by [number] \n\t-> or 0 to turn WiFi off \n"
+                << "\t-> or -1 to skip and proceed with MQTT (actual WiFi settings will be used):    "
+                << std::endl;
       intInput = Serial.parseInt();
       Serial.readStringUntil('\n').c_str(); // remove line end
 
@@ -106,6 +109,8 @@ bool radiator::NetworkHandler::configureWiFiAndMQTT()
       WiFi.persistent(false);
       WiFi.disconnect(true, true);   // turn off WiFi, erase AP from persistent
       Serial.setTimeout(oldTimeout); // restore previous value
+      if (Serial.available() > 0)    // clear buffer
+        Serial.read();
       return false;
     }
 
@@ -125,6 +130,8 @@ bool radiator::NetworkHandler::configureWiFiAndMQTT()
       WiFi.begin(WiFi.SSID(intInput - 1).c_str(), strInput.c_str());
 
     Serial.setTimeout(oldTimeout); // restore previous value
+    if (Serial.available() > 0)    // clear buffer
+      Serial.read();
   }
 
   // button NOT pressed or only mqtt changes -> NO WiFi config change -> use persistent credentials
@@ -198,14 +205,19 @@ void radiator::NetworkHandler::installWiFiCallbacks()
   WiFi.onEvent(
       [](WiFiEvent_t _WiFi_Event, WiFiEventInfo_t _WiFi_Event_Info)
       {
-        LOG_info << "\nWiFi connected to... \n"
-                 << "\t WLAN / SSID: \t" << WiFi.SSID().c_str() << "\n"
-                 << "\t Signal: \tRSSI " << std::to_string(WiFi.RSSI()) << "\n"
-                 << "\t Hostname: \t" << WiFi.getHostname() << "\n"
-                 << "\t IP address: \t" << WiFi.localIP().toString().c_str() << "\n"
-                 << "\t Gateway IP: \t" << WiFi.gatewayIP().toString().c_str() << "\n"
-                 << "\t Network IP: \t" << WiFi.networkID().toString().c_str() << "\n"
-                 << std::endl;
+        std::stringstream message;
+        message << "\nWiFi connected to... \n"
+                << "\t WLAN / SSID: \t" << WiFi.SSID().c_str() << "\n"
+                << "\t Signal: \tRSSI " << std::to_string(WiFi.RSSI()) << "\n"
+                << "\t Hostname: \t" << WiFi.getHostname() << "\n"
+                << "\t IP address: \t" << WiFi.localIP().toString().c_str() << "\n"
+                << "\t Gateway IP: \t" << WiFi.gatewayIP().toString().c_str() << "\n"
+                << "\t Network IP: \t" << WiFi.networkID().toString().c_str() << "\n"
+                << std::endl;
+        LOG_warn << message.str();
+
+        if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
+          std::cout << message.str(); // for better user info also to console
 
         // make some noise to signal connection ;-) ...
         pinMode(BUZZER_PIN, OUTPUT);
@@ -224,29 +236,37 @@ void radiator::NetworkHandler::installWiFiCallbacks()
       [](WiFiEvent_t _WiFi_Event, WiFiEventInfo_t _WiFi_Event_Info)
       {
         static ulong timeConnectionLostMs = 0;
+        std::stringstream message;
+
         if (WiFi.status() == WL_CONNECTION_LOST)
         {
-          LOG_info
-              << "\nWiFi was DISCONNECTED from WLAN. System is trying to reconnect in a background task ... \n"
-              << "(Info: Change WiFi or MQTT settings by pressing the big yellow button at startup of the ESP32)\n"
-              << std::endl;
           timeConnectionLostMs = millis();
+          message << "\nWiFi was DISCONNECTED from WLAN. System is trying to reconnect in a background task ... \n"
+                  << "(Info: Change WiFi or MQTT settings by pressing the big yellow button at startup of the ESP32)\n"
+                  << std::endl;
+          LOG_warn << message.str();
 
-          // disconnectMqtt();
+          if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
+            std::cout << message.str(); // for better user info also to console
         }
 
         static ulong nextInfoOutputMs = 0;
-        static const int infoOutputIntervallSec = 10 * 60; // info output all 10 minutes -> consider needed space when output is redirected to syslog file
+        static const int infoOutputIntervallSec = 15 * 60; // info output all 15 minutes -> consider needed space when output is redirected to syslog file
 
         if (WiFi.status() == WL_NO_SSID_AVAIL && millis() >= nextInfoOutputMs)
         {
-          LOG_info
-              << "\nWiFi is NOT CONNECTED to WLAN -> SSID not available. The system keeps trying to reconnect in a background task ... \n"
-              << "\t(Connection was lost " << ((millis() - timeConnectionLostMs) / (1000 * 60)) << " minutes ago.)\n"
-              << "\t(Info: Change WiFi or MQTT settings by pressing the big yellow button at startup of the ESP32)\n"
-              << std::endl;
+          message << "\nWiFi is NOT CONNECTED to WLAN -> SSID not available. The system keeps trying to reconnect in a background task ... \n"
+                  << "\t(Connection was lost " << ((millis() - timeConnectionLostMs) / (1000 * 60)) << " minutes ago.)\n"
+                  << "\t(Info: Change WiFi or MQTT settings by pressing the big yellow button at startup of the ESP32)\n"
+                  << std::endl;
+          LOG_info << message.str();
+
+          if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
+            std::cout << message.str(); // for better user info also to console
+
           nextInfoOutputMs = millis() + infoOutputIntervallSec * 1000;
 
+          // make some noise
           pinMode(BUZZER_PIN, OUTPUT);
           bool OnOff = 1;
           for (int i = 0; i < 3; i++)
@@ -263,10 +283,16 @@ void radiator::NetworkHandler::installWiFiCallbacks()
   WiFi.onEvent(
       [](WiFiEvent_t _WiFi_Event, WiFiEventInfo_t _WiFi_Event_Info)
       {
-        LOG_info << "\nWiFi:\tGot IP address:\t" << WiFi.localIP().toString().c_str() << "\n"
-                 << "\tGateway IP: \t" << WiFi.gatewayIP().toString().c_str() << "\n"
-                 << "\tNetwork IP: \t" << WiFi.networkID().toString().c_str() << "\n"
-                 << std::endl;
+        std::stringstream message;
+        message << "\nWiFi:\tGot IP address:\t" << WiFi.localIP().toString().c_str() << "\n"
+                << "\tGateway IP: \t" << WiFi.gatewayIP().toString().c_str() << "\n"
+                << "\tNetwork IP: \t" << WiFi.networkID().toString().c_str() << "\n"
+                << std::endl;
+
+        LOG_warn << message.str();
+
+        if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
+          std::cout << message.str(); // for better user info also to console
 
         if (outputToMQTT)
           connectToMqtt();
@@ -298,7 +324,7 @@ void radiator::NetworkHandler::configureMQTT()
   mqttClient.setKeepAlive(MQTT_KEEP_ALIVE);
   mqttClient.setCleanSession(false); // hold queued messages after disconnect -> consider needed ram at longer disconnection intervals
 
-  static std::string lastWillTopic = mqttTopic + "/onlinestatus";
+  static std::string lastWillTopic = mqttTopic + MQTT_TOPIC_ONLINESTATUS;
   static std::string lastWill = (std::string)mqttClient.getClientId() + ": offline";
   mqttClient.setWill(lastWillTopic.c_str(), 1, true, lastWill.c_str()); // topic and payload for lastWill must be defined static!!
 
@@ -322,12 +348,24 @@ std::string radiator::NetworkHandler::printMQTTConfig()
  *********************************************************************/
 void radiator::NetworkHandler::onMqttConnect(bool sessionPresent)
 {
-  LOG_info << millis() << " ms: Connected to MQTT: Session present= " << sessionPresent
-           << ", mqttClient.getClientId()=" << mqttClient.getClientId() << std::endl;
+  std::stringstream message;
+  message << millis() << " ms: Connected to MQTT: Broker= " << mqttBroker
+          << "Session present= " << sessionPresent
+          << ", mqttClient.getClientId()=" << mqttClient.getClientId() << std::endl;
+  LOG_warn << message.str();
+
+  if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
+    std::cout << message.str(); // for better user info also to console
 
   std::string statusInfo = (std::string)mqttClient.getClientId() + ": online";
-  mqttClient.publish((mqttTopic + "/onlinestatus").c_str(), 1, true, statusInfo.c_str());
-  mqttClient.publish((mqttTopic + "/systeminfo").c_str(), 1, true, get_System_Info().c_str());
+  mqttClient.publish((mqttTopic + MQTT_TOPIC_ONLINESTATUS).c_str(), 1, true, statusInfo.c_str());
+  mqttClient.publish((mqttTopic + MQTT_TOPIC_SYSINFO).c_str(), 1, true, get_System_Info().c_str());
+  tickerSendSysinfoToMQTT.attach_ms( // send sysinfo periodic to mqtt for system health analysis
+      MQTT_INTERVALL_FOR_SYSINFO_SEC * 1000,
+      []()
+      {
+        mqttClient.publish((mqttTopic + MQTT_TOPIC_SYSINFO).c_str(), 1, true, get_System_Info().c_str());
+      });
 }
 
 /*********************************************************************
@@ -367,11 +405,21 @@ void radiator::NetworkHandler::onMqttDisconnect(AsyncMqttClientDisconnectReason 
     break;
   }
 
-  LOG_info << millis() << " ms: Disconnected from MQTT: reason = " << reasonStr << std::endl;
+  std::stringstream message;
+  message << millis() << " ms: Disconnected from MQTT: reason = " << reasonStr << std::endl;
+  LOG_warn << message.str();
+
+  if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
+    std::cout << message.str(); // for better user info also to console
 
   if (WiFi.isConnected() && outputToMQTT)
   {
-    LOG_info << millis() << " ms: Start ticker for reconnect to MQTT broker in " << MQTT_RECONNECTION_TIMEOUT_SEC << " sec." << std::endl;
+    message << millis() << " ms: Start ticker for reconnect to MQTT broker in " << MQTT_RECONNECTION_TIMEOUT_SEC << " sec." << std::endl;
+    LOG_info << message.str();
+
+    if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
+      std::cout << message.str(); // for better user info also to console
+
     tickerReconnectMQTT.once(MQTT_RECONNECTION_TIMEOUT_SEC, connectToMqtt);
   }
 }
@@ -428,7 +476,7 @@ void radiator::NetworkHandler::onMqttMessage(char *topic, char *payload, AsyncMq
  *********************************************************************/
 void radiator::NetworkHandler::onMqttPublish(uint16_t packetId)
 {
-  LOG_info << millis() << " ms: Publish acknowledged for packetId= " << packetId << std::endl;
+  LOG_debug << millis() << " ms: MQTT Publish acknowledged for packetId= " << packetId << std::endl;
 }
 
 /*********************************************************************
@@ -440,7 +488,7 @@ void radiator::NetworkHandler::connectToMqtt()
 {
   if (!outputToMQTT)
   {
-    LOG_info << millis() << " ms: Output to MQTT is disabled by config (outputToMQTT=false)" << std::endl;
+    LOG_warn << millis() << " ms: Output to MQTT is disabled by config (outputToMQTT=false)" << std::endl;
     return;
   }
 
@@ -491,7 +539,8 @@ bool radiator::NetworkHandler::publishToMQTT(std::string payload, std::string su
     return false;
   }
 
-  // mqttClient itself buffers only until disconnection from MQTT broker - so we have to buffer and resend the data on our own
+  // mqttClient itself buffers only until "official" disconnection message from MQTT broker
+  // - so we have to buffer and resend the data on our own
   struct BuffStruct
   {
     std::string payload;
@@ -500,6 +549,10 @@ bool radiator::NetworkHandler::publishToMQTT(std::string payload, std::string su
     bool retain;
   };
   static std::deque<BuffStruct> bufferQueue;
+
+  // we need a mutex semaphore to handle concurrent access from different tasks - otherwise "funny" crashes from bufferQueue-handling
+  static SemaphoreHandle_t semaphoreMqttPublish = xSemaphoreCreateMutex();
+  xSemaphoreTake(semaphoreMqttPublish, portMAX_DELAY);
 
   while (ESP.getFreeHeap() < MIN_FREE_HEAPSIZE_FOR_MQTT_BUFFERQUEUE_BYTES)
   {
@@ -518,16 +571,21 @@ bool radiator::NetworkHandler::publishToMQTT(std::string payload, std::string su
 
   if (!mqttClient.connected())
   {
-    LOG_warn << millis() << " ms: mqttClient is not connected! Cannot publish to MQTT broker (" << mqttBroker << ")\n"
-             << "\t -> message is buffered (queue size=" << bufferQueue.size() << ", ESP.getFreeHeap()=" << (ESP.getFreeHeap())
-             << ") and send at reconnection \n"
-             << "\t topic = " << (mqttTopic + bufferQueue.back().subtopic) << "\n"
-             << "\t payload = " << bufferQueue.back().payload << std::endl;
+    LOG_info << millis() << " ms: Cannot publish to MQTT broker (" << mqttBroker << ") -> mqttClient is not connected (WiFi.isConnected()="
+             << WiFi.isConnected() << ")" << std::endl;
+    LOG_debug << "\t -> message is buffered (queue size=" << bufferQueue.size() << ", ESP.getFreeHeap()=" << (ESP.getFreeHeap())
+              << ") and send at reconnection \n"
+              << "\t topic = " << (mqttTopic + bufferQueue.back().subtopic) << "\n"
+              << "\t payload = " << bufferQueue.back().payload << std::endl;
+
+    xSemaphoreGive(semaphoreMqttPublish);
+
     return false;
   }
 
   uint16_t packetId;
 
+  // send all buffered messages
   while (!bufferQueue.empty())
   {
     std::string topic = mqttTopic + bufferQueue.front().subtopic;
@@ -537,14 +595,16 @@ bool radiator::NetworkHandler::publishToMQTT(std::string payload, std::string su
                                   bufferQueue.front().retain,
                                   bufferQueue.front().payload.c_str());
 
-    LOG_info << millis() << " ms: publishToMQTT: broker = " << mqttBroker
-             << ", topic = " << topic
-             << ", Quality of service = " << (int)bufferQueue.front().qos
-             << ", retain = " << bufferQueue.front().retain << ", packetId = " << packetId
-             << ", \n\tpayload=\n\t" << bufferQueue.front().payload << std::endl;
+    LOG_debug << millis() << " ms: publishToMQTT: broker = " << mqttBroker
+              << ", topic = " << topic
+              << ", Quality of service = " << (int)bufferQueue.front().qos
+              << ", retain = " << bufferQueue.front().retain << ", packetId = " << packetId
+              << ", \n\tpayload=\n\t" << bufferQueue.front().payload << std::endl;
 
     bufferQueue.pop_front(); // remove sent message from buffer queue
   }
+
+  xSemaphoreGive(semaphoreMqttPublish);
 
   return packetId; // 0 on failure
 }
@@ -558,42 +618,75 @@ std::string radiator::NetworkHandler::get_System_Info()
 {
   std::stringstream systemInfo;
 
-  systemInfo << "Microcontroller ESP32: \n";
-  systemInfo << "ESP32 chip model  : " << ESP.getChipModel() << "\n";
-  systemInfo << "Chip Revision     : " << ((int)ESP.getChipRevision()) << "\n";
-  systemInfo << "CPU Frequency     : " << ESP.getCpuFreqMHz() << " MHz \n";
-  systemInfo << "Chip cores        : " << ((int)ESP.getChipCores()) << "\n";
-  systemInfo << "Flash chip size   : " << (ESP.getFlashChipSize() / 1024) << " kBytes \n";
-  systemInfo << "Flash chip speed  : " << (ESP.getFlashChipSpeed() / 1000000) << " MHz \n";
-  systemInfo << "Sketch size       : " << (ESP.getSketchSize() / 1024) << " kBytes \n";
-  systemInfo << "Free sketch space : " << (ESP.getFreeSketchSpace() / 1024) << " kBytes \n";
-  systemInfo << "SDK version       : " << ESP.getSdkVersion() << "\n";
+  systemInfo << millis() << " ms: Microcontroller ESP32: \n";
+  systemInfo << "ESP32 chip model   : " << ESP.getChipModel() << "; \n";
+  systemInfo << "Chip Revision      : " << ((int)ESP.getChipRevision()) << "; \n";
+  systemInfo << "CPU Frequency      : " << ESP.getCpuFreqMHz() << " MHz; \n";
+  systemInfo << "Chip cores         : " << ((int)ESP.getChipCores()) << "; \n";
+  systemInfo << "Flash chip size    : " << (ESP.getFlashChipSize() / 1024) << " kBytes; \n";
+  systemInfo << "Flash chip speed   : " << (ESP.getFlashChipSpeed() / 1000000) << " MHz; \n";
+  systemInfo << "Sketch size        : " << (ESP.getSketchSize() / 1024) << " kBytes; \n";
+  systemInfo << "Free sketch space  : " << (ESP.getFreeSketchSpace() / 1024) << " kBytes; \n";
+  systemInfo << "SDK version        : " << ESP.getSdkVersion() << "; \n";
 
   systemInfo << "\n";
 
-  systemInfo << "Uptime            : " << (millis() / (1000 * 60)) << " min \n";
-  systemInfo << "Heapsize          : " << (ESP.getHeapSize() / 1024) << " kBytes \n";
-  systemInfo << "Free heap         : " << (ESP.getFreeHeap() / 1024) << " kBytes \n";
-  systemInfo << "Min. free heap    : " << (ESP.getMinFreeHeap() / 1024) << " kBytes \n";
-  systemInfo << "Max. alloc heap   : " << (ESP.getMaxAllocHeap() / 1024) << " kBytes \n";
-  systemInfo << "Free PSRAM        : " << ESP.getFreePsram() << " Bytes \n";
-  systemInfo << "Filesystem        : " << XSTRINGIFY(FILESYSTEM_TO_USE) << " \n";
-  systemInfo << "Basepath(Mountpt.): " << FILESYSTEM_BASE_PATH << " \n";
-  systemInfo << "Used Filesystem   : " << (FILESYSTEM_TO_USE.usedBytes() / 1024) << " kBytes \n";
-  systemInfo << "Free Filesystem   : " << ((FILESYSTEM_TO_USE.totalBytes() - SPIFFS.usedBytes()) / 1024) << " kBytes \n";
+  systemInfo << "Uptime             : " << (millis() / (1000 * 60)) << " min; \n";
+  systemInfo << "Heapsize           : " << (ESP.getHeapSize() / 1024) << " kBytes; \n";
+  systemInfo << "Free heap          : " << (ESP.getFreeHeap() / 1024) << " kBytes; \n";
+  systemInfo << "Min. free heap     : " << (ESP.getMinFreeHeap() / 1024) << " kBytes; \n";
+  systemInfo << "Max. alloc heap    : " << (ESP.getMaxAllocHeap() / 1024) << " kBytes; \n";
+  systemInfo << "Free PSRAM         : " << ESP.getFreePsram() << " Bytes; \n";
 
   systemInfo << "\n";
 
-  systemInfo << "WiFi IP            : " << WiFi.localIP().toString().c_str() << "\n";
-  systemInfo << "WiFi hostname      : " << WiFi.getHostname() << "\n";
-  systemInfo << "WiFi SSID          : " << WiFi.SSID().c_str() << "\n";
-  systemInfo << "WiFi status        : " << WiFi.status() << "\n";
-  systemInfo << "WiFi strength RSSI : " << ((int)WiFi.RSSI()) << " dB\n";
-  systemInfo << "WiFi MAC           : " << WiFi.macAddress().c_str() << "\n";
-  systemInfo << "WiFi subnet        : " << WiFi.subnetMask().toString().c_str() << "\n";
-  systemInfo << "WiFi gateway       : " << WiFi.gatewayIP().toString().c_str() << "\n";
-  systemInfo << "WiFi DNS 1         : " << WiFi.dnsIP(0).toString().c_str() << "\n";
-  systemInfo << "WiFi DNS 2         : " << WiFi.dnsIP(1).toString().c_str() << "\n";
+  systemInfo << "WiFi IP            : " << WiFi.localIP().toString().c_str() << "; \n";
+  systemInfo << "WiFi hostname      : " << WiFi.getHostname() << "; \n";
+  systemInfo << "WiFi SSID          : " << WiFi.SSID().c_str() << "; \n";
+  systemInfo << "WiFi status        : " << WiFi.status() << "; \n";
+  systemInfo << "WiFi strength RSSI : " << ((int)WiFi.RSSI()) << " dB; \n";
+  systemInfo << "WiFi MAC           : " << WiFi.macAddress().c_str() << "; \n";
+  systemInfo << "WiFi subnet        : " << WiFi.subnetMask().toString().c_str() << "; \n";
+  systemInfo << "WiFi gateway       : " << WiFi.gatewayIP().toString().c_str() << "; \n";
+  systemInfo << "WiFi DNS 1         : " << WiFi.dnsIP(0).toString().c_str() << "; \n";
+  systemInfo << "WiFi DNS 2         : " << WiFi.dnsIP(1).toString().c_str() << "; \n";
+  systemInfo << "Webserver          : " << (START_WEBSERVER ? "Started" : "NOT started") << "; \n";
+
+  systemInfo << "\n";
+
+  systemInfo << "Filesystem               : " << XSTRINGIFY(FILESYSTEM_TO_USE) << "; \n";
+  systemInfo << "Basepath(Mountpoint)     : " << FILESYSTEM_BASE_PATH << "; \n";
+  systemInfo << "Filesystem total         : " << (FILESYSTEM_TO_USE.totalBytes() / 1024) << " kBytes; \n";
+  systemInfo << "Used Filesystem          : " << (FILESYSTEM_TO_USE.usedBytes() / 1024) << " kBytes; \n";
+  systemInfo << "Free Filesystem          : " << ((FILESYSTEM_TO_USE.totalBytes() - FILESYSTEM_TO_USE.usedBytes()) / 1024) << " kBytes; \n";
+
+  systemInfo << "\n";
+
+  systemInfo << "Data directory           : " << DATA_DIRECTORY << "; \n";
+  systemInfo << "File output interval     : " << FILE_OUTPUT_INTERVALL_SEC << " sec; \n";
+  systemInfo << "Write to file interval   : " << WRITE_TO_FILE_INTERVAL_SEC << " sec; \n";
+  systemInfo << "Filesystem check interval: " << INTERVALL_FOR_FILESYSTEM_CHECK_SEC << " sec; \n";
+
+  systemInfo << "\n";
+
+  systemInfo << "Redirect to syslog file  : " << (REDIRECT_STD_ERR_TO_SYSLOG_FILE ? "On" : "Off") << "; \n";
+  systemInfo << "Syslog filename          : " << SYSLOG_PATHNAME << " \n";
+  systemInfo << "Write to syslog interval : " << WRITE_TO_SYSLOGFILE_INTERVAL_SEC << " sec; \n";
+  systemInfo << "Syslog max. filesize     : " << MAX_SYSLOG_FILE_SIZE_BYTES << " bytes; \n";
+  systemInfo << "Syslog max. files        : " << MAX_OLD_SYSLOG_FILES << "; \n";
+
+  systemInfo << "\n";
+
+  systemInfo << "MQTT output              : " << (outputToMQTT ? "activated" : "NOT activated") << "; \n";
+  systemInfo << "MQTT broker              : " << mqttBroker << "; \n";
+  systemInfo << "MQTT port                : " << MQTT_PORT << "; \n";
+  systemInfo << "MQTT status              : " << (mqttClient.connected() ? "connected" : "NOT connected") << "; \n";
+  systemInfo << "MQTT client ID           : " << mqttClient.getClientId() << "; \n";
+  systemInfo << "MQTT topic               : " << mqttTopic << "; \n";
+  systemInfo << "MQTT syslog subtopic     : " << MQTT_TOPIC_SYSLOG << "; \n";
+  systemInfo << "MQTT output interval     : " << MQTT_OUTPUTINTERVALL_SEC << " sec; \n";
+  systemInfo << "MQTT keep alive          : " << MQTT_KEEP_ALIVE << " sec; \n";
+  systemInfo << "MQTT reconnection timeout: " << MQTT_RECONNECTION_TIMEOUT_SEC << " sec; \n";
 
   systemInfo << std::endl;
   // std::cout << systemInfo.str();
@@ -609,6 +702,8 @@ void radiator::NetworkHandler::configureWebserver()
 {
   static AsyncWebServer server(80); // Create AsyncWebServer object on port 80
 
+  // <link rel = "icon" href = "data:,">
+
   // create very simple html page
   static const char index_html[] PROGMEM =
       R"rawliteral(
@@ -617,17 +712,18 @@ void radiator::NetworkHandler::configureWebserver()
           <title>Pelletsheizung Froeling P2/S3100</title>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <link rel="icon" href="data:,">
+          <link rel="icon" href="/favicon.ico" type="image/x-icon">
           <style>
           </style>
         </head>
         <body>
           <h2>ESP Web Server für Pelletsheizung Fröling P2/S3100</h2>
-          <ul>
+          <ol>
             <li><a href=logfiles>Heizungs-Logfiles</a></li>
+            <li><a href=syslogfile>System Logfiles</a></li>
             <li><a href=sysinfo>ESP32 System Info</a></li>
-            <li><a href=syslogfile>System Logfile</a></li>
-          </ul>
+            <li><a href=esprestart>Restart ESP</a></li>
+          </ol>
         <script>
         </script>
         </body>
@@ -640,38 +736,148 @@ void radiator::NetworkHandler::configureWebserver()
       [](AsyncWebServerRequest *request)
       { request->send_P(200, "text/html", index_html); });
 
-  server.serveStatic("/", FILESYSTEM_TO_USE, DATA_DIRECTORY);
-
-  server.onNotFound(
-      [](AsyncWebServerRequest *request)
-      { request->send(404, "text/plain", "404 - Not found"); });
-
   server.on(
       "/logfiles", HTTP_GET, [](AsyncWebServerRequest *request)
       { request->send(200, "text/html", handleLogfilesForWebserver(DATA_DIRECTORY).c_str()); });
 
+  server.on(DATA_DIRECTORY, HTTP_GET, sendLargeFile); // replacement for serveStatic due to problems with larger files ...
+
+  // server.on(
+  //     "/downloadLogfilesAsOne", HTTP_GET, [](AsyncWebServerRequest *request)
+  //     { request->send(200, "text/html", downloadLogfilesAsOne(DATA_DIRECTORY).c_str()); });
+
+  // server.serveStatic("/syslogfile", FILESYSTEM_TO_USE, SYSLOG_PATHNAME);  //for only one logfile
   server.on(
-      "/downloadAllAsOneFile", HTTP_GET, [](AsyncWebServerRequest *request)
-      { request->send(200, "text/html", downloadAllAsOneFile(DATA_DIRECTORY).c_str()); });
+      "/syslogfile", HTTP_GET, [](AsyncWebServerRequest *request)
+      { request->send(200, "text/html", handleSysLogfilesForWebserver(SYSLOG_DIR).c_str()); });
+
+  server.on(
+      "/syslog", HTTP_GET, sendLargeFile); // replacement for serveStatic due to problems with larger files ...
 
   server.on(
       "/sysinfo", HTTP_GET, [](AsyncWebServerRequest *request)
       { request->send(200, "text/plain", get_System_Info().c_str()); });
 
-  server.serveStatic("/syslogfile", FILESYSTEM_TO_USE, SYSLOG_FILENAME);
+  server.on(
+      "/esprestart", HTTP_GET,
+      [](AsyncWebServerRequest *request)
+      {
+        request->send(200, "text/plain", "Microcontroller ESP32 is restarted NOW ...");
+        vTaskDelay(pdMS_TO_TICKS(1000)); // wait to deliver the webpage
+        std::cout << millis() << " ms: ESP will be NOW restarted due to USER REQUEST from web interface";
+
+        FILESYSTEM_TO_USE.end();
+        ESP.restart();
+      });
+
+  server.serveStatic("/", FILESYSTEM_TO_USE, "/");
+
+  server.onNotFound(
+      [](AsyncWebServerRequest *request)
+      { request->send(404, "text/plain", "404 - Not found"); });
 
   // before we start the webserver service we have to be sure that WiFi has finished initialisation
   while (WiFi.status() == WL_NO_SHIELD)
   {
-    LOG_info << millis() << " ms: Wait for WiFi to finished initialisation (WiFi.status() !=255 (WL_NO_SHIELD) ...) -> now WiFi.status()="
-             << WiFi.status() << std::endl;
+    LOG_debug << millis() << " ms: Wait for WiFi to finished initialisation (WiFi.status() !=255 (WL_NO_SHIELD) ...) -> now WiFi.status()="
+              << WiFi.status() << std::endl;
     vTaskDelay(500);
   }
-  LOG_info << millis() << " ms: Proceed with WiFi.status()=" << WiFi.status() << " -> start webserver" << std::endl;
+  LOG_debug << millis() << " ms: Proceed with WiFi.status()=" << WiFi.status() << " -> start webserver" << std::endl;
 
   // Start server
   server.begin();
   LOG_info << millis() << " ms: Webserver started" << std::endl;
+}
+
+/*********************************************************************
+ * @brief 	handler for file request as replacement for server.serveStatic()
+ *          due to problems of serveStatic for large files (> 20kB)
+ * @param 	request
+ * @return 	void
+ *********************************************************************/
+void radiator::NetworkHandler::sendLargeFile(AsyncWebServerRequest *request)
+{
+  fs::File file = FILESYSTEM_TO_USE.open(request->url().c_str());
+  if (!file)
+  {
+    std::string message = (std::string) "ERROR opening file " + request->url().c_str();
+    request->send(200, message.c_str());
+    return;
+  }
+
+  // std::cout << "file.size()=" << file.size() << std::endl;
+
+  AsyncWebServerResponse *response = request->beginResponse(
+      "text/plain; charset=utf-8",
+      file.size(),
+      [file](uint8_t *buffer, size_t maxLen, size_t total) mutable -> size_t
+      {
+        int bytes = file.read(buffer, maxLen);
+        // std::cout << "maxLen=" << maxLen << ", total=" << total << ", bytes=" << bytes << std::endl;
+
+        // close file at the end
+        if (bytes + total == file.size())
+          file.close();
+        return max(0, bytes); // return 0 even when no bytes were loaded
+      });
+
+  // response->addHeader("meta", "charset=UTF-8");
+  request->send(response);
+}
+
+/*********************************************************************
+ * @brief 	list and handle ESP system logfiles for webserver
+ * @param 	pathname for logfiles directory
+ * @param 	used filesystem
+ * @return 	text/html page with list of files in directory
+ *          and download buttons (with javascript)
+ *********************************************************************/
+std::string radiator::NetworkHandler::handleSysLogfilesForWebserver(std::string dirname, fs::FS &fs)
+{
+  File root = fs.open(dirname.c_str());
+  if (!root || !root.isDirectory())
+  {
+    LOG_error << millis() << " ms: handleSysLogfilesForWebserver: Failed to open directory " << dirname << std::endl;
+    return "";
+  }
+
+  std::stringstream filesDownloadList;
+  std::stringstream filesUrlsList;
+
+  File file = root.openNextFile();
+  while (file)
+  {
+    if (!file.isDirectory())
+    {
+      filesUrlsList << "<li>"
+                    << "<a href='" << file.path() << "'>"
+                    << file.name() << " (" << file.size() << " bytes)   </a>"
+                    << "<button type=button><a href='" << file.path() << "' download> download</a></button>"
+                    << "</li>";
+    }
+    file = root.openNextFile();
+    if (file)
+      filesDownloadList << ",";
+  }
+
+  std::stringstream logfilesPage;
+  logfilesPage << "<!DOCTYPE HTML><html>"
+               << " <head>"
+               << "  <title>Pelletsheizung Froeling P2/S3100</title>"
+               << "  <meta charset='UTF-8'>"
+               << "  <meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+               << "  <link rel='icon' href='/favicon.ico' 'type='image/x-icon'>"
+               << "</head>"
+               << "<body>"
+               << "  <h2>ESP Web Server für Pelletsheizung Fröling P2/S3100</h2>"
+               << "  <ul>"
+               << filesUrlsList.str()
+               << "  </ul>"
+               << "</body></html>"
+               << std::endl;
+
+  return logfilesPage.str();
 }
 
 /*********************************************************************
@@ -686,7 +892,7 @@ std::string radiator::NetworkHandler::handleLogfilesForWebserver(std::string dir
   File root = fs.open(dirname.c_str());
   if (!root || !root.isDirectory())
   {
-    LOG_error << "Failed to open directory " << dirname << std::endl;
+    LOG_error << millis() << " ms: handleLogfilesForWebserver: Failed to open directory " << dirname << std::endl;
     return "";
   }
 
@@ -699,11 +905,11 @@ std::string radiator::NetworkHandler::handleLogfilesForWebserver(std::string dir
     if (!file.isDirectory())
     {
       filesUrlsList << "<li>"
-                    << "<a href='" << file.name() << "'>"
+                    << "<a href='" << file.path() << "'>"
                     << file.name() << " (" << file.size() << " bytes)   </a>"
-                    << "<button type=button><a href='" << file.name() << "' download> download</a></button>"
+                    << "<button type=button><a href='" << file.path() << "' download> download</a></button>"
                     << "</li>";
-      filesDownloadList << "{ download: '" << file.name() << "' }";
+      filesDownloadList << "{ download: '" << file.path() << "', filename: '" << file.name() << "' }";
     }
     file = root.openNextFile();
     if (file)
@@ -716,30 +922,32 @@ std::string radiator::NetworkHandler::handleLogfilesForWebserver(std::string dir
                << "  <title>Pelletsheizung Froeling P2/S3100</title>"
                << "  <meta charset='UTF-8'>"
                << "  <meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-               << "  <link rel='icon' href='data:,'>"
+               << "  <link rel='icon' href='/favicon.ico' 'type='image/x-icon'>"
                << "</head>"
-               << "<script> "
-               << "  function downloadAllFiles(files)"
-               << "  {"
-               << "      files.forEach(function(el)"
-               << "      {"
-               << "        let a = document.createElement('a');"
-               << "        a.href = el.download;"
-               << "        a.target = '_parent';"
-               << "        a.download = el.filename;"
-               << "        (document.body || document.documentElement).appendChild(a);"
-               << "        a.click();"
-               << "        a.parentNode.removeChild(a);"
-               << "      });"
-               << "  }"
-               << "</script>"
+               // did NOT WORK due to limitations of ESP espc. AsyncTCP and SD libs in concern of parallel access of browser to multiple files
+               //   << "<script> "
+               //   << "  function downloadAllFiles(files)"
+               //   << "  {"
+               //   << "      files.forEach(function(el)"
+               //   << "      {"
+               //   << "        let a = document.createElement('a');"
+               //   << "        a.href = el.download;"
+               //   << "        a.target = '_parent';"
+               //   << "        a.download = el.filename;"
+               //   << "        (document.body || document.documentElement).appendChild(a);"
+               //   << "        a.click();"
+               //   << "        a.parentNode.removeChild(a);"
+               //   << "      });"
+               //   << "  }"
+               //   << "</script>"
                << "<body>"
                << "  <h2>ESP Web Server für Pelletsheizung Fröling P2/S3100</h2>"
-               << "  <p>"
-               << "  <button type=button onclick=\"downloadAllFiles([" << filesDownloadList.str() << "])\">Download ALL files</button>"
-               << "  </p><p>"
-               << "  <button type=button><a href=downloadAllAsOneFile>Create ONE FILE FROM LAST 3 MONTH DATA for download </br>!!! THIS WILL LAST A WHILE !!!</a></button>"
-               << "  </p>"
+               // did NOT WORK due to limitations of ESP espc. AsyncTCP lib
+               //   << "  <p>"
+               //   << "  <button type=button onclick=\"downloadAllFiles([" << filesDownloadList.str() << "])\">Download ALL files</button>"
+               //   << "  </p><p>"
+               //   << "  <button type=button><a href=downloadLogfilesAsOne>Create ONE FILE FROM LAST 3 MONTH DATA for download </br>!!! THIS WILL LAST A WHILE !!!</a></button>"
+               //   << "  </p>"
                << "  <ul>"
                << filesUrlsList.str()
                << "  </ul>"
@@ -750,12 +958,13 @@ std::string radiator::NetworkHandler::handleLogfilesForWebserver(std::string dir
 }
 
 /*********************************************************************
+ * DID NOT WORK FOR HUGE FILES (we have) -> AsyncTCP watchdog resets ESP
  * @brief 	download NUMBER_OF_LOGFILES_TO_COMBINE logfiles as ONE FILE
  * @param 	source dir with logfiles to combine
  * @param 	used filesystem
  * @return 	link to file for download
  *********************************************************************/
-std::string radiator::NetworkHandler::downloadAllAsOneFile(std::string dirname, fs::FS &fs)
+std::string radiator::NetworkHandler::downloadLogfilesAsOne(std::string dirname, uint16_t NumberOfLogfiles, fs::FS &fs)
 {
   File root = fs.open(dirname.c_str());
   if (!root || !root.isDirectory())
@@ -778,14 +987,10 @@ std::string radiator::NetworkHandler::downloadAllAsOneFile(std::string dirname, 
   filesList.sort();
 
   // save only last 3 month = 92 days = no. of files
-  while (filesList.size() > NUMBER_OF_LOGFILES_TO_COMBINE)
+  while (filesList.size() > NumberOfLogfiles)
   {
     filesList.pop_front();
   }
-
-  // LOG_info << "Sorted files list: \n";
-  // for (auto el : filesList)
-  //   LOG_info << el << "\n";
 
   std::string subdirName = "/union";
   fs.mkdir((dirname + subdirName).c_str());
@@ -795,7 +1000,7 @@ std::string radiator::NetworkHandler::downloadAllAsOneFile(std::string dirname, 
   File targetFile = fs.open(targetPathname.c_str(), FILE_APPEND);
   if (!targetFile)
   {
-    auto buf = "Failed to open target file  " + targetPathname + "  for writing";
+    auto buf = millis() + " ms: downloadLogfilesAsOne: Failed to open target file  " + targetPathname + "  for writing";
     LOG_error << buf << std::endl;
     return buf;
   }
@@ -810,8 +1015,9 @@ std::string radiator::NetworkHandler::downloadAllAsOneFile(std::string dirname, 
       {
         written_bytes += targetFile.write(sourceFile.read());
         // std::cout << '.';
+        // vTaskDelay(pdMS_TO_TICKS(1)); // avoid AsyncTCP watchdog ... funzt so nicht ...
       }
-      LOG_info << "  Written " << written_bytes << " bytes from " << sourceFile.name() << " to " << targetFile.name() << std::endl;
+      std::cout << "  Written " << written_bytes << " bytes from " << sourceFile.name() << " to " << targetFile.name() << std::endl;
     }
     sourceFile.close();
   }
@@ -823,12 +1029,12 @@ std::string radiator::NetworkHandler::downloadAllAsOneFile(std::string dirname, 
        << "  <title>Pelletsheizung Froeling P2/S3100</title>"
        << "  <meta charset='UTF-8'>"
        << "  <meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-       << "  <link rel='icon' href='data:,'>"
+       << "  <link rel='icon' href='/favicon.ico' 'type='image/x-icon'>"
        << "</head>"
        << "<body>"
        << "  <h2>ESP Web Server für Pelletsheizung Fröling P2/S3100</h2>"
-       << "  <a href='" << (subdirName + targetFilename) << "'>" << (subdirName + targetFilename) << " (" << targetFile.size() << " bytes)   </a>"
-       << "  <button type=button><a href='" << (subdirName + targetFilename) << "' download> download</a></button>"
+       << "  <a href='" << (targetFile.path()) << "'>" << (targetFilename) << " (" << targetFile.size() << " bytes)   </a>"
+       << "  <button type=button><a href='" << (targetFile.path()) << "' download> download</a></button>"
        << "  </br></br>"
        << "  <a href=/>Home</a>"
        << "</body></html>"

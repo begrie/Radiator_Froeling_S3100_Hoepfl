@@ -33,14 +33,17 @@ namespace radiator
     static AsyncMqttClient mqttClient;
     static bool outputToMQTT;
     static Ticker tickerReconnectMQTT;
+    static Ticker tickerSendSysinfoToMQTT;
     static std::string mqttTopic;
     static std::string mqttBroker;
 
     static std::string get_System_Info();
 
     static void configureWebserver();
+    static void sendLargeFile(AsyncWebServerRequest *request);
+    static std::string handleSysLogfilesForWebserver(std::string dirname, fs::FS &fs = FILESYSTEM_TO_USE);
     static std::string handleLogfilesForWebserver(std::string dirname, fs::FS &fs = FILESYSTEM_TO_USE);
-    static std::string downloadAllAsOneFile(std::string dirname, fs::FS &fs = FILESYSTEM_TO_USE);
+    static std::string downloadLogfilesAsOne(std::string dirname, uint16_t NumberOfLogfiles = NUMBER_OF_LOGFILES_TO_COMBINE, fs::FS &fs = FILESYSTEM_TO_USE);
 
   public:
     static bool init(bool _outputToMQTT = false, bool startWebServer = true);

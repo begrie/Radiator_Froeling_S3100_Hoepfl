@@ -131,6 +131,10 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LittleFS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/FS/src/FS.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src/SPIFFS.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SD/src/SD.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/SD/src/sd_defines.h \
  src/network.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFi.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Print.h \
@@ -233,4 +237,6 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/Ticker/src/Ticker.h \
  src/surveillance.h src/device.h src/serial.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/HardwareSerial.h \
- src/debug.h
+ src/debug.h src/externalsensors.h \
+ .pio/libdeps/esp32dev/DHT\ sensor\ library/DHT.h \
+ lib/ESP32_Servo/ESP32_Servo.h

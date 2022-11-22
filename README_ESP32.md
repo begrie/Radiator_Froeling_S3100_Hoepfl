@@ -1,6 +1,6 @@
 # Überwachungstool für Fröling P2 / Lambdatronic S 3100
 
-## Anpassung für ESP32 (BeGrie, Sept. 2022)
+## Anpassung für ESP32 (BeGrie, Sept./Okt. 2022)
 
 Im Zuge der Energiekrise 2022 und einem Pelletspreisanstieg von 200 auf 800 Euro je Tonne habe ich mein seit langem geplantes und immer wieder beiseite geschobenes Projekt (Heizung seit 2006 im Betrieb - hüstel) der Heizungsüberwachung wieder aktiviert um Optimierungspotentiale zu erschließen. 
 
@@ -14,18 +14,20 @@ Die ESP32 Lösung besteht nur noch aus dem C++ Sourcecode, bei dem ich im wesent
 
 * Serieller Input (in serial.cpp) über Serial2 realisiert (hardwareseitig wie beim RasPi über RS232-Schnittstellenumsetzer ->bei mir SparkFun Transceiver Breakout - MAX3232 https://www.sparkfun.com/products/11189)
 
-* Output fast komplett neu (output.h, output.cpp) -> nun "autark" (ohne externe Skripte o.ä) auf  
+* Output fast komplett neu (output.h/.cpp, network.h/.cpp, files.h/.cpp) -> nun "autark" (ohne externe Skripte o.ä) auf  
     * Console/Serial, 
     * Flash/LittleFS (wg. geringem Speicherplatz nur zum Testen sinnvoll). 
     * SD Card (hardwareseitig jeder 3,3V SD Reader an den ESP32 anschliessbar). Aktuell muss die SD Card entnommen und am PC eingelesen werden. 
     * Buzzer (aktiv) und Quit-Button zur akustischen Fehlermeldung im Keller 
+    * WiFi ...
+          * ... inkl. Konfiguration über console/Serial per USB-Anschluss -> beim Booten den Quit-Button drücken
+          * ... zum Versand von MQTT-Nachrichten (Konfiguration wie bei WiFi)
+          * ... mit Webserver zum Datenabgriff von der SD-Card
 
-* Geplant sind noch WiFi zum Versand von MQTT-Nachrichten und evtl. ein kleiner Webserver zum Datenabgriff von der SD-Card - schau'mer mal
-
-* Die Konfiguration bzgl. Filesystem, Output und weiterem Verhalten erfolgt ausschließlich über die #defines in main.cpp, output.h und serial.cpp, was bei Änderungen natürlich eine Neucompilierung erfordert (ich weiss: nicht schön - aber der kürzeste Weg). Dies sollte aber durch die Nutzung von Platformio über die hier enthaltene platformio.ini problemlos möglich sein ...
+* Die Konfiguration bzgl. Filesystem, Output und weiterem Verhalten erfolgt ausschließlich über die #defines in config.h, was bei Änderungen natürlich eine Neucompilierung erfordert (ich weiss: nicht schön - aber der kürzeste Weg). Dies sollte aber durch die Nutzung von Platformio über die hier enthaltene platformio.ini problemlos möglich sein ...
 
 * Schaltplan zur Konfiguration im Sourcecode:
-    ![Schaltplan](Schaltplan.jpg)
+    ![Schaltplan](Schaltplan.png)
 
 * Fotos zur Umsetzung:
     ![Foto Platine oben](Platine_Oben.jpg)

@@ -1,0 +1,1424 @@
+stringWithDate=2022-11-11; 05:22:53, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16650495 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:22:53; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 156°; 100%; 39%; 65%; 95%; 91.1%; 423°; 72°; 26°; 76%; 1°; 30°; 31°; 37°; 30°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16650521ms: File output data buffered for next file write in20 seconds
+16650521 ms: NO MQTT output (next in 7 seconds)
+M2 16650615 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:22:54
+M1 16651177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16651180 ms: NO file output (next in 9 seconds)
+16651180 ms: NO MQTT output (next in 6 seconds)
+M2 16651613 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:22:55
+M1 16652180 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16652183 ms: NO file output (next in 8 seconds)
+16652184 ms: NO MQTT output (next in 5 seconds)
+M2 16652611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:22:56
+M1 16653178 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16653181 ms: NO file output (next in 7 seconds)
+16653182 ms: NO MQTT output (next in 4 seconds)
+M2 16653614 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:22:57
+M1 16654177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16654180 ms: NO file output (next in 6 seconds)
+16654180 ms: NO MQTT output (next in 3 seconds)
+M2 16654612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:22:58
+M1 16655180 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16655182 ms: NO file output (next in 5 seconds)
+16655183 ms: NO MQTT output (next in 2 seconds)
+M2 16655615 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:22:59
+M1 16656177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16656180 ms: NO file output (next in 4 seconds)
+16656181 ms: NO MQTT output (next in 1 seconds)
+M2 16656613 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:00
+M1 16657176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16657179 ms: NO file output (next in 3 seconds)
+date=2022-11-11, time= 05:23:00
+outStrStream.str()={"date": "2022-11-11", "time": " 05:23:00","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "156°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "91.0%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "76%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "31°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16657189 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1113, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:23:00","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "156°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "91.0%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "76%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "31°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16657217 ms: Publish acknowledged for packetId= 1113
+M2 16657614 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:01
+M1 16658176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16658179 ms: NO file output (next in 2 seconds)
+16658179 ms: NO MQTT output (next in 14 seconds)
+M2 16658612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:02
+M1 16659180 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16659183 ms: NO file output (next in 1 seconds)
+16659183 ms: NO MQTT output (next in 13 seconds)
+M2 16659611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:03
+M1 16660179 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:23:03, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16660333 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:23:03; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 156°; 100%; 39%; 65%; 95%; 91.0%; 423°; 72°; 26°; 76%; 1°; 30°; 31°; 37°; 32°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16660334ms: File output data buffered for next file write in29 seconds
+16660335 ms: NO MQTT output (next in 12 seconds)
+M2 16660614 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:04
+M1 16661177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16661180 ms: NO file output (next in 9 seconds)
+16661180 ms: NO MQTT output (next in 11 seconds)
+M2 16661613 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:05
+M1 16662175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16662178 ms: NO file output (next in 8 seconds)
+16662179 ms: NO MQTT output (next in 10 seconds)
+M2 16662611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:06
+M1 16663179 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16663182 ms: NO file output (next in 7 seconds)
+16663182 ms: NO MQTT output (next in 9 seconds)
+M2 16663610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:07
+M1 16664177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16664180 ms: NO file output (next in 6 seconds)
+16664181 ms: NO MQTT output (next in 8 seconds)
+M2 16664613 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:08
+M1 16665176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16665179 ms: NO file output (next in 5 seconds)
+16665179 ms: NO MQTT output (next in 7 seconds)
+M2 16665612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:09
+M1 16666180 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16666183 ms: NO file output (next in 4 seconds)
+16666183 ms: NO MQTT output (next in 6 seconds)
+M2 16666611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:10
+M1 16667180 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16667183 ms: NO file output (next in 3 seconds)
+16667183 ms: NO MQTT output (next in 5 seconds)
+M2 16667611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:11
+M1 16668179 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16668182 ms: NO file output (next in 2 seconds)
+16668182 ms: NO MQTT output (next in 4 seconds)
+M2 16668614 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:12
+M1 16669177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16669180 ms: NO file output (next in 1 seconds)
+16669180 ms: NO MQTT output (next in 3 seconds)
+M2 16669613 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:13
+M1 16670175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:23:13, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16670330 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:23:13; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 156°; 100%; 39%; 65%; 95%; 91.0%; 423°; 72°; 26°; 76%; 1°; 30°; 31°; 37°; 33°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16670345ms: reached end of writeToFileIntervalSec=30 -> Buffered file output data is written to file
+16670345 ms: NO MQTT output (next in 2 seconds)
+M2 16670614 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:14
+M1 16671176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16671179 ms: NO file output (next in 9 seconds)
+16671179 ms: NO MQTT output (next in 1 seconds)
+M2 16671612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:15
+M1 16672180 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16672183 ms: NO file output (next in 8 seconds)
+date=2022-11-11, time= 05:23:15
+outStrStream.str()={"date": "2022-11-11", "time": " 05:23:15","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "156°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "91.0%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "76%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "34°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16672193 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1114, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:23:15","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "156°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "91.0%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "76%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "34°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16672217 ms: Publish acknowledged for packetId= 1114
+M2 16672612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:16
+M1 16673179 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16673182 ms: NO file output (next in 7 seconds)
+16673182 ms: NO MQTT output (next in 14 seconds)
+M2 16673610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:17
+M1 16674177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16674180 ms: NO file output (next in 6 seconds)
+16674181 ms: NO MQTT output (next in 13 seconds)
+M2 16674613 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:18
+M1 16675176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16675179 ms: NO file output (next in 5 seconds)
+16675179 ms: NO MQTT output (next in 12 seconds)
+M2 16675612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:19
+M1 16676175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16676178 ms: NO file output (next in 4 seconds)
+16676178 ms: NO MQTT output (next in 11 seconds)
+M2 16676611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:20
+M1 16677179 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16677182 ms: NO file output (next in 3 seconds)
+16677182 ms: NO MQTT output (next in 10 seconds)
+M2 16677610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:21
+M1 16678178 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16678181 ms: NO file output (next in 2 seconds)
+16678181 ms: NO MQTT output (next in 9 seconds)
+M2 16678609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:22
+M1 16679177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16679179 ms: NO file output (next in 1 seconds)
+16679180 ms: NO MQTT output (next in 8 seconds)
+M2 16679612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:23
+M1 16680176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:23:23, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+File /sd/P2_Logging/2022-11-11.log was opened
+16680348 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:23:23; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 156°; 100%; 39%; 65%; 95%; 91.0%; 423°; 72°; 26°; 76%; 1°; 30°; 31°; 37°; 35°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16680473ms: File output data buffered for next file write in10 seconds
+16680474 ms: NO MQTT output (next in 7 seconds)
+16680536 ms: syslog file = /syslog/syslog.log (size= 107423) reaches max size= 102400
+M2 16680615 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:24
+16680698 ms: Deleted oldest syslog file= /syslog/syslog.log.bak_15
+M1 16681197 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16681203 ms: NO file output (next in 9 seconds)
+16681204 ms: NO MQTT output (next in 6 seconds)
+M2 16681617 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:25
+M1 16682177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16682180 ms: NO file output (next in 8 seconds)
+16682180 ms: NO MQTT output (next in 5 seconds)
+M2 16682613 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:26
+M1 16683176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16683179 ms: NO file output (next in 7 seconds)
+16683179 ms: NO MQTT output (next in 4 seconds)
+M2 16683612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:27
+M1 16684176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16684179 ms: NO file output (next in 6 seconds)
+16684179 ms: NO MQTT output (next in 3 seconds)
+M2 16684612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:28
+M1 16685175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16685178 ms: NO file output (next in 5 seconds)
+16685178 ms: NO MQTT output (next in 2 seconds)
+M2 16685611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:29
+M1 16686174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16686177 ms: NO file output (next in 4 seconds)
+16686177 ms: NO MQTT output (next in 1 seconds)
+M2 16686610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:30
+M1 16687173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16687176 ms: NO file output (next in 3 seconds)
+date=2022-11-11, time= 05:23:30
+outStrStream.str()={"date": "2022-11-11", "time": " 05:23:30","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "156°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "91.0%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "76%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "36°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16687186 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1115, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:23:30","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "156°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "91.0%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "76%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "36°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16687212 ms: Publish acknowledged for packetId= 1115
+M2 16687611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:31
+M1 16688173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16688176 ms: NO file output (next in 2 seconds)
+16688176 ms: NO MQTT output (next in 14 seconds)
+M2 16688609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:32
+M1 16689172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16689175 ms: NO file output (next in 1 seconds)
+16689175 ms: NO MQTT output (next in 13 seconds)
+M2 16689608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:33
+M1 16690176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:23:33, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16690331 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:23:33; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 156°; 100%; 39%; 65%; 95%; 91.0%; 423°; 72°; 26°; 76%; 1°; 30°; 31°; 37°; 36°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16690332ms: File output data buffered for next file write in19 seconds
+16690332 ms: NO MQTT output (next in 12 seconds)
+M2 16690611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:34
+M1 16691173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16691176 ms: NO file output (next in 9 seconds)
+16691176 ms: NO MQTT output (next in 11 seconds)
+M2 16691609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:35
+M1 16692171 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16692174 ms: NO file output (next in 8 seconds)
+16692175 ms: NO MQTT output (next in 10 seconds)
+M2 16692607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:36
+M1 16693175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16693178 ms: NO file output (next in 7 seconds)
+16693178 ms: NO MQTT output (next in 9 seconds)
+M2 16693606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:37
+M1 16694173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16694176 ms: NO file output (next in 6 seconds)
+16694177 ms: NO MQTT output (next in 8 seconds)
+M2 16694609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:38
+M1 16695172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16695175 ms: NO file output (next in 5 seconds)
+16695175 ms: NO MQTT output (next in 7 seconds)
+M2 16695608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:39
+M1 16696171 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16696174 ms: NO file output (next in 4 seconds)
+16696174 ms: NO MQTT output (next in 6 seconds)
+M2 16696607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:40
+M1 16697176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16697179 ms: NO file output (next in 3 seconds)
+16697179 ms: NO MQTT output (next in 5 seconds)
+M2 16697607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:41
+M1 16698174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16698177 ms: NO file output (next in 2 seconds)
+16698178 ms: NO MQTT output (next in 4 seconds)
+M2 16698610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:42
+M1 16699173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16699175 ms: NO file output (next in 1 seconds)
+16699176 ms: NO MQTT output (next in 3 seconds)
+M2 16699608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:43
+M1 16700170 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:23:43, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16700325 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:23:43; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 156°; 100%; 39%; 65%; 95%; 90.9%; 423°; 72°; 26°; 76%; 1°; 30°; 31°; 37°; 38°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16700450ms: reached end of writeToFileIntervalSec=30 -> Buffered file output data is written to file
+16700451 ms: NO MQTT output (next in 2 seconds)
+M2 16700610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:44
+M1 16701173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16701176 ms: NO file output (next in 9 seconds)
+16701177 ms: NO MQTT output (next in 1 seconds)
+M2 16701609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:45
+M1 16702172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16702175 ms: NO file output (next in 8 seconds)
+date=2022-11-11, time= 05:23:45
+outStrStream.str()={"date": "2022-11-11", "time": " 05:23:45","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "156°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.9%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "76%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "38°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16702185 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1116, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:23:45","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "156°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.9%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "76%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "38°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16702206 ms: Publish acknowledged for packetId= 1116
+M2 16702610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:46
+M1 16703172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16703175 ms: NO file output (next in 7 seconds)
+16703175 ms: NO MQTT output (next in 14 seconds)
+M2 16703608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:47
+M1 16704170 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16704173 ms: NO file output (next in 6 seconds)
+16704174 ms: NO MQTT output (next in 13 seconds)
+M2 16704606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:48
+M1 16705174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16705177 ms: NO file output (next in 5 seconds)
+16705177 ms: NO MQTT output (next in 12 seconds)
+M2 16705605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:49
+M1 16706172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16706175 ms: NO file output (next in 4 seconds)
+16706176 ms: NO MQTT output (next in 11 seconds)
+M2 16706608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:50
+M1 16707170 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16707173 ms: NO file output (next in 3 seconds)
+16707174 ms: NO MQTT output (next in 10 seconds)
+M2 16707606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:51
+M1 16708173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16708176 ms: NO file output (next in 2 seconds)
+16708177 ms: NO MQTT output (next in 9 seconds)
+M2 16708609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:52
+M1 16709172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16709174 ms: NO file output (next in 1 seconds)
+16709175 ms: NO MQTT output (next in 8 seconds)
+M2 16709607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:53
+M1 16710175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:23:53, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+File /sd/P2_Logging/2022-11-11.log was opened
+16710346 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:23:53; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 156°; 100%; 39%; 65%; 95%; 90.9%; 423°; 72°; 26°; 76%; 1°; 30°; 31°; 37°; 40°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16710347ms: File output data buffered for next file write in9 seconds
+16710347 ms: NO MQTT output (next in 7 seconds)
+M2 16710606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:54
+M1 16711174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16711176 ms: NO file output (next in 9 seconds)
+16711177 ms: NO MQTT output (next in 6 seconds)
+M2 16711610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:55
+M1 16712172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16712175 ms: NO file output (next in 8 seconds)
+16712175 ms: NO MQTT output (next in 5 seconds)
+M2 16712608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:56
+M1 16713171 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16713174 ms: NO file output (next in 7 seconds)
+16713174 ms: NO MQTT output (next in 4 seconds)
+M2 16713607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:57
+M1 16714170 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16714173 ms: NO file output (next in 6 seconds)
+16714173 ms: NO MQTT output (next in 3 seconds)
+M2 16714606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:58
+M1 16715174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16715177 ms: NO file output (next in 5 seconds)
+16715177 ms: NO MQTT output (next in 2 seconds)
+M2 16715605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:23:59
+M1 16716173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16716176 ms: NO file output (next in 4 seconds)
+16716176 ms: NO MQTT output (next in 1 seconds)
+M2 16716604 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:00
+M1 16717172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16717175 ms: NO file output (next in 3 seconds)
+date=2022-11-11, time= 05:24:00
+outStrStream.str()={"date": "2022-11-11", "time": " 05:24:00","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "156°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.9%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "76%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "42°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16717185 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1117, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:24:00","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "156°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.9%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "76%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "42°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16717217 ms: Publish acknowledged for packetId= 1117
+M2 16717605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:01
+M1 16718173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16718176 ms: NO file output (next in 2 seconds)
+16718176 ms: NO MQTT output (next in 14 seconds)
+M2 16718604 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:02
+M1 16719172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16719175 ms: NO file output (next in 1 seconds)
+16719175 ms: NO MQTT output (next in 13 seconds)
+M2 16719608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:03
+M1 16720171 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:24:03, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16720326 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:24:03; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 156°; 100%; 39%; 65%; 95%; 90.9%; 423°; 72°; 26°; 76%; 1°; 30°; 31°; 37°; 42°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16720327ms: File output data buffered for next file write in19 seconds
+16720328 ms: NO MQTT output (next in 12 seconds)
+M2 16720606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:04
+M1 16721173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16721176 ms: NO file output (next in 9 seconds)
+16721176 ms: NO MQTT output (next in 11 seconds)
+M2 16721604 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:05
+M1 16722172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16722174 ms: NO file output (next in 8 seconds)
+16722175 ms: NO MQTT output (next in 10 seconds)
+M2 16722607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:06
+M1 16723169 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16723172 ms: NO file output (next in 7 seconds)
+16723173 ms: NO MQTT output (next in 9 seconds)
+M2 16723605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:07
+M1 16724172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16724175 ms: NO file output (next in 6 seconds)
+16724175 ms: NO MQTT output (next in 8 seconds)
+M2 16724608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:08
+M1 16725170 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16725173 ms: NO file output (next in 5 seconds)
+16725174 ms: NO MQTT output (next in 7 seconds)
+M2 16725606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:09
+M1 16726173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16726176 ms: NO file output (next in 4 seconds)
+16726177 ms: NO MQTT output (next in 6 seconds)
+M2 16726604 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:10
+M1 16727172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16727175 ms: NO file output (next in 3 seconds)
+16727175 ms: NO MQTT output (next in 5 seconds)
+M2 16727608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:11
+M1 16728171 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16728173 ms: NO file output (next in 2 seconds)
+16728174 ms: NO MQTT output (next in 4 seconds)
+M2 16728606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:12
+M1 16729174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16729177 ms: NO file output (next in 1 seconds)
+16729177 ms: NO MQTT output (next in 3 seconds)
+M2 16729605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:13
+M1 16730173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:24:13, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16730327 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:24:13; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 156°; 100%; 39%; 65%; 95%; 90.9%; 423°; 72°; 26°; 76%; 1°; 30°; 31°; 37°; 44°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16730333ms: File output data buffered for next file write in29 seconds
+16730334 ms: NO MQTT output (next in 2 seconds)
+M2 16730607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:14
+M1 16731175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16731178 ms: NO file output (next in 9 seconds)
+16731178 ms: NO MQTT output (next in 1 seconds)
+M2 16731606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:15
+M1 16732174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16732176 ms: NO file output (next in 8 seconds)
+date=2022-11-11, time= 05:24:15
+outStrStream.str()={"date": "2022-11-11", "time": " 05:24:15","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "154°","KessStellGr": "98%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.8%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "81%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "45°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16732187 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1118, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:24:15","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "154°","KessStellGr": "98%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.8%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "81%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "45°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16732210 ms: Publish acknowledged for packetId= 1118
+M2 16732607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:16
+M1 16733174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16733177 ms: NO file output (next in 7 seconds)
+16733177 ms: NO MQTT output (next in 14 seconds)
+M2 16733605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:17
+M1 16734173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16734176 ms: NO file output (next in 6 seconds)
+16734176 ms: NO MQTT output (next in 13 seconds)
+M2 16734609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:18
+M1 16735172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16735175 ms: NO file output (next in 5 seconds)
+16735175 ms: NO MQTT output (next in 12 seconds)
+M2 16735608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:19
+M1 16736170 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16736173 ms: NO file output (next in 4 seconds)
+16736174 ms: NO MQTT output (next in 11 seconds)
+M2 16736606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:20
+M1 16737173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16737176 ms: NO file output (next in 3 seconds)
+16737177 ms: NO MQTT output (next in 10 seconds)
+M2 16737609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:21
+M1 16738171 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16738174 ms: NO file output (next in 2 seconds)
+16738174 ms: NO MQTT output (next in 9 seconds)
+M2 16738607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:22
+M1 16739175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16739178 ms: NO file output (next in 1 seconds)
+16739178 ms: NO MQTT output (next in 8 seconds)
+M2 16739606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:23
+M1 16740174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:24:23, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16740328 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:24:23; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 156°; 100%; 39%; 65%; 95%; 90.8%; 423°; 72°; 26°; 76%; 1°; 30°; 31°; 37°; 46°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16740343ms: reached end of writeToFileIntervalSec=30 -> Buffered file output data is written to file
+16740343 ms: NO MQTT output (next in 7 seconds)
+M2 16740607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:24
+M1 16741174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16741177 ms: NO file output (next in 9 seconds)
+16741177 ms: NO MQTT output (next in 6 seconds)
+M2 16741610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:25
+M1 16742194 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16742199 ms: NO file output (next in 8 seconds)
+16742200 ms: NO MQTT output (next in 5 seconds)
+M2 16742607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:26
+M1 16743174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16743177 ms: NO file output (next in 7 seconds)
+16743177 ms: NO MQTT output (next in 4 seconds)
+M2 16743610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:27
+M1 16744173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16744176 ms: NO file output (next in 6 seconds)
+16744176 ms: NO MQTT output (next in 3 seconds)
+M2 16744609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:28
+M1 16745172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16745175 ms: NO file output (next in 5 seconds)
+16745175 ms: NO MQTT output (next in 2 seconds)
+M2 16745609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:29
+M1 16746176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16746179 ms: NO file output (next in 4 seconds)
+16746179 ms: NO MQTT output (next in 1 seconds)
+M2 16746606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:30
+M1 16747174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16747177 ms: NO file output (next in 3 seconds)
+date=2022-11-11, time= 05:24:30
+outStrStream.str()={"date": "2022-11-11", "time": " 05:24:30","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "154°","KessStellGr": "98%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.8%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "81%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "48°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16747187 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1119, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:24:30","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "154°","KessStellGr": "98%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.8%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "81%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "48°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16747203 ms: Publish acknowledged for packetId= 1119
+M2 16747611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:31
+M1 16748173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16748176 ms: NO file output (next in 2 seconds)
+16748176 ms: NO MQTT output (next in 14 seconds)
+M2 16748609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:32
+M1 16749172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16749175 ms: NO file output (next in 1 seconds)
+16749175 ms: NO MQTT output (next in 13 seconds)
+M2 16749608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:33
+M1 16750176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:24:33, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+File /sd/P2_Logging/2022-11-11.log was opened
+16750349 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:24:33; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 154°; 98%; 39%; 65%; 95%; 90.8%; 423°; 72°; 26°; 81%; 1°; 30°; 31°; 37°; 48°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16750354ms: File output data buffered for next file write in10 seconds
+16750354 ms: NO MQTT output (next in 12 seconds)
+M2 16750608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:34
+M1 16751176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16751178 ms: NO file output (next in 9 seconds)
+16751179 ms: NO MQTT output (next in 11 seconds)
+M2 16751611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:35
+M1 16752174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16752177 ms: NO file output (next in 8 seconds)
+16752177 ms: NO MQTT output (next in 10 seconds)
+M2 16752610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:36
+M1 16753173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16753176 ms: NO file output (next in 7 seconds)
+16753176 ms: NO MQTT output (next in 9 seconds)
+M2 16753609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:37
+M1 16754177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16754180 ms: NO file output (next in 6 seconds)
+16754180 ms: NO MQTT output (next in 8 seconds)
+M2 16754608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:38
+M1 16755176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16755179 ms: NO file output (next in 5 seconds)
+16755179 ms: NO MQTT output (next in 7 seconds)
+M2 16755607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:39
+M1 16756175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16756178 ms: NO file output (next in 4 seconds)
+16756178 ms: NO MQTT output (next in 6 seconds)
+M2 16756611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:40
+M1 16757174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16757177 ms: NO file output (next in 3 seconds)
+16757177 ms: NO MQTT output (next in 5 seconds)
+M2 16757610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:41
+M1 16758173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16758176 ms: NO file output (next in 2 seconds)
+16758176 ms: NO MQTT output (next in 4 seconds)
+M2 16758609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:42
+M1 16759177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16759180 ms: NO file output (next in 1 seconds)
+16759180 ms: NO MQTT output (next in 3 seconds)
+M2 16759608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:43
+M1 16760176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:24:43, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16760331 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:24:43; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 156°; 99%; 37%; 63%; 92%; 90.8%; 423°; 72°; 26°; 77%; 1°; 30°; 31°; 37°; 50°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16760332ms: File output data buffered for next file write in19 seconds
+16760332 ms: NO MQTT output (next in 2 seconds)
+M2 16760611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:44
+M1 16761173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16761176 ms: NO file output (next in 9 seconds)
+16761176 ms: NO MQTT output (next in 1 seconds)
+M2 16761609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:45
+M1 16762177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16762179 ms: NO file output (next in 8 seconds)
+date=2022-11-11, time= 05:24:45
+outStrStream.str()={"date": "2022-11-11", "time": " 05:24:45","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "154°","KessStellGr": "97%","Saugzug  ": "38%","Zuluftgebl": "64%","Einschub": "94%","Fuellst.:": "90.8%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "82%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "50°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16762190 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1120, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:24:45","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "154°","KessStellGr": "97%","Saugzug  ": "38%","Zuluftgebl": "64%","Einschub": "94%","Fuellst.:": "90.8%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "26°","Puffer Pu.": "82%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "50°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+M2 16762609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:46
+16762922 ms: Publish acknowledged for packetId= 1120
+M1 16763176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16763179 ms: NO file output (next in 7 seconds)
+16763179 ms: NO MQTT output (next in 14 seconds)
+M2 16763612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:47
+M1 16764175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16764177 ms: NO file output (next in 6 seconds)
+16764178 ms: NO MQTT output (next in 13 seconds)
+M2 16764610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:48
+M1 16765174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16765177 ms: NO file output (next in 5 seconds)
+16765177 ms: NO MQTT output (next in 12 seconds)
+M2 16765610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:49
+M1 16766178 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16766181 ms: NO file output (next in 4 seconds)
+16766181 ms: NO MQTT output (next in 11 seconds)
+M2 16766608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:50
+M1 16767176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16767179 ms: NO file output (next in 3 seconds)
+16767179 ms: NO MQTT output (next in 10 seconds)
+M2 16767611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:51
+M1 16768174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16768177 ms: NO file output (next in 2 seconds)
+16768177 ms: NO MQTT output (next in 9 seconds)
+M2 16768610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:52
+M1 16769174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16769177 ms: NO file output (next in 1 seconds)
+16769177 ms: NO MQTT output (next in 8 seconds)
+M2 16769610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:53
+M1 16770173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:24:53, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16770328 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:24:53; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 155°; 98%; 39%; 65%; 95%; 90.7%; 423°; 72°; 28°; 82%; 1°; 30°; 31°; 37°; 51°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16770329ms: File output data buffered for next file write in29 seconds
+16770330 ms: NO MQTT output (next in 7 seconds)
+M2 16770609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:54
+M1 16771176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16771179 ms: NO file output (next in 9 seconds)
+16771179 ms: NO MQTT output (next in 6 seconds)
+M2 16771612 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:55
+M1 16772174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16772177 ms: NO file output (next in 8 seconds)
+16772177 ms: NO MQTT output (next in 5 seconds)
+M2 16772611 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:56
+M1 16773177 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16773180 ms: NO file output (next in 7 seconds)
+16773180 ms: NO MQTT output (next in 4 seconds)
+M2 16773608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:57
+M1 16774176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16774179 ms: NO file output (next in 6 seconds)
+16774179 ms: NO MQTT output (next in 3 seconds)
+M2 16774607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:58
+M1 16775174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16775177 ms: NO file output (next in 5 seconds)
+16775177 ms: NO MQTT output (next in 2 seconds)
+M2 16775610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:24:59
+M1 16776173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16776176 ms: NO file output (next in 4 seconds)
+16776176 ms: NO MQTT output (next in 1 seconds)
+M2 16776609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:00
+M1 16777172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16777175 ms: NO file output (next in 3 seconds)
+date=2022-11-11, time= 05:25:00
+outStrStream.str()={"date": "2022-11-11", "time": " 05:25:00","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "157°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.7%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "77%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "52°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16777185 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1121, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:25:00","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "157°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.7%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "77%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "52°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16777211 ms: Publish acknowledged for packetId= 1121
+M2 16777610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:01
+M1 16778173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16778176 ms: NO file output (next in 2 seconds)
+16778176 ms: NO MQTT output (next in 14 seconds)
+M2 16778609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:02
+M1 16779172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16779175 ms: NO file output (next in 1 seconds)
+16779175 ms: NO MQTT output (next in 13 seconds)
+M2 16779608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:03
+M1 16780176 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:25:03, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16780331 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:25:03; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 155°; 98%; 39%; 65%; 95%; 90.7%; 423°; 72°; 28°; 82%; 1°; 30°; 31°; 37°; 53°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16780348ms: reached end of writeToFileIntervalSec=30 -> Buffered file output data is written to file
+16780349 ms: NO MQTT output (next in 12 seconds)
+M2 16780608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:04
+M1 16781175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16781178 ms: NO file output (next in 9 seconds)
+16781178 ms: NO MQTT output (next in 11 seconds)
+M2 16781606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:05
+M1 16782175 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16782178 ms: NO file output (next in 8 seconds)
+16782178 ms: NO MQTT output (next in 10 seconds)
+M2 16782606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:06
+M1 16783174 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16783177 ms: NO file output (next in 7 seconds)
+16783177 ms: NO MQTT output (next in 9 seconds)
+M2 16783610 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:07
+M1 16784173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16784176 ms: NO file output (next in 6 seconds)
+16784176 ms: NO MQTT output (next in 8 seconds)
+M2 16784609 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:08
+M1 16785172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16785175 ms: NO file output (next in 5 seconds)
+16785175 ms: NO MQTT output (next in 7 seconds)
+M2 16785608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:09
+M1 16786172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16786175 ms: NO file output (next in 4 seconds)
+16786175 ms: NO MQTT output (next in 6 seconds)
+M2 16786608 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:10
+M1 16787171 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16787174 ms: NO file output (next in 3 seconds)
+16787174 ms: NO MQTT output (next in 5 seconds)
+M2 16787607 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:11
+M1 16788170 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16788173 ms: NO file output (next in 2 seconds)
+16788173 ms: NO MQTT output (next in 4 seconds)
+M2 16788606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:12
+M1 16789169 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16789172 ms: NO file output (next in 1 seconds)
+16789172 ms: NO MQTT output (next in 3 seconds)
+M2 16789605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:13
+M1 16790173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:25:13, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+File /sd/P2_Logging/2022-11-11.log was opened
+16790345 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:25:13; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 157°; 100%; 39%; 65%; 95%; 90.7%; 423°; 72°; 28°; 77%; 1°; 30°; 31°; 37°; 54°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16790346ms: File output data buffered for next file write in9 seconds
+16790346 ms: NO MQTT output (next in 2 seconds)
+M2 16790605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:14
+M1 16791173 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16791176 ms: NO file output (next in 9 seconds)
+16791176 ms: NO MQTT output (next in 1 seconds)
+M2 16791604 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:15
+M1 16792172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16792175 ms: NO file output (next in 8 seconds)
+date=2022-11-11, time= 05:25:15
+outStrStream.str()={"date": "2022-11-11", "time": " 05:25:15","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "157°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.7%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "77%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "54°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16792185 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1122, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:25:15","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "157°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.7%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "77%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "54°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16792207 ms: Publish acknowledged for packetId= 1122
+M2 16792606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:16
+M1 16793168 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16793171 ms: NO file output (next in 7 seconds)
+16793171 ms: NO MQTT output (next in 14 seconds)
+M2 16793604 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:17
+M1 16794172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16794175 ms: NO file output (next in 6 seconds)
+16794175 ms: NO MQTT output (next in 13 seconds)
+M2 16794603 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:18
+M1 16795172 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16795175 ms: NO file output (next in 5 seconds)
+16795175 ms: NO MQTT output (next in 12 seconds)
+M2 16795603 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:19
+M1 16796171 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16796174 ms: NO file output (next in 4 seconds)
+16796174 ms: NO MQTT output (next in 11 seconds)
+M2 16796602 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:20
+M1 16797170 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16797173 ms: NO file output (next in 3 seconds)
+16797173 ms: NO MQTT output (next in 10 seconds)
+M2 16797606 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:21
+M1 16798169 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16798172 ms: NO file output (next in 2 seconds)
+16798172 ms: NO MQTT output (next in 9 seconds)
+M2 16798605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:22
+M1 16799169 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16799172 ms: NO file output (next in 1 seconds)
+16799172 ms: NO MQTT output (next in 8 seconds)
+M2 16799605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:23
+M1 16800168 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:25:23, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16800323 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:25:23; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 157°; 100%; 39%; 65%; 95%; 90.7%; 423°; 72°; 28°; 77%; 1°; 30°; 31°; 37°; 55°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16800443ms: File output data buffered for next file write in20 seconds
+16800443 ms: NO MQTT output (next in 7 seconds)
+M2 16800602 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:24
+M1 16801169 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16801172 ms: NO file output (next in 9 seconds)
+16801172 ms: NO MQTT output (next in 6 seconds)
+M2 16801605 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:25
+M1 16802168 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16802171 ms: NO file output (next in 8 seconds)
+16802171 ms: NO MQTT output (next in 5 seconds)
+M2 16802603 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:26
+M1 16803168 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16803171 ms: NO file output (next in 7 seconds)
+16803171 ms: NO MQTT output (next in 4 seconds)
+M2 16803604 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:27
+M1 16804167 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16804170 ms: NO file output (next in 6 seconds)
+16804170 ms: NO MQTT output (next in 3 seconds)
+M2 16804603 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:28
+M1 16805166 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16805169 ms: NO file output (next in 5 seconds)
+16805169 ms: NO MQTT output (next in 2 seconds)
+M2 16805602 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:29
+M1 16806165 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16806168 ms: NO file output (next in 4 seconds)
+16806168 ms: NO MQTT output (next in 1 seconds)
+M2 16806601 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:30
+M1 16807165 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16807168 ms: NO file output (next in 3 seconds)
+date=2022-11-11, time= 05:25:30
+outStrStream.str()={"date": "2022-11-11", "time": " 05:25:30","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "157°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.6%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "77%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "56°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16807178 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1123, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:25:30","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "157°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.6%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "77%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "56°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16807193 ms: Publish acknowledged for packetId= 1123
+M2 16807603 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:31
+M1 16808165 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16808168 ms: NO file output (next in 2 seconds)
+16808168 ms: NO MQTT output (next in 14 seconds)
+M2 16808601 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:32
+M1 16809164 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16809167 ms: NO file output (next in 1 seconds)
+16809167 ms: NO MQTT output (next in 13 seconds)
+M2 16809600 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:33
+M1 16810168 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:25:33, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16810323 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:25:33; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 157°; 100%; 38%; 64%; 93%; 90.6%; 423°; 72°; 28°; 77%; 1°; 30°; 31°; 37°; 56°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16810324ms: File output data buffered for next file write in29 seconds
+16810325 ms: NO MQTT output (next in 12 seconds)
+M2 16810603 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:34
+M1 16811165 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16811168 ms: NO file output (next in 9 seconds)
+16811168 ms: NO MQTT output (next in 11 seconds)
+M2 16811601 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:35
+M1 16812163 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16812166 ms: NO file output (next in 8 seconds)
+16812167 ms: NO MQTT output (next in 10 seconds)
+M2 16812599 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:36
+M1 16813166 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16813170 ms: NO file output (next in 7 seconds)
+16813170 ms: NO MQTT output (next in 9 seconds)
+M2 16813598 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:37
+M1 16814165 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16814168 ms: NO file output (next in 6 seconds)
+16814169 ms: NO MQTT output (next in 8 seconds)
+M2 16814601 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:38
+M1 16815163 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16815166 ms: NO file output (next in 5 seconds)
+16815167 ms: NO MQTT output (next in 7 seconds)
+M2 16815599 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:39
+M1 16816162 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16816165 ms: NO file output (next in 4 seconds)
+16816165 ms: NO MQTT output (next in 6 seconds)
+M2 16816598 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:40
+M1 16817165 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16817168 ms: NO file output (next in 3 seconds)
+16817168 ms: NO MQTT output (next in 5 seconds)
+M2 16817596 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:41
+M1 16818163 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16818166 ms: NO file output (next in 2 seconds)
+16818167 ms: NO MQTT output (next in 4 seconds)
+M2 16818599 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:42
+M1 16819162 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16819164 ms: NO file output (next in 1 seconds)
+16819165 ms: NO MQTT output (next in 3 seconds)
+M2 16819597 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:43
+M1 16820166 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:25:43, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16820321 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:25:43; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 155°; 98%; 38%; 64%; 93%; 90.6%; 423°; 72°; 28°; 82%; 1°; 30°; 31°; 37°; 56°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16820338ms: reached end of writeToFileIntervalSec=30 -> Buffered file output data is written to file
+16820338 ms: NO MQTT output (next in 2 seconds)
+M2 16820597 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:44
+M1 16821164 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16821167 ms: NO file output (next in 9 seconds)
+16821167 ms: NO MQTT output (next in 1 seconds)
+M2 16821595 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:45
+M1 16822162 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16822165 ms: NO file output (next in 8 seconds)
+date=2022-11-11, time= 05:25:45
+outStrStream.str()={"date": "2022-11-11", "time": " 05:25:45","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "157°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.6%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "77%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "56°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16822176 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1124, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:25:45","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "157°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.6%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "77%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "56°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16822193 ms: Publish acknowledged for packetId= 1124
+M2 16822596 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:46
+M1 16823163 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16823166 ms: NO file output (next in 7 seconds)
+16823166 ms: NO MQTT output (next in 14 seconds)
+M2 16823594 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:47
+M1 16824162 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16824165 ms: NO file output (next in 6 seconds)
+16824165 ms: NO MQTT output (next in 13 seconds)
+M2 16824598 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:48
+M1 16825160 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16825163 ms: NO file output (next in 5 seconds)
+16825164 ms: NO MQTT output (next in 12 seconds)
+M2 16825596 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:49
+M1 16826159 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16826161 ms: NO file output (next in 4 seconds)
+16826162 ms: NO MQTT output (next in 11 seconds)
+M2 16826594 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:50
+M1 16827162 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16827164 ms: NO file output (next in 3 seconds)
+16827165 ms: NO MQTT output (next in 10 seconds)
+M2 16827597 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:51
+M1 16828160 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16828163 ms: NO file output (next in 2 seconds)
+16828163 ms: NO MQTT output (next in 9 seconds)
+M2 16828595 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:52
+M1 16829157 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16829160 ms: NO file output (next in 1 seconds)
+16829160 ms: NO MQTT output (next in 8 seconds)
+M2 16829593 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:53
+M1 16830160 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:25:53, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+File /sd/P2_Logging/2022-11-11.log was opened
+16830324 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:25:53; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 157°; 100%; 39%; 65%; 95%; 90.6%; 423°; 72°; 28°; 78%; 1°; 30°; 31°; 37°; 56°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16830442ms: File output data buffered for next file write in10 seconds
+16830443 ms: NO MQTT output (next in 7 seconds)
+M2 16830597 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:54
+M1 16831159 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16831162 ms: NO file output (next in 9 seconds)
+16831163 ms: NO MQTT output (next in 6 seconds)
+M2 16831595 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:55
+M1 16832158 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16832161 ms: NO file output (next in 8 seconds)
+16832161 ms: NO MQTT output (next in 5 seconds)
+M2 16832594 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:56
+M1 16833161 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16833164 ms: NO file output (next in 7 seconds)
+16833164 ms: NO MQTT output (next in 4 seconds)
+M2 16833592 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:57
+M1 16834160 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16834163 ms: NO file output (next in 6 seconds)
+16834163 ms: NO MQTT output (next in 3 seconds)
+M2 16834597 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:58
+M1 16835160 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16835163 ms: NO file output (next in 5 seconds)
+16835163 ms: NO MQTT output (next in 2 seconds)
+M2 16835596 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:25:59
+M1 16836159 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16836162 ms: NO file output (next in 4 seconds)
+16836162 ms: NO MQTT output (next in 1 seconds)
+M2 16836595 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:00
+M1 16837159 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16837162 ms: NO file output (next in 3 seconds)
+date=2022-11-11, time= 05:26:00
+outStrStream.str()={"date": "2022-11-11", "time": " 05:26:00","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "148°","Abgas. SW ": "155°","KessStellGr": "97%","Saugzug  ": "37%","Zuluftgebl": "63%","Einschub": "92%","Fuellst.:": "90.6%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "83%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "55°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16837172 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1125, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:26:00","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "148°","Abgas. SW ": "155°","KessStellGr": "97%","Saugzug  ": "37%","Zuluftgebl": "63%","Einschub": "92%","Fuellst.:": "90.6%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "83%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "55°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16837193 ms: Publish acknowledged for packetId= 1125
+M2 16837592 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:01
+M1 16838159 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16838162 ms: NO file output (next in 2 seconds)
+16838162 ms: NO MQTT output (next in 14 seconds)
+M2 16838595 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:02
+M1 16839158 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16839161 ms: NO file output (next in 1 seconds)
+16839161 ms: NO MQTT output (next in 13 seconds)
+M2 16839594 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:03
+M1 16840157 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:26:03, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16840305 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:26:03; übergangsbetr.;    Heizen      ; 1; 0; 72°; 148°; 156°; 98%; 38%; 64%; 93%; 90.6%; 423°; 72°; 28°; 83%; 1°; 30°; 31°; 37°; 54°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16840306ms: File output data buffered for next file write in19 seconds
+16840306 ms: NO MQTT output (next in 12 seconds)
+M2 16840595 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:04
+M1 16841158 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16841161 ms: NO file output (next in 9 seconds)
+16841161 ms: NO MQTT output (next in 11 seconds)
+M2 16841594 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:05
+M1 16842157 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16842160 ms: NO file output (next in 8 seconds)
+16842160 ms: NO MQTT output (next in 10 seconds)
+M2 16842593 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:06
+M1 16843156 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16843159 ms: NO file output (next in 7 seconds)
+16843159 ms: NO MQTT output (next in 9 seconds)
+M2 16843592 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:07
+M1 16844160 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16844162 ms: NO file output (next in 6 seconds)
+16844163 ms: NO MQTT output (next in 8 seconds)
+M2 16844590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:08
+M1 16845158 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16845161 ms: NO file output (next in 5 seconds)
+16845161 ms: NO MQTT output (next in 7 seconds)
+M2 16845594 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:09
+M1 16846157 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16846159 ms: NO file output (next in 4 seconds)
+16846160 ms: NO MQTT output (next in 6 seconds)
+M2 16846592 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:10
+M1 16847155 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16847157 ms: NO file output (next in 3 seconds)
+16847158 ms: NO MQTT output (next in 5 seconds)
+M2 16847590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:11
+M1 16848158 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16848160 ms: NO file output (next in 2 seconds)
+16848161 ms: NO MQTT output (next in 4 seconds)
+M2 16848593 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:12
+M1 16849156 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16849159 ms: NO file output (next in 1 seconds)
+16849159 ms: NO MQTT output (next in 3 seconds)
+M2 16849592 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:13
+M1 16850155 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:26:13, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16850303 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:26:13; übergangsbetr.;    Heizen      ; 1; 0; 72°; 148°; 156°; 98%; 38%; 64%; 93%; 90.5%; 423°; 72°; 28°; 83%; 1°; 30°; 31°; 37°; 54°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16850307ms: File output data buffered for next file write in29 seconds
+16850307 ms: NO MQTT output (next in 2 seconds)
+M2 16850591 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:14
+M1 16851158 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16851161 ms: NO file output (next in 9 seconds)
+16851161 ms: NO MQTT output (next in 1 seconds)
+M2 16851589 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:15
+M1 16852157 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16852160 ms: NO file output (next in 8 seconds)
+date=2022-11-11, time= 05:26:15
+outStrStream.str()={"date": "2022-11-11", "time": " 05:26:15","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "148°","Abgas. SW ": "156°","KessStellGr": "99%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.5%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "83%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "54°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16852170 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1126, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:26:15","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "148°","Abgas. SW ": "156°","KessStellGr": "99%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.5%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "83%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "54°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16852190 ms: Publish acknowledged for packetId= 1126
+M2 16852590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:16
+M1 16853157 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16853160 ms: NO file output (next in 7 seconds)
+16853160 ms: NO MQTT output (next in 14 seconds)
+M2 16853593 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:17
+M1 16854156 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16854159 ms: NO file output (next in 6 seconds)
+16854159 ms: NO MQTT output (next in 13 seconds)
+M2 16854592 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:18
+M1 16855155 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16855157 ms: NO file output (next in 5 seconds)
+16855158 ms: NO MQTT output (next in 12 seconds)
+M2 16855591 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:19
+M1 16856153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16856156 ms: NO file output (next in 4 seconds)
+16856156 ms: NO MQTT output (next in 11 seconds)
+M2 16856588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:20
+M1 16857156 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16857159 ms: NO file output (next in 3 seconds)
+16857159 ms: NO MQTT output (next in 10 seconds)
+M2 16857592 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:21
+M1 16858155 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16858158 ms: NO file output (next in 2 seconds)
+16858158 ms: NO MQTT output (next in 9 seconds)
+M2 16858591 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:22
+M1 16859154 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16859157 ms: NO file output (next in 1 seconds)
+16859157 ms: NO MQTT output (next in 8 seconds)
+M2 16859590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:23
+M1 16860153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:26:23, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16860302 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:26:23; übergangsbetr.;    Heizen      ; 1; 0; 72°; 148°; 156°; 98%; 38%; 64%; 93%; 90.5%; 423°; 72°; 28°; 84%; 1°; 30°; 31°; 37°; 52°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16860316ms: reached end of writeToFileIntervalSec=30 -> Buffered file output data is written to file
+16860317 ms: NO MQTT output (next in 7 seconds)
+M2 16860591 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:24
+M1 16861153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16861156 ms: NO file output (next in 9 seconds)
+16861156 ms: NO MQTT output (next in 6 seconds)
+M2 16861589 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:25
+M1 16862157 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16862160 ms: NO file output (next in 8 seconds)
+16862160 ms: NO MQTT output (next in 5 seconds)
+M2 16862588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:26
+16863179 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16863186 ms: NO file output (next in 7 seconds)
+16863186 ms: NO MQTT output (next in 4 seconds)
+M2 16863588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:27
+M1 16864155 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16864158 ms: NO file output (next in 6 seconds)
+16864158 ms: NO MQTT output (next in 3 seconds)
+M2 16864591 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:28
+M1 16865154 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16865157 ms: NO file output (next in 5 seconds)
+16865157 ms: NO MQTT output (next in 2 seconds)
+M2 16865590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:29
+M1 16866153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16866156 ms: NO file output (next in 4 seconds)
+16866156 ms: NO MQTT output (next in 1 seconds)
+M2 16866589 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:30
+M1 16867157 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16867160 ms: NO file output (next in 3 seconds)
+date=2022-11-11, time= 05:26:30
+outStrStream.str()={"date": "2022-11-11", "time": " 05:26:30","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "148°","Abgas. SW ": "156°","KessStellGr": "98%","Saugzug  ": "38%","Zuluftgebl": "64%","Einschub": "93%","Fuellst.:": "90.5%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "84%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "51°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16867170 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1127, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:26:30","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "148°","Abgas. SW ": "156°","KessStellGr": "98%","Saugzug  ": "38%","Zuluftgebl": "64%","Einschub": "93%","Fuellst.:": "90.5%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "84%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "51°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+M2 16867590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:31
+M1 16868157 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16868160 ms: NO file output (next in 2 seconds)
+16868160 ms: NO MQTT output (next in 14 seconds)
+M2 16868588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:32
+M1 16869156 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16869159 ms: NO file output (next in 1 seconds)
+16869159 ms: NO MQTT output (next in 13 seconds)
+M2 16869587 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:33
+16869725 ms: Publish acknowledged for packetId= 1127
+M1 16870155 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:26:33, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+File /sd/P2_Logging/2022-11-11.log was opened
+16870322 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:26:33; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 156°; 99%; 38%; 64%; 94%; 90.5%; 423°; 72°; 28°; 84%; 1°; 30°; 31°; 37°; 50°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16870322ms: File output data buffered for next file write in10 seconds
+16870323 ms: NO MQTT output (next in 12 seconds)
+M2 16870592 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:34
+M1 16871155 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16871158 ms: NO file output (next in 9 seconds)
+16871158 ms: NO MQTT output (next in 11 seconds)
+M2 16871591 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:35
+M1 16872154 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16872157 ms: NO file output (next in 8 seconds)
+16872157 ms: NO MQTT output (next in 10 seconds)
+M2 16872590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:36
+M1 16873153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16873156 ms: NO file output (next in 7 seconds)
+16873156 ms: NO MQTT output (next in 9 seconds)
+M2 16873589 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:37
+M1 16874152 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16874155 ms: NO file output (next in 6 seconds)
+16874155 ms: NO MQTT output (next in 8 seconds)
+M2 16874588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:38
+M1 16875157 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16875160 ms: NO file output (next in 5 seconds)
+16875161 ms: NO MQTT output (next in 7 seconds)
+M2 16875588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:39
+M1 16876156 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16876159 ms: NO file output (next in 4 seconds)
+16876159 ms: NO MQTT output (next in 6 seconds)
+M2 16876587 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:40
+M1 16877155 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16877158 ms: NO file output (next in 3 seconds)
+16877158 ms: NO MQTT output (next in 5 seconds)
+M2 16877586 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:41
+M1 16878154 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16878157 ms: NO file output (next in 2 seconds)
+16878157 ms: NO MQTT output (next in 4 seconds)
+M2 16878590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:42
+M1 16879154 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16879157 ms: NO file output (next in 1 seconds)
+16879157 ms: NO MQTT output (next in 3 seconds)
+M2 16879585 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:43
+M1 16880153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:26:43, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16880303 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:26:43; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 158°; 100%; 38%; 64%; 93%; 90.4%; 423°; 72°; 28°; 79%; 1°; 30°; 31°; 37°; 49°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16880423ms: File output data buffered for next file write in20 seconds
+16880423 ms: NO MQTT output (next in 2 seconds)
+M2 16880587 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:44
+M1 16881154 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16881157 ms: NO file output (next in 9 seconds)
+16881157 ms: NO MQTT output (next in 1 seconds)
+M2 16881590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:45
+M1 16882153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16882155 ms: NO file output (next in 8 seconds)
+date=2022-11-11, time= 05:26:45
+outStrStream.str()={"date": "2022-11-11", "time": " 05:26:45","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "158°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.4%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "79%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "48°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16882166 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1128, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:26:45","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "158°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.4%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "79%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "48°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16882185 ms: Publish acknowledged for packetId= 1128
+M2 16882590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:46
+M1 16883152 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16883155 ms: NO file output (next in 7 seconds)
+16883155 ms: NO MQTT output (next in 14 seconds)
+M2 16883588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:47
+M1 16884151 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16884153 ms: NO file output (next in 6 seconds)
+16884154 ms: NO MQTT output (next in 13 seconds)
+M2 16884586 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:48
+M1 16885153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16885156 ms: NO file output (next in 5 seconds)
+16885157 ms: NO MQTT output (next in 12 seconds)
+M2 16885590 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:49
+M1 16886151 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16886154 ms: NO file output (next in 4 seconds)
+16886155 ms: NO MQTT output (next in 11 seconds)
+M2 16886587 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:50
+M1 16887149 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16887152 ms: NO file output (next in 3 seconds)
+16887153 ms: NO MQTT output (next in 10 seconds)
+M2 16887585 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:51
+M1 16888153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16888156 ms: NO file output (next in 2 seconds)
+16888156 ms: NO MQTT output (next in 9 seconds)
+M2 16888584 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:52
+M1 16889151 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16889154 ms: NO file output (next in 1 seconds)
+16889155 ms: NO MQTT output (next in 8 seconds)
+M2 16889588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:53
+M1 16890150 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:26:53, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16890301 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:26:53; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 158°; 100%; 39%; 65%; 95%; 90.4%; 423°; 72°; 28°; 79%; 1°; 30°; 31°; 37°; 47°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16890302ms: File output data buffered for next file write in29 seconds
+16890302 ms: NO MQTT output (next in 7 seconds)
+M2 16890587 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:54
+M1 16891154 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16891157 ms: NO file output (next in 9 seconds)
+16891157 ms: NO MQTT output (next in 6 seconds)
+M2 16891585 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:55
+M1 16892154 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16892157 ms: NO file output (next in 8 seconds)
+16892157 ms: NO MQTT output (next in 5 seconds)
+M2 16892585 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:56
+M1 16893153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16893155 ms: NO file output (next in 7 seconds)
+16893156 ms: NO MQTT output (next in 4 seconds)
+M2 16893587 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:57
+M1 16894150 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16894153 ms: NO file output (next in 6 seconds)
+16894153 ms: NO MQTT output (next in 3 seconds)
+M2 16894586 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:58
+M1 16895149 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16895152 ms: NO file output (next in 5 seconds)
+16895152 ms: NO MQTT output (next in 2 seconds)
+M2 16895585 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:26:59
+M1 16896154 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16896157 ms: NO file output (next in 4 seconds)
+16896157 ms: NO MQTT output (next in 1 seconds)
+M2 16896585 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:00
+M1 16897148 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16897151 ms: NO file output (next in 3 seconds)
+date=2022-11-11, time= 05:27:00
+outStrStream.str()={"date": "2022-11-11", "time": " 05:27:00","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "158°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.4%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "79%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "46°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16897161 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1129, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:27:00","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "147°","Abgas. SW ": "158°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.4%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "79%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "46°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16897193 ms: Publish acknowledged for packetId= 1129
+M2 16897586 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:01
+M1 16898148 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16898151 ms: NO file output (next in 2 seconds)
+16898151 ms: NO MQTT output (next in 14 seconds)
+M2 16898584 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:02
+M1 16899152 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16899155 ms: NO file output (next in 1 seconds)
+16899155 ms: NO MQTT output (next in 13 seconds)
+M2 16899582 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:03
+M1 16900150 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:27:03, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16900306 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:27:03; übergangsbetr.;    Heizen      ; 1; 0; 72°; 147°; 158°; 100%; 39%; 65%; 95%; 90.4%; 423°; 72°; 28°; 79%; 1°; 30°; 31°; 37°; 46°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16900323ms: reached end of writeToFileIntervalSec=30 -> Buffered file output data is written to file
+16900324 ms: NO MQTT output (next in 12 seconds)
+M2 16900583 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:04
+M1 16901150 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16901153 ms: NO file output (next in 9 seconds)
+16901153 ms: NO MQTT output (next in 11 seconds)
+M2 16901586 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:05
+M1 16902149 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16902151 ms: NO file output (next in 8 seconds)
+16902152 ms: NO MQTT output (next in 10 seconds)
+M2 16902584 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:06
+M1 16903147 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16903149 ms: NO file output (next in 7 seconds)
+16903150 ms: NO MQTT output (next in 9 seconds)
+M2 16903582 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:07
+M1 16904150 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16904152 ms: NO file output (next in 6 seconds)
+16904153 ms: NO MQTT output (next in 8 seconds)
+M2 16904585 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:08
+M1 16905147 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16905151 ms: NO file output (next in 5 seconds)
+16905151 ms: NO MQTT output (next in 7 seconds)
+M2 16905584 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:09
+M1 16906146 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16906149 ms: NO file output (next in 4 seconds)
+16906149 ms: NO MQTT output (next in 6 seconds)
+M2 16906583 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:10
+M1 16907149 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16907152 ms: NO file output (next in 3 seconds)
+16907152 ms: NO MQTT output (next in 5 seconds)
+M2 16907585 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:11
+M1 16908147 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16908150 ms: NO file output (next in 2 seconds)
+16908150 ms: NO MQTT output (next in 4 seconds)
+M2 16908583 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:12
+M1 16909152 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16909155 ms: NO file output (next in 1 seconds)
+16909155 ms: NO MQTT output (next in 3 seconds)
+M2 16909583 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:13
+M1 16910151 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:27:13, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+File /sd/P2_Logging/2022-11-11.log was opened
+16910323 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:27:13; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 158°; 100%; 39%; 65%; 95%; 90.4%; 423°; 72°; 28°; 79%; 1°; 30°; 31°; 37°; 44°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16910324ms: File output data buffered for next file write in10 seconds
+16910324 ms: NO MQTT output (next in 2 seconds)
+M2 16910583 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:14
+M1 16911150 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16911153 ms: NO file output (next in 9 seconds)
+16911153 ms: NO MQTT output (next in 1 seconds)
+M2 16911586 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:15
+M1 16912149 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16912152 ms: NO file output (next in 8 seconds)
+date=2022-11-11, time= 05:27:15
+outStrStream.str()={"date": "2022-11-11", "time": " 05:27:15","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "158°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.4%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "79%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "44°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16912162 ms: publishToMQTT: broker = broker.hivemq.com, topic = Heizung_Froeling_P2, Quality of service = 1, retain = 1, packetId = 1130, 
+	payload=
+	{"date": "2022-11-11", "time": " 05:27:15","00": "übergangsbetr.","01": "   Heizen      ","Zustand": "1","ROST": "0","Kesseltemp": "72°","Abgastemp.": "146°","Abgas. SW ": "158°","KessStellGr": "100%","Saugzug  ": "39%","Zuluftgebl": "65%","Einschub": "95%","Fuellst.:": "90.4%","Feuerraumt": "423°","Puffert.ob": "72°","Puffert.un": "28°","Puffer Pu.": "79%","Außentemp": "1°","Vorlauft.1sw": "30°","Vorlauft.1": "31°","Vorlauft.2sw": "37°","Vorlauft.2": "44°","KTY6_H2": "127°","KTY7_H2": "127°","Brenn.ST": "10476","Laufzeit:": "15901h","Boardtemp.": "35°","Die Kesseltemp. soll sein": "75°"}
+
+16912190 ms: Publish acknowledged for packetId= 1130
+M2 16912583 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:16
+M1 16913151 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16913154 ms: NO file output (next in 7 seconds)
+16913154 ms: NO MQTT output (next in 14 seconds)
+M2 16913587 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:17
+M1 16914150 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16914152 ms: NO file output (next in 6 seconds)
+16914153 ms: NO MQTT output (next in 13 seconds)
+M2 16914585 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:18
+M1 16915148 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16915151 ms: NO file output (next in 5 seconds)
+16915151 ms: NO MQTT output (next in 12 seconds)
+M2 16915588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:19
+M1 16916151 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16916154 ms: NO file output (next in 4 seconds)
+16916154 ms: NO MQTT output (next in 11 seconds)
+M2 16916586 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:20
+M1 16917149 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16917152 ms: NO file output (next in 3 seconds)
+16917152 ms: NO MQTT output (next in 10 seconds)
+M2 16917585 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:21
+M1 16918153 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16918156 ms: NO file output (next in 2 seconds)
+16918156 ms: NO MQTT output (next in 9 seconds)
+M2 16918584 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:22
+M1 16919152 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16919154 ms: NO file output (next in 1 seconds)
+16919155 ms: NO MQTT output (next in 8 seconds)
+M2 16919588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:23
+M1 16920150 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+OutputHandler::deriveFilename
+stringWithDate=2022-11-11; 05:27:23, regex_search->result=2022-11-11 ->filename=2022-11-11.log
+OutputHandler::handleFiles
+The values will continue to be saved in file /sd/P2_Logging/2022-11-11.log
+16920302 ms: OutputHandler::outputToFile -> ************* File output: *************
+2022-11-11; 05:27:23; übergangsbetr.;    Heizen      ; 1; 0; 72°; 146°; 158°; 100%; 39%; 65%; 95%; 90.3%; 423°; 72°; 28°; 79%; 1°; 30°; 31°; 37°; 43°; 127°; 127°; 10476; 15901h; 35°; 75°; 
+
+16920304ms: File output data buffered for next file write in19 seconds
+16920304 ms: NO MQTT output (next in 7 seconds)
+M2 16920588 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:24
+M1 16921150 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16921153 ms: NO file output (next in 9 seconds)
+16921153 ms: NO MQTT output (next in 6 seconds)
+M2 16921586 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:25
+M1 16922155 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16922158 ms: NO file output (next in 8 seconds)
+16922158 ms: NO MQTT output (next in 5 seconds)
+M2 16922586 ms: OutputHandler::handleValuesTimeSeries -> TIME 2022-11-11; 05:27:26
+M1 16923154 ms: OutputHandler::handleValuesTimeSeries -> VALUES
+16923156 ms: NO file output (next in 7 seconds)
+16923157 ms: NO MQTT output (next in 4 seconds)

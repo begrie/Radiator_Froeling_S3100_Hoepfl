@@ -61,6 +61,7 @@
     "condition_variable": "cpp",
     "csignal": "cpp",
     "mutex": "cpp",
-    "thread": "cpp"
+    "thread": "cpp",
+    "ledc.h": "c"
   }
 }
