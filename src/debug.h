@@ -23,6 +23,39 @@ static std::ostream &null()
 
 extern uint8_t debug_level;
 
+// ugly hack to eliminate logging from compilation without changing original "Hoepfl source"
+#if D_DEBUG_LEVEL >= 5
+#define LOG_TRACE(...) __VA_ARGS__
+#else
+#define LOG_TRACE(...)
+#endif
+
+#if D_DEBUG_LEVEL >= 4
+#define LOG_DEBUG(...) __VA_ARGS__
+#else
+#define LOG_DEBUG(...)
+#endif
+
+#if D_DEBUG_LEVEL >= 3
+#define LOG_INFO(...) __VA_ARGS__
+#else
+#define LOG_INFO(...)
+#endif
+
+#if D_DEBUG_LEVEL >= 2
+#define LOG_WARN(...) __VA_ARGS__
+#else
+#define LOG_WARN(...)
+#endif
+
+#if D_DEBUG_LEVEL >= 1
+#define LOG_ERROR(...) __VA_ARGS__
+#else
+#define LOG_ERROR(...)
+#endif
+
+#define MYLOGMACRO(...)
+
 void dump_string(const char *prefix,
                  const uint8_t *data,
                  int len,
