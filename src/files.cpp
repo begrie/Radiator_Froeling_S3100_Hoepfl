@@ -3,6 +3,9 @@
 
 #include <list>
 
+/*********************
+ * STATIC DEFINITIONS
+ *********************/
 bool radiator::FilesystemHandler::redirectStdErrToSyslogFile = REDIRECT_STD_ERR_TO_SYSLOG_FILE;
 std::string radiator::FilesystemHandler::syslogPathName = SYSLOG_PATHNAME;
 std::stringstream radiator::FilesystemHandler::syslogStringStream;
@@ -16,13 +19,10 @@ std::ofstream radiator::FilesystemHandler::syslogFileStream;
  *********************************************************************/
 std::string radiator::FilesystemHandler::initFilesystem(std::string dataDirectory)
 {
-  std::string basepath;
-  std::string fsName;
+  std::string message;
 
   if ((void *)&FILESYSTEM_TO_USE == (void *)&SD)
   {
-    fsName = "SD";
-    basepath = "/sd"; // standard mountpoint(mountpath)
     FILESYSTEM_TO_USE.end();
     if (!FILESYSTEM_TO_USE.begin())
     {
@@ -30,12 +30,12 @@ std::string radiator::FilesystemHandler::initFilesystem(std::string dataDirector
       bool ok = false;
       for (int i = 0; i < 20; i++)
       {
-        LOG_info << millis() << " ms: retry SD.begin() #" << i << std::endl;
+        LOG_info << millis() << " ms: initFilesystem(): retry SD.begin() #" << i << std::endl;
         delay(200);
         FILESYSTEM_TO_USE.end();
         if (FILESYSTEM_TO_USE.begin())
         {
-          LOG_info << millis() << " ms: SUCCESS SD.begin() #" << i << std::endl;
+          LOG_info << millis() << " ms: initFilesystem(): SUCCESS SD.begin() #" << i << std::endl;
           ok = true;
           break;
         }
@@ -43,10 +43,9 @@ std::string radiator::FilesystemHandler::initFilesystem(std::string dataDirector
 
       if (!ok)
       {
-        std::stringstream message;
-        message << millis() << " ms: " << fsName << " MOUNT FAILED!! -> NO LOCAL DATA STORAGE AVAILABLE" << std::endl;
-        NetworkHandler::publishToMQTT(message.str(), MQTT_TOPIC_SYSLOG);
-        LOG_error << message.str();
+        message = std::to_string(millis()) + " ms: initFilesystem(): " + XSTRINGIFY(FILESYSTEM_TO_USE) + " MOUNT FAILED!! -> NO LOCAL DATA STORAGE AVAILABLE";
+        NetworkHandler::publishToMQTT(message, MQTT_SUBTOPIC_SYSLOG);
+        LOG_error << message << std::endl;
         return "";
       }
       else
@@ -55,35 +54,25 @@ std::string radiator::FilesystemHandler::initFilesystem(std::string dataDirector
   }
   else // no SD
   {
-    if ((void *)&FILESYSTEM_TO_USE == (void *)&LittleFS)
-    {
-      fsName = "LittleFS";
-      basepath = "/littlefs"; // standard mountpoint(mountpath)
-    }
-    else if ((void *)&FILESYSTEM_TO_USE == (void *)&SPIFFS)
-    {
-      fsName = "SPIFFS";
-      basepath = "/spiffs"; // standard mountpoint(mountpath)
-    }
     if (!FILESYSTEM_TO_USE.begin(false))
     {
-      LOG_info << fsName << " mount failed -> Try to format file system for " << fsName << " -> please wait ..." << std::endl;
+      LOG_info << millis() << " ms: initFilesystem(): " << XSTRINGIFY(FILESYSTEM_TO_USE) << " mount failed -> Try to format file system for " << XSTRINGIFY(FILESYSTEM_TO_USE) << " -> please wait ..." << std::endl;
       if (!FILESYSTEM_TO_USE.begin(true)) // open with format filesystem
       {
-        std::stringstream message;
-        message << fsName << " formatting not possible -> NO LOCAL DATA STORAGE AVAILABLE" << std::endl;
-        NetworkHandler::publishToMQTT(message.str(), MQTT_TOPIC_SYSLOG);
-        LOG_error << message.str();
+        message = std::to_string(millis()) + " ms: initFilesystem(): " + XSTRINGIFY(FILESYSTEM_TO_USE) + " formatting not possible->NO LOCAL DATA STORAGE AVAILABLE ";
+        NetworkHandler::publishToMQTT(message, MQTT_SUBTOPIC_SYSLOG);
+        LOG_error << message << std::endl;
         return "";
       }
-      LOG_info << "Formatting of filesystem for " << fsName << " successfull" << std::endl;
+      LOG_info << millis() << " ms: initFilesystem(): Formatting of filesystem for " << XSTRINGIFY(FILESYSTEM_TO_USE) << " successfull" << std::endl;
     }
   }
 
   // FS_Filehelper::deleteDirectory("/");
   // FILESYSTEM_TO_USE.format();
 
-  LOG_info << millis() << " ms: Filesystem   " << fsName << "   was successfull mounted at basepath:  " << basepath
+  LOG_info << millis() << " ms: initFilesystem(): Filesystem   " << XSTRINGIFY(FILESYSTEM_TO_USE)
+           << "   was successfull mounted at basepath:  " << FILESYSTEM_BASE_PATH
            << "  -> Available space " << ((FILESYSTEM_TO_USE.totalBytes() - FILESYSTEM_TO_USE.usedBytes()) / 1024)
            << " kB from total " << (FILESYSTEM_TO_USE.totalBytes() / 1024) << " kB" << std::endl;
 
@@ -94,29 +83,29 @@ std::string radiator::FilesystemHandler::initFilesystem(std::string dataDirector
 
     if (FILESYSTEM_TO_USE.exists((dataDirectory).c_str())) // it seems that LittleFS creates a new dir on its own if it did not exist
     {
-      LOG_info << millis() << " ms: Directory " << dataDirectory << " already exists" << std::endl;
+      LOG_info << millis() << " ms: initFilesystem(): Directory " << dataDirectory << " already exists" << std::endl;
     }
     else // create new directory
     {
-      LOG_info << millis() << " ms: dataDirectory " << dataDirectory << " did not exist -> try to create it ..." << std::endl;
+      LOG_info << millis() << " ms: initFilesystem(): dataDirectory " << dataDirectory << " did not exist -> try to create it ..." << std::endl;
       if (FILESYSTEM_TO_USE.mkdir(dataDirectory.c_str()))
       {
         LOG_info << millis() << " ms: ... " << dataDirectory << " was successfully created" << std::endl;
       }
       else
       {
-        std::stringstream message;
-        message << millis() << " ms: ... " << dataDirectory << " CAN NOT BE CREATED" << std::endl;
-        NetworkHandler::publishToMQTT(message.str(), MQTT_TOPIC_SYSLOG);
-        LOG_error << message.str();
+        message = std::to_string(millis()) + " ms: ... " + dataDirectory + " CAN NOT BE CREATED";
+        NetworkHandler::publishToMQTT(message, MQTT_SUBTOPIC_SYSLOG);
+        LOG_error << message << std::endl;
 
         dataDirectory = "";
       }
     }
   }
 
-  basepath += dataDirectory;
-  LOG_info << millis() << " ms: Whole output path is  " << basepath << std::endl;
+  // basepath += dataDirectory;
+  dataDirectory = FILESYSTEM_BASE_PATH + dataDirectory;
+  LOG_info << millis() << " ms: initFilesystem(): Whole output path is  " << FILESYSTEM_BASE_PATH << std::endl;
 
   TaskHandle_t HandlexTaskWatchdogAndMaintenance;
 
@@ -140,7 +129,133 @@ std::string radiator::FilesystemHandler::initFilesystem(std::string dataDirector
   // createTestData();
   // FS_Filehelper::listDir("/", 255, false, FILESYSTEM_TO_USE);
 
-  return basepath;
+  return dataDirectory;
+
+  // std::string basepath;
+  // std::string fsName;
+
+  // if ((void *)&FILESYSTEM_TO_USE == (void *)&SD)
+  // {
+  //   fsName = "SD";
+  //   basepath = "/sd"; // standard mountpoint(mountpath)
+  //   FILESYSTEM_TO_USE.end();
+  //   if (!FILESYSTEM_TO_USE.begin())
+  //   {
+  //     // retry some more times due to possible problems with sd init
+  //     bool ok = false;
+  //     for (int i = 0; i < 20; i++)
+  //     {
+  //       LOG_info << millis() << " ms: initFilesystem(): retry SD.begin() #" << i << std::endl;
+  //       delay(200);
+  //       FILESYSTEM_TO_USE.end();
+  //       if (FILESYSTEM_TO_USE.begin())
+  //       {
+  //         LOG_info << millis() << " ms: initFilesystem(): SUCCESS SD.begin() #" << i << std::endl;
+  //         ok = true;
+  //         break;
+  //       }
+  //     }
+
+  //     if (!ok)
+  //     {
+  //       std::string message;
+  //       message =std::to_string( millis()) + " ms: initFilesystem(): " + fsName + " MOUNT FAILED!! -> NO LOCAL DATA STORAGE AVAILABLE";
+  //       NetworkHandler::publishToMQTT(message, MQTT_SUBTOPIC_SYSLOG);
+  //       LOG_error << message;
+  //       return "";
+  //     }
+  //     else
+  //       std::cout << millis() << " ms: initFilesystem() -> SD.begin SUCCESSFULL" << std::endl;
+  //   }
+  // }
+  // else // no SD
+  // {
+  //   if ((void *)&FILESYSTEM_TO_USE == (void *)&LittleFS)
+  //   {
+  //     fsName = "LittleFS";
+  //     basepath = "/littlefs"; // standard mountpoint(mountpath)
+  //   }
+  //   else if ((void *)&FILESYSTEM_TO_USE == (void *)&SPIFFS)
+  //   {
+  //     fsName = "SPIFFS";
+  //     basepath = "/spiffs"; // standard mountpoint(mountpath)
+  //   }
+  //   if (!FILESYSTEM_TO_USE.begin(false))
+  //   {
+  //     LOG_info << millis() << " ms: initFilesystem(): " << fsName << " mount failed -> Try to format file system for " << fsName << " -> please wait ..." << std::endl;
+  //     if (!FILESYSTEM_TO_USE.begin(true)) // open with format filesystem
+  //     {
+  //       std::stringstream message;
+  //       message << millis() << " ms: initFilesystem(): " << fsName << " formatting not possible->NO LOCAL DATA STORAGE AVAILABLE " << std::endl;
+  //       NetworkHandler::publishToMQTT(message.str(), MQTT_SUBTOPIC_SYSLOG);
+  //       LOG_error << message.str();
+  //       return "";
+  //     }
+  //     LOG_info << millis() << " ms: initFilesystem(): Formatting of filesystem for " << fsName << " successfull" << std::endl;
+  //   }
+  // }
+
+  // // FS_Filehelper::deleteDirectory("/");
+  // // FILESYSTEM_TO_USE.format();
+
+  // LOG_info << millis() << " ms: initFilesystem(): Filesystem   " << fsName << "   was successfull mounted at basepath:  " << basepath
+  //          << "  -> Available space " << ((FILESYSTEM_TO_USE.totalBytes() - FILESYSTEM_TO_USE.usedBytes()) / 1024)
+  //          << " kB from total " << (FILESYSTEM_TO_USE.totalBytes() / 1024) << " kB" << std::endl;
+
+  // if (!dataDirectory.empty())
+  // {
+  //   if (dataDirectory.front() != '/')
+  //     dataDirectory = '/' + dataDirectory;
+
+  //   if (FILESYSTEM_TO_USE.exists((dataDirectory).c_str())) // it seems that LittleFS creates a new dir on its own if it did not exist
+  //   {
+  //     LOG_info << millis() << " ms: initFilesystem(): Directory " << dataDirectory << " already exists" << std::endl;
+  //   }
+  //   else // create new directory
+  //   {
+  //     LOG_info << millis() << " ms: initFilesystem(): dataDirectory " << dataDirectory << " did not exist -> try to create it ..." << std::endl;
+  //     if (FILESYSTEM_TO_USE.mkdir(dataDirectory.c_str()))
+  //     {
+  //       LOG_info << millis() << " ms: ... " << dataDirectory << " was successfully created" << std::endl;
+  //     }
+  //     else
+  //     {
+  //       std::stringstream message;
+  //       message << millis() << " ms: ... " << dataDirectory << " CAN NOT BE CREATED" << std::endl;
+  //       NetworkHandler::publishToMQTT(message.str(), MQTT_SUBTOPIC_SYSLOG);
+  //       LOG_error << message.str();
+
+  //       dataDirectory = "";
+  //     }
+  //   }
+  // }
+
+  // basepath += dataDirectory;
+  // LOG_info << millis() << " ms: initFilesystem(): Whole output path is  " << basepath << std::endl;
+
+  // TaskHandle_t HandlexTaskWatchdogAndMaintenance;
+
+  // // Create RTOS task
+  // BaseType_t _Result = xTaskCreatePinnedToCore(
+  //     xTaskFilesWatchdog,                 // Task function
+  //     "xTaskFilesWatchdog",               // String with name of task
+  //     4096,                               // Stack size in bytes
+  //     NULL,                               // Parameter passed as input of the task
+  //     uxTaskPriorityGet(NULL),            // Priority of the task: higher values -> higher priority
+  //                                         // with uxTaskPriorityGet(NULL)-> same priority as current task
+  //     &HandlexTaskWatchdogAndMaintenance, // Task handle (Typ: TaskHandle_t)
+  //     1);                                 // Core 0 or 1 (Arduino code by default on Core 1)
+
+  // if (_Result != pdPASS)
+  // {
+  //   throw std::runtime_error("xTaskFilesWatchdog: Error creating xTask");
+  // }
+
+  // // FS_Filehelper::deleteDirectory(((std::string)DATA_DIRECTORY).c_str(), FILESYSTEM_TO_USE);
+  // // createTestData();
+  // // FS_Filehelper::listDir("/", 255, false, FILESYSTEM_TO_USE);
+
+  // return basepath;
 }
 
 /**********************************************************************
@@ -185,6 +300,8 @@ void radiator::FilesystemHandler::xTaskFilesWatchdog(void *parameter)
     }
 #endif
 
+    LOG_warn << millis() << " ms: FilesystemHandler::xTaskFilesWatchdog: uxTaskGetStackHighWaterMark(NULL)= " << uxTaskGetStackHighWaterMark(NULL) << std::endl;
+
     vTaskDelay((watchDogIntervallSec * 1000) / portTICK_PERIOD_MS); // execute all xx seconds
   }
   assert(false); //-> we must never get here -> if we do -> restart
@@ -196,7 +313,7 @@ void radiator::FilesystemHandler::xTaskFilesWatchdog(void *parameter)
  * @return 	true : success
  *          false: error
  *********************************************************************/
-bool radiator::FilesystemHandler::initRedirectStdErrToSyslogFile(std::string _syslogPathName)
+bool radiator::FilesystemHandler::initRedirectStdErrToSyslogFile(std::string_view _syslogPathName)
 {
   std::string inputStr = Serial.readString().c_str();
   if (!inputStr.empty()) // a key on the console was pressed -> NO redirection until next reboot
@@ -212,16 +329,15 @@ bool radiator::FilesystemHandler::initRedirectStdErrToSyslogFile(std::string _sy
   if (!FILESYSTEM_TO_USE.exists(dirname.c_str()))
   {
     if (FILESYSTEM_TO_USE.mkdir(dirname.c_str()))
-      std::cout << "Created directory " << dirname << std::endl;
+      std::cout << millis() << " ms: initRedirectStdErrToSyslogFile(): Created directory " << dirname << std::endl;
     else
-      std::cout << "ERROR creating directory " << dirname << std::endl;
+      std::cout << millis() << " ms: initRedirectStdErrToSyslogFile(): ERROR creating directory " << dirname << std::endl;
   }
 
-  LOG_info
-      << "\n"
-      << millis() << " ms: !!! ALL OUTPUT TO std::cerr IS NOW REDIRECTED TO FILE " << syslogPathName << " !!!\n"
-      << "\t !!! -> NO OUTPUT TO CONSOLE / SERIAL ANY MORE !!!\n"
-      << "\t To deactivate redirection temporarily: hold any key at startup of ESP" << std::endl;
+  LOG_info << "\n"
+           << millis() << " ms: !!! ALL OUTPUT TO std::cerr IS NOW REDIRECTED TO FILE " << syslogPathName << " !!!\n"
+           << "\t !!! -> NO OUTPUT TO CONSOLE / SERIAL ANY MORE !!!\n"
+           << "\t To deactivate redirection temporarily: hold any key at startup of ESP" << std::endl;
 
   std::cerr.rdbuf(syslogStringStream.rdbuf()); // redirect by assigning buffer of string stream which is periodically saved to file
   return true;
@@ -240,14 +356,14 @@ bool radiator::FilesystemHandler::writeSyslogfile()
   if (syslogStringStream.str().empty()) // Nothing to write
     return false;
 
-  // NetworkHandler::publishToMQTT(syslogStringStream.str(), MQTT_TOPIC_SYSLOG);
+  // NetworkHandler::publishToMQTT(syslogStringStream.str(), MQTT_SUBTOPIC_SYSLOG);
 
   auto file = FILESYSTEM_TO_USE.open(syslogPathName.c_str(), FILE_APPEND);
 
   // manage syslog files
   if (file && file.size() > MAX_SYSLOG_FILE_SIZE_BYTES)
   {
-    LOG_info << millis() << " ms: syslog file = " << syslogPathName << " (size= " << file.size() << ") reaches max size= " << MAX_SYSLOG_FILE_SIZE_BYTES << std::endl;
+    LOG_info << millis() << " ms: writeSyslogfile(): syslog file = " << syslogPathName << " (size= " << file.size() << ") reaches max size= " << MAX_SYSLOG_FILE_SIZE_BYTES << std::endl;
 
     file.close();
 
@@ -272,26 +388,26 @@ bool radiator::FilesystemHandler::writeSyslogfile()
       if (FILESYSTEM_TO_USE.exists(oldSyslogPathname.c_str()) && i == MAX_OLD_SYSLOG_FILES)
       {
         if (FILESYSTEM_TO_USE.remove(oldSyslogPathname.c_str()))
-          LOG_warn << millis() << " ms: Deleted oldest syslog file= " << oldSyslogPathname << std::endl;
+          LOG_warn << millis() << " ms: writeSyslogfile(): Deleted oldest syslog file= " << oldSyslogPathname << std::endl;
       }
       else
         FILESYSTEM_TO_USE.rename(oldSyslogPathname.c_str(), newSyslogPathname.c_str());
     }
 
     file = FILESYSTEM_TO_USE.open(syslogPathName.c_str(), FILE_WRITE);
-    std::cout << millis() << " ms: Opened new syslog file= " << syslogPathName << std::endl;
+    std::cout << millis() << " ms: writeSyslogfile(): Opened new syslog file= " << syslogPathName << std::endl;
   }
 
   if (!file)
   {
-    std::cout << millis() << " ms: ERROR opening syslog file = " << syslogPathName << "   !!! System logging now to console:" << std::endl;
+    std::cout << millis() << " ms: writeSyslogfile(): ERROR opening syslog file = " << syslogPathName << "   !!! System logging now to console:" << std::endl;
     std::cout << syslogStringStream.str() << std::endl;
     return false;
   }
 
   // write stringstream content to the file
   auto writtenBytes = file.print(syslogStringStream.str().c_str());
-  syslogStringStream.str(""); // delete all content
+  syslogStringStream.str(""); // delete all content from stringstream buffer
 
   file.close();
   return true;
@@ -318,8 +434,8 @@ void radiator::FilesystemHandler::checkFilesystem()
 
   auto res = initFilesystem();
 
-  std::stringstream message;
-  message << millis() << " ms: .... FILESYSTEM RE-INIT: ";
+  std::string message;
+  message = std::to_string(millis()) + " ms: .... FILESYSTEM RE-INIT: ";
   // std::cout << millis() << " ms: .... FILESYSTEM RE-INIT: " << (res.empty() ? "FAILED" : "SUCCESS") << " ..." << std::endl;
 
   static uint8_t problemCounter = 0;
@@ -328,7 +444,7 @@ void radiator::FilesystemHandler::checkFilesystem()
   if (res.empty())
   {
     problemCounter++;
-    message << "FAILED ..." << std::endl;
+    message += "FAILED ...";
 
     pinMode(BUZZER_PIN, OUTPUT);
     bool OnOff = 1;
@@ -343,17 +459,17 @@ void radiator::FilesystemHandler::checkFilesystem()
   else
   {
     problemCounter = 0;
-    message << "SUCCESS ..." << std::endl;
+    message += "SUCCESS ...";
   }
 
-  NetworkHandler::publishToMQTT(message.str(), MQTT_TOPIC_SYSLOG);
-  std::cout << message.str();
+  NetworkHandler::publishToMQTT(message, MQTT_SUBTOPIC_SYSLOG);
+  std::cout << message << std::endl;
 
   if (problemCounter >= 3)
   {
-    message << millis() << " ms: REPEATED PROBLEMS WITH THE FILESYSTEM!! -> NOW RESTART OF THE ESP32" << std::endl;
-    NetworkHandler::publishToMQTT(message.str(), MQTT_TOPIC_SYSLOG);
-    std::cout << message.str();
+    message = std::to_string(millis()) + " ms: REPEATED PROBLEMS WITH THE FILESYSTEM!! -> NOW RESTART OF THE ESP32";
+    NetworkHandler::publishToMQTT(message, MQTT_SUBTOPIC_SYSLOG);
+    std::cout << message << std::endl;
     vTaskDelay(pdMS_TO_TICKS(1000)); // wait to deliver message to mqtt
     ESP.restart();
   }
@@ -367,18 +483,16 @@ void radiator::FilesystemHandler::checkFilesystem()
  *********************************************************************/
 void radiator::FilesystemHandler::checkFreeSpaceOnFilesystem()
 {
-  auto freekBytes = (FILESYSTEM_TO_USE.totalBytes() - FILESYSTEM_TO_USE.usedBytes()) / 1024;
+  uint16_t freekBytes = (FILESYSTEM_TO_USE.totalBytes() - FILESYSTEM_TO_USE.usedBytes()) / 1024;
 
-  LOG_info
-      << millis() << " ms: Checking free space limit (" << MIN_FREE_KILOBYTES_ON_FILESYSTEM
-      << " kB) for the logging data on the filesystem:\n"
-      << " \t Available " << freekBytes
-      << " kB from total " << (FILESYSTEM_TO_USE.totalBytes() / 1024) << " kB \n"
-      << std::endl;
+  LOG_info << millis() << " ms: Checking free space limit (" << MIN_FREE_KILOBYTES_ON_FILESYSTEM
+           << " kB) for the logging data on the filesystem: " << XSTRINGIFY(FILESYSTEM_TO_USE) << "\n"
+           << " \t Available " << freekBytes
+           << " kB from total " << (FILESYSTEM_TO_USE.totalBytes() / 1024) << " kB \n";
 
   if (freekBytes > MIN_FREE_KILOBYTES_ON_FILESYSTEM)
   {
-    LOG_info << " \t -> OK: Enough free space" << std::endl;
+    LOG_info << " \t -> OK: Enough free space on the filesystem" << std::endl;
   }
   else
   {
@@ -403,17 +517,16 @@ void radiator::FilesystemHandler::checkFreeSpaceOnFilesystem()
       LOG_info << "Sorted files list: \n";
       for (auto el : filesList)
         LOG_info << el << "\n";
+      LOG_info << std::endl;
 
       if (FILESYSTEM_TO_USE.remove(filesList.front().c_str()))
         LOG_info << "File   " << filesList.front() << " deleted" << std::endl;
       else
       {
-        std::stringstream message;
-        message << millis() << " ms: ERROR: xTask_Watchdog_and_Maintenance at Check for free space on filesystem -> FILE  "
-                << filesList.front()
-                << "   CANNOT BE DELETED -> NO SPACE FREED ON FILESYSTEM (" << freekBytes << " kB available)" << std::endl;
-        NetworkHandler::publishToMQTT(message.str(), MQTT_TOPIC_SYSLOG);
-        LOG_error << message.str();
+        std::string message;
+        message = std::to_string(millis()) + " ms: ERROR: xTask_Watchdog_and_Maintenance at Check for free space on filesystem -> FILE  " + filesList.front() + "   CANNOT BE DELETED -> NO SPACE FREED ON FILESYSTEM (" + std::to_string(freekBytes) + " kB available)";
+        NetworkHandler::publishToMQTT(message, MQTT_SUBTOPIC_SYSLOG);
+        LOG_error << message << std::endl;
       }
     }
   }

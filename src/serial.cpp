@@ -21,7 +21,7 @@ namespace radiator
    * @param devicename The filename of the serial port device.
    * @return void
    */
-  SerialPort::SerialPort(std::string devicename)
+  SerialPort::SerialPort(std::string_view devicename)
   {
     if (devicename == "Serial")
       Serial_to_Radiator = &Serial;

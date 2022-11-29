@@ -113,6 +113,12 @@ namespace radiator
         }
       }
       }
+      static ulong nextLog = 0;
+      if (millis() >= nextLog)
+      {
+        nextLog = millis() + 60000;
+        LOG_warn << millis() << " ms: Surveillance::main_loop: uxTaskGetStackHighWaterMark(NULL)= " << uxTaskGetStackHighWaterMark(NULL) << std::endl;
+      }
     }
 
     LOG_error << millis() << " ms: Froeling P2/S3100 protocol error" << std::endl;

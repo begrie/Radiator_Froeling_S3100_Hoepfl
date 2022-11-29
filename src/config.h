@@ -28,14 +28,14 @@ namespace radiator
 /*********************
  *      DEFINES
  *********************/
-#define D_DEBUG_LEVEL 3 // 0 - No logging
+#define D_DEBUG_LEVEL 2 // 0 - No logging
                         // 1 - Errors
                         // 2 - Warnings
                         // 3 - Infos
                         // 4 - Debug
                         // 5 - Trace
 
-#define REDIRECT_STD_ERR_TO_SYSLOG_FILE false    // debug output to file INSTEAD to console/Serial
+#define REDIRECT_STD_ERR_TO_SYSLOG_FILE true     // debug output to file INSTEAD to console/Serial
                                                  // -> do it only with D_DEBUG_LEVEL 0, 1 or 2
 #define SYSLOG_DIR "/syslog"                     // directory for syslog files
 #define SYSLOG_PATHNAME SYSLOG_DIR "/syslog.log" // name with path (only one directory level is created automatic)
@@ -99,14 +99,14 @@ namespace radiator
 #define MQTT_OUTPUTINTERVALL_SEC 15 // controls how often resp. how many of the received
                                     // data is send to a MQTT broker
 #define MQTT_TOPIC WIFI_HOSTNAME    // use WiFi hostname as basic mqtt topic
-#define MQTT_TOPIC_ONLINESTATUS "/onlinestatus"
-#define MQTT_TOPIC_SYSLOG "/syslog"
-#define MQTT_TOPIC_SYSINFO "/systeminfo"
-#define MQTT_INTERVALL_FOR_SYSINFO_SEC (15)                //(1 * 60 * 60)       // execute all 1 hours to send systeminfo to mqtt broker
+#define MQTT_SUBTOPIC_ONLINESTATUS "/onlinestatus"
+#define MQTT_SUBTOPIC_SYSLOG "/syslog"
+#define MQTT_SUBTOPIC_SYSINFO "/systeminfo"
+#define MQTT_INTERVALL_FOR_SYSINFO_SEC (1 * 60 * 60)       //(1 * 60 * 60)       // execute all 1 hours to send systeminfo to mqtt broker
 #define MQTT_KEEP_ALIVE (MQTT_OUTPUTINTERVALL_SEC * 2.5)   // must be valid together with MQTT_OUTPUTINTERVALL_SEC
 #define MQTT_RECONNECTION_TIMEOUT_SEC 15                   // timeout after disconnection from MQTT broker
                                                            // until a reconnection is tried from ESP
-#define MIN_FREE_HEAPSIZE_FOR_MQTT_BUFFERQUEUE_BYTES 30000 // MQTT messages are buffered for resending after conditional
+#define MIN_FREE_HEAPSIZE_FOR_MQTT_BUFFERQUEUE_BYTES 25000 // MQTT messages are buffered for resending after conditional
                                                            // broker disconnection ->  if this free heap size value is undercut
                                                            // -> the oldest buffered values are dropped
 
@@ -116,7 +116,7 @@ namespace radiator
 
 #define PREFERENCES_NAMESPACE "FroelingP2" // limited to 15 chars
 
-#define USE_EXTERNAL_SENSORS false // use or disable functionality from externalsensors.h/.cpp
+#define USE_EXTERNAL_SENSORS true // use or disable functionality from externalsensors.h/.cpp
 #define GPIO_FOR_DHT11 21         // GPIO 21    or   0 to deactivate
 #define DHTTYPE DHT11             // use type definition from DHT lib
 
@@ -124,7 +124,7 @@ namespace radiator
 #define MIN_TEMP_FOR_VENTILATOR_ON 25                                // °C
 #define MAX_TEMP_FOR_VENTILATOR_OFF (MIN_TEMP_FOR_VENTILATOR_ON - 2) // °C; hysterisis to avoid nervous switching
                                                                      // due to measurement fluctuations
-#define MAX_HUMIDITY_FOR_VENTILATOR_RUN 55                           // %
+#define MAX_HUMIDITY_FOR_VENTILATOR_RUN 35                           // %
 
 #define GPIO_FOR_SERVO_FOR_AIR_INPUT_FLAP 25              // GPIO 25  or  0 to deactivate
 #define CLOSED_ANGLE_FOR_SERVO_FOR_AIR_INPUT_FLAP 45      // °   angle in degree
@@ -135,8 +135,6 @@ namespace radiator
 
 #define GPIO_FOR_AC_CURRENT_SENSOR 33                                // GPIO 33    or 0 to deactivate
 #define AC_CURRENT_SENSOR_SCALE_AMPERE_PER_MILLIVOLT (30.0 / 1000.0) // e.g. for 30 Ampere per 1000 Millivolt
-// #define ADC_SCALE (3300 / 4096.0) // ADC digitizer scale for 12 bit accuracy -> 4095 = 3300mV
-// #define AC_SCALE (ADC_SCALE * AC_CURRENT_SENSOR_SCALE_AMPERE_PER_MILLIVOLT)
 
 /*********************
  *      MACROS

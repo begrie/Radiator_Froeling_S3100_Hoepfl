@@ -239,4 +239,7 @@
  src/files.h lib/FS_Filehelper/FS_Filehelper.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LITTLEFS.h \
  src/externalsensors.h .pio/libdeps/esp32dev/DHT\ sensor\ library/DHT.h \
- lib/ESP32_Servo/ESP32_Servo.h
+ lib/ESP32_Servo/ESP32_Servo.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp32/rom/rtc.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp32/rom/ets_sys.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/rtc_cntl_reg.h

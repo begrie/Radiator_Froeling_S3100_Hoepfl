@@ -15,6 +15,10 @@ namespace radiator
 {
   class FilesystemHandler
   {
+  public:
+    static std::string initFilesystem(std::string dataDirectory = DATA_DIRECTORY);
+    static bool initRedirectStdErrToSyslogFile(std::string_view _syslogPathName = SYSLOG_PATHNAME);
+
   protected:
     static void xTaskFilesWatchdog(void *parameter);
 
@@ -28,10 +32,6 @@ namespace radiator
     static void checkFilesystem();
     static void checkFreeSpaceOnFilesystem();
     static void createTestData();
-
-  public:
-    static std::string initFilesystem(std::string dataDirectory = DATA_DIRECTORY);
-    static bool initRedirectStdErrToSyslogFile(std::string _syslogPathName = SYSLOG_PATHNAME);
   };
 } // namespace radiator
 #endif //#ifndef __DH_FILES_H__

@@ -14,14 +14,19 @@ namespace radiator
    * @param 	void
    * @return 	void
    *********************************************************************/
-  OutputHandler::OutputHandler(std::string pathnameOnly, bool toConsole, bool toMQTT)
-      : outputPath(pathnameOnly), toConsole(toConsole), toMQTT(toMQTT)
+  OutputHandler::OutputHandler(std::string_view pathnameOnly, const bool _toConsole, const bool _toMQTT)
+      : outputPath(pathnameOnly),
+        toConsole(_toConsole),
+        toMQTT(_toMQTT)
   {
     outputPath.empty() ? toFile = false : toFile = true;
 
-    LOG_info << millis() << " ms: Output to\tconsole: \t" << (toConsole ? "ON" : "OFF") << std::endl;
-    LOG_info << "                     \tfile: \t\t" << (toFile ? "ON" : "OFF") << std::endl;
-    LOG_info << "                     \tMQTT: \t\t" << (toMQTT ? "ON" : "OFF") << std::endl;
+    bufStr.reserve(2000);
+
+    LOG_info
+        << millis() << " ms: Output to\tconsole: \t" << (toConsole ? "ON" : "OFF") << "\n"
+        << "                     \tfile: \t\t" << (toFile ? "ON" : "OFF") << "\n"
+        << "                     \tMQTT: \t\t" << (toMQTT ? "ON" : "OFF") << std::endl;
 
     if (toFile)
     {
@@ -29,51 +34,23 @@ namespace radiator
         outputPath += "/";
 
       // check for path availability (with fstream only possible by usage of a testfile which cannot be deleted here...)
-      std::ofstream testForDirectory(outputPath + "dirtest.tst");
-      if (!testForDirectory)
+      // std::ofstream testForDirectory(outputPath + "dirtest.tst");
+      // if (!testForDirectory)
+      outFileStream.open(outputPath + "dirtest.tst");
+      if (!outFileStream)
       {
         bufStr = std::to_string(millis()) + " ms: Output path  " + outputPath + "  CAN NOT BE OPENED -> NO VALUES WILL BE SAVED TO FILE";
-        NetworkHandler::publishToMQTT(bufStr, MQTT_TOPIC_SYSLOG);
+        NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
         LOG_error << bufStr;
 
         ::perror("OutputHandler: Unable to open file for output");
         throw("Unable to open file for output");
       }
+      outFileStream.close();
 
       LOG_info << millis() << " ms: Files are saved to path   " << outputPath << std::endl;
     }
   }
-  // OutputHandler::OutputHandler(std::string pathnameOnly, bool toConsole, bool toMQTT)
-  //     : outputPath(pathnameOnly), toConsole(toConsole), toMQTT(toMQTT)
-  // {
-  //   outputPath.empty() ? toFile = false : toFile = true;
-
-  //   LOG_info << millis() << " ms: Output to\tconsole: \t" << (toConsole ? "ON" : "OFF") << std::endl;
-  //   LOG_info << "                     \tfile: \t\t" << (toFile ? "ON" : "OFF") << std::endl;
-  //   LOG_info << "                     \tMQTT: \t\t" << (toMQTT ? "ON" : "OFF") << std::endl;
-
-  //   if (toFile)
-  //   {
-  //     if (outputPath.back() != '/')
-  //       outputPath += "/";
-
-  //     // check for path availability (with fstream only possible by usage of a testfile which cannot be deleted here...)
-  //     std::ofstream testForDirectory(outputPath + "dirtest.tst");
-  //     if (!testForDirectory)
-  //     {
-  //       // std::stringstream message;
-  //       bufferStringStream.str() = ""; // empties content
-  //       bufferStringStream << millis() << " ms: Output path  " << outputPath << "  CAN NOT BE OPENED -> NO VALUES WILL BE SAVED TO FILE" << std::endl;
-  //       NetworkHandler::publishToMQTT(bufferStringStream.str(), MQTT_TOPIC_SYSLOG);
-  //       LOG_error << bufferStringStream.str();
-
-  //       ::perror("OutputHandler: Unable to open file for output");
-  //       throw("Unable to open file for output");
-  //     }
-
-  //     LOG_info << millis() << " ms: Files are saved to path   " << outputPath << std::endl;
-  //   }
-  // }
 
   /*********************************************************************
    * @brief 	class destructor
@@ -98,7 +75,6 @@ namespace radiator
                                  uint16_t year, uint8_t month, uint8_t day,
                                  uint8_t hour, uint8_t minute, uint8_t second)
   {
-    // std::ostringstream outStrStream;
     outStrStream.str("");
 
     outStrStream << std::dec
@@ -116,43 +92,10 @@ namespace radiator
       outputToConsole((std::string) "[TIME] " +
                       (std::string)(dowString[dow - 1]) +
                       ", " + outStrStream.str());
-      // std::ostringstream enrichedOutput;
-      // enrichedOutput << "[TIME] "
-      //                << dowString[dow - 1] << ", "
-      //                << outStrStream.str() << std::endl;
-      // outputToConsole(enrichedOutput.str());
     }
 
     handleValuesTimeSeries(outStrStream.str());
   }
-  // void OutputHandler::handleTime(Surveillance &surveillance,
-  //                                uint8_t dow,
-  //                                uint16_t year, uint8_t month, uint8_t day,
-  //                                uint8_t hour, uint8_t minute, uint8_t second)
-  // {
-  //   std::ostringstream outStrStream;
-
-  //   outStrStream << std::dec
-  //                << std::setw(4) << std::setfill('0') << (int)year << "-"
-  //                << std::setw(2) << std::setfill('0') << (int)month << "-"
-  //                << std::setw(2) << std::setfill('0') << (int)day << DELIMITER_FOR_CSV_FILE
-  //                << std::setw(2) << std::setfill('0') << (int)hour << ":"
-  //                << std::setw(2) << std::setfill('0') << (int)minute << ":"
-  //                << std::setw(2) << std::setfill('0') << (int)second;
-
-  //   static const char *dowString[7] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-
-  //   if (toConsole)
-  //   {
-  //     std::ostringstream enrichedOutput;
-  //     enrichedOutput << "[TIME] "
-  //                    << dowString[dow - 1] << ", "
-  //                    << outStrStream.str() << std::endl;
-  //     outputToConsole(enrichedOutput.str());
-  //   }
-
-  //   handleValuesTimeSeries(outStrStream.str());
-  // }
 
   /*********************************************************************
    * @brief 	handling of the measurement values received (every 1 second) from the radiator
@@ -161,8 +104,7 @@ namespace radiator
    * @param 	list with values from radiator
    * @return 	void
    *********************************************************************/
-  void OutputHandler::handleMeasurement(Surveillance &surveillance,
-                                        std::list<VALUE_DATA> values)
+  void OutputHandler::handleMeasurement(Surveillance &surveillance, std::list<VALUE_DATA> values)
   {
     if (toConsole)
       outputToConsole(formatValueData(surveillance, values));
@@ -173,17 +115,19 @@ namespace radiator
       handleValuesFileOutput(surveillance);
 
     if (toMQTT)
-      handleValuesMQTTOutput(surveillance);
+      handleValuesMQTTOutput();
 
+    checkForLimit(values, "Kesseltemp", 90); // check against overheating if more than 90°
+                                             // // for testing only:
+                                             // if (millis() > 30000 && millis() < 60000)
+                                             //   checkForLimit(values, "Kesseltemp", 10);
+
+#if USE_EXTERNAL_SENSORS
     if (checkForRadiatorIsBurning(values))
       radiator::ExternalSensors::setRadiatorIsBurning();
     else
       radiator::ExternalSensors::setRadiatorFireIsOff();
-
-    checkForLimit(values, "Kesseltemp", 90);
-    // // testing only:
-    // if (millis() > 30000 && millis() < 60000)
-    //   checkForLimit(values, "Kesseltemp", 10);
+#endif
   }
 
   /*********************************************************************
@@ -198,7 +142,6 @@ namespace radiator
                                   uint8_t hour, uint8_t minute, uint8_t second,
                                   std::string description)
   {
-    // std::ostringstream outStrStream;
     outStrStream.str("");
 
     outStrStream << "[ERROR] "
@@ -214,7 +157,8 @@ namespace radiator
     if (toConsole)
       outputToConsole(outStrStream.str());
 
-    if (description.find("Last errors") == std::string::npos) // no signal for "Last errors" from connection begin
+    // signal errors with buzzer sound
+    if (description.find("Last errors") == std::string::npos) // no sound signal for "Last errors" from connection begin
       outputErrorToBuzzer();
 
     if (toMQTT)
@@ -227,7 +171,7 @@ namespace radiator
       else
       {
         bufStr = std::to_string(millis()) + " ms: handleError(): Can not save to File";
-        NetworkHandler::publishToMQTT(bufStr, MQTT_TOPIC_SYSLOG);
+        NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
         LOG_error << bufStr;
       }
     }
@@ -266,8 +210,7 @@ namespace radiator
    *                   [Boardtemp.] = [21°] [N] (21)
    *                   [Die Kesseltemp. soll sein] = [75°] [N] (150)
    *********************************************************************/
-  std::string OutputHandler::formatValueData(Surveillance &surveillance,
-                                             std::list<VALUE_DATA> values)
+  std::string OutputHandler::formatValueData(Surveillance &surveillance, const std::list<VALUE_DATA> &values)
   {
     bufStr = "";
 
@@ -298,45 +241,10 @@ namespace radiator
     bufStr += radiator::ExternalSensors::getSensorValues();
 #endif
 
+    bufStr += "\n";
+
     return bufStr;
   }
-  //   {
-  //     std::ostringstream outStrStream;
-
-  //     auto parameterNames = surveillance.getParameterNames();
-  //     for (auto iter = values.begin();
-  //          iter != values.end();
-  //          ++iter)
-  //     {
-  //       outStrStream
-  //           //<< "[VALUE] "
-  //           //<< std::dec << std::setw(2) << std::setfill('0') << iter->index << std::dec
-  //           << " [" << iter->name << "] = [" << iter->value << "]";
-
-  //       switch (parameterNames[iter->index].type)
-  //       {
-  //       case PNT_STRING:
-  //         outStrStream << " [S]";
-  //         break;
-  //       case PNT_VALUE:
-  //         outStrStream << " [N]";
-  //         break;
-  //       default:
-  //         outStrStream << " [O]";
-  //         break;
-  //       }
-
-  //       outStrStream << " (" << (int)iter->rawValue << ")\n";
-  //     }
-
-  // #if USE_EXTERNAL_SENSORS
-  //     outStrStream << radiator::ExternalSensors::getSensorValues();
-  // #endif
-
-  //     outStrStream << std::endl;
-
-  //     return outStrStream.str();
-  //   }
 
   /*********************************************************************
    * @brief 	format received value data to string for output as JSON
@@ -373,27 +281,30 @@ namespace radiator
    *                   "Brenn.ST": "10461",
    *                   "Laufzeit:": "15878h",
    *                   "Boardtemp.": "21°",
-   *                   "Die Kesseltemp. soll sein": "75°"
+   *                   "Die Kesseltemp. soll sein": "75°",
+   *                   "Heizungsraum-Temp": "27°",
+   *                   "Heizungsraum-Feuchtigkeit": "14%",
+   *                   "Ventilator": "AN",
+   *                   "Zuluftklappe": "ZU",
+   *                   "Leckwassersensor": "TROCKEN",
+   *                   "Stromstaerke": 0.318198"A"
    *                 }
    *********************************************************************/
-  std::string OutputHandler::formatValueDataAsJSON(
-      std::string timeStringForValues,
-      std::list<VALUE_DATA> values)
+  std::string OutputHandler::formatValueDataAsJSON(std::string_view timeStringForValues, const std::list<VALUE_DATA> &values)
   {
-    // std::ostringstream outStrStream;
     bufStr = "{";
 
     auto date = timeStringForValues.substr(0, timeStringForValues.find(DELIMITER_FOR_CSV_FILE));
     auto time = timeStringForValues.substr(timeStringForValues.find(DELIMITER_FOR_CSV_FILE) + 1);
 
-    bufStr += "\"date\": \"" + date + "\", \"time\": \"" + time + "\",";
+    bufStr += "\"date\": \"" + static_cast<std::string>(date) + "\", \"time\": \"" + static_cast<std::string>(time) + "\",";
 
     for (auto iter = values.begin();
          iter != values.end();
          ++iter)
     {
       bufStr += '"';
-      if (iter->name.empty()) // first two value items have no names
+      if (iter->name.empty()) // first two value items have no names from raditor output itself -> so lets add them
       {
         if (iter->index == 0)
           bufStr += "Betriebsart";
@@ -412,54 +323,15 @@ namespace radiator
 #if USE_EXTERNAL_SENSORS
     bufStr += radiator::ExternalSensors::getSensorValuesAsJSON();
 #endif
-    bufStr.pop_back(); // remove last ","
-    // outStrStream.seekp(-1, outStrStream.cur); // remove last ","
-    bufStr += "}";
+    bufStr.pop_back(); // remove last "," (, must exist and no spaces behind)
+    // auto pos = bufStr.find_last_of(","); // remove last "," (missing and spaces behind allowed)
+    // if (pos != std::string::npos && pos >= bufStr.length() - 3)
+    //   bufStr.erase(pos);
+
+    bufStr += "} \n";
 
     return bufStr;
   }
-  //   std::string OutputHandler::formatValueDataAsJSON(
-  //       std::string timeStringForValues,
-  //       std::list<VALUE_DATA> values)
-  //   {
-  //     std::ostringstream outStrStream;
-  //     outStrStream << "{";
-
-  //     auto date = timeStringForValues.substr(0, timeStringForValues.find(DELIMITER_FOR_CSV_FILE));
-  //     auto time = timeStringForValues.substr(timeStringForValues.find(DELIMITER_FOR_CSV_FILE) + 1);
-
-  //     outStrStream << "\"date\": \"" << date << "\", \"time\": \"" << time << "\",";
-
-  //     for (auto iter = values.begin();
-  //          iter != values.end();
-  //          ++iter)
-  //     {
-  //       outStrStream << '"';
-  //       if (iter->name.empty()) // first two value items have no names
-  //       {
-  //         if (iter->index == 0)
-  //           outStrStream << "Betriebsart";
-  //         else if (iter->index == 1)
-  //           outStrStream << "Status";
-  //         else
-  //           outStrStream << std::dec << std::setw(2) << std::setfill('0') << iter->index;
-  //       }
-  //       else
-  //       {
-  //         outStrStream << iter->name;
-  //       }
-  //       outStrStream << "\": \"" << iter->value << "\",";
-  //     }
-
-  // #if USE_EXTERNAL_SENSORS
-  //     outStrStream << radiator::ExternalSensors::getSensorValuesAsJSON();
-  // #endif
-
-  //     outStrStream.seekp(-1, outStrStream.cur); // remove last ","
-  //     outStrStream << "}" << std::endl;
-
-  //     return outStrStream.str();
-  //   }
 
   /*********************************************************************
    * @brief 	format data for header of a csv file
@@ -469,7 +341,7 @@ namespace radiator
    *********************************************************************/
   std::string OutputHandler::formatValueDataHeaderForCSV(Surveillance &surveillance)
   {
-    bufStr = "Date; Time" + (std::string)DELIMITER_FOR_CSV_FILE;
+    bufStr = "Date" DELIMITER_FOR_CSV_FILE " Time" DELIMITER_FOR_CSV_FILE;
 
     auto parameterNames = surveillance.getParameterNames();
     for (auto el : parameterNames)
@@ -485,18 +357,6 @@ namespace radiator
         else
           bufStr += std::to_string(el.index);
       }
-      // switch (el.type)
-      // {
-      // case PNT_STRING:
-      //   outStrStream << " [S]";
-      //   break;
-      // case PNT_VALUE:
-      //   outStrStream << " [N]";
-      //   break;
-      // default:
-      //   outStrStream << " [O]";
-      //   break;
-      // }
 
       bufStr += DELIMITER_FOR_CSV_FILE;
     }
@@ -505,56 +365,12 @@ namespace radiator
     bufStr += radiator::ExternalSensors::getSensorValueHeaderForCSV() + DELIMITER_FOR_CSV_FILE;
 #endif
 
+    bufStr += "\n";
+
     LOG_info << "formatValueDataHeaderForCSV = " << bufStr << std::endl;
 
     return bufStr;
   }
-  //   std::string OutputHandler::formatValueDataHeaderForCSV(Surveillance &surveillance)
-  //   {
-  //     std::ostringstream outStrStream;
-
-  //     outStrStream << "Date; Time" << DELIMITER_FOR_CSV_FILE;
-
-  //     auto parameterNames = surveillance.getParameterNames();
-  //     for (auto el : parameterNames)
-  //     {
-  //       outStrStream << el.name;
-
-  //       if (el.type == PNT_STRING) // first two value items have no names - so lets add them
-  //       {
-  //         if (el.index == 0)
-  //           outStrStream << "Betriebsart";
-  //         else if (el.index == 1)
-  //           outStrStream << "Status";
-  //         else
-  //           outStrStream << std::dec << std::setw(2) << std::setfill('0') << el.index;
-  //       }
-  //       // switch (el.type)
-  //       // {
-  //       // case PNT_STRING:
-  //       //   outStrStream << " [S]";
-  //       //   break;
-  //       // case PNT_VALUE:
-  //       //   outStrStream << " [N]";
-  //       //   break;
-  //       // default:
-  //       //   outStrStream << " [O]";
-  //       //   break;
-  //       // }
-
-  //       outStrStream << DELIMITER_FOR_CSV_FILE;
-  //     }
-
-  // #if USE_EXTERNAL_SENSORS
-  //     outStrStream << radiator::ExternalSensors::getSensorValueHeaderForCSV() << DELIMITER_FOR_CSV_FILE;
-  // #endif
-
-  //     outStrStream << std::endl;
-
-  //     LOG_info << "formatValueDataHeaderForCSV = " << outStrStream.str() << std::endl;
-
-  //     return outStrStream.str();
-  //   }
 
   /*********************************************************************
    * @brief 	format values from radiator for output as CSV file
@@ -563,9 +379,9 @@ namespace radiator
    * @return 	formatted string with received values
    *          e.g.  22-09-01; 12:21:35; Ausgeschaltet; Brenner Aus; 1; 0; 18°; 21°; 31°; 50%; 0%; 0%; 0%; 99.9%; 347°; 18°; 19°; 0%; 17°; 0°; 20°; 0°; 20°; 127°; 127°; 10461; 15878h; 21°; 75°;
    *********************************************************************/
-  std::string OutputHandler::formatValueDataForCSV(std::string time, std::list<VALUE_DATA> values)
+  std::string OutputHandler::formatValueDataForCSV(std::string_view time, const std::list<VALUE_DATA> &values)
   {
-    bufStr = time + DELIMITER_FOR_CSV_FILE;
+    bufStr = static_cast<std::string>(time) + DELIMITER_FOR_CSV_FILE;
 
     for (auto iter = values.begin();
          iter != values.end();
@@ -578,29 +394,10 @@ namespace radiator
     bufStr += radiator::ExternalSensors::getSensorValueDataForCSV();
 #endif
 
+    bufStr += "\n";
+
     return bufStr;
   }
-  //   std::string OutputHandler::formatValueDataForCSV(std::string time, std::list<VALUE_DATA> values)
-  //   {
-  //     std::ostringstream outStrStream;
-
-  //     outStrStream << time << DELIMITER_FOR_CSV_FILE;
-
-  //     for (auto iter = values.begin();
-  //          iter != values.end();
-  //          ++iter)
-  //     {
-  //       outStrStream << iter->value << DELIMITER_FOR_CSV_FILE;
-  //     }
-
-  // #if USE_EXTERNAL_SENSORS
-  //     outStrStream << radiator::ExternalSensors::getSensorValueDataForCSV();
-  // #endif
-
-  //     outStrStream << std::endl;
-
-  //     return outStrStream.str();
-  //   }
 
   /*********************************************************************
    * @brief 	first step for creating a time series for the received radiator data
@@ -613,11 +410,11 @@ namespace radiator
    * @param 	string with time received from radiator; e.g.    [TIME] Thu, 2022-09-08, 11:58:19
    * @return 	void
    *********************************************************************/
-  void OutputHandler::handleValuesTimeSeries(std::string time)
+  void OutputHandler::handleValuesTimeSeries(std::string_view time)
   {
     LOG_debug << millis() << " ms: OutputHandler::handleValuesTimeSeries -> TIME " << time << std::endl;
 
-    valuesAtTime = std::make_tuple(millis(), time, emptyValuesPlaceholder);
+    valuesAtTime = std::make_tuple(millis(), static_cast<std::string>(time), emptyValuesPlaceholder);
   }
 
   /*********************************************************************
@@ -629,30 +426,45 @@ namespace radiator
    * @param 	list with values from radiator
    * @return 	void
    *********************************************************************/
-  void OutputHandler::handleValuesTimeSeries(std::list<VALUE_DATA> values)
+  void OutputHandler::handleValuesTimeSeries(const std::list<VALUE_DATA> &values)
   {
+    // Version 1 WITHOUT stored time series
     LOG_debug << millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;
-
-    // remove expired item (only one per function call -> should be enough)
-    if (valuesTimeSeries.size() > 0)
-    {
-      ulong firstStoredTime = std::get<0>(valuesTimeSeries.front());
-      auto deltaTime = millis() - firstStoredTime;
-      if (deltaTime > (fileOutputIntervallSec * 1000) && deltaTime > (MQTTOutputIntervallSec * 1000))
-      {
-        valuesTimeSeries.pop_front();
-      }
-    }
 
     // store new values item
     std::get<2>(valuesAtTime) = values;
-    valuesTimeSeries.push_back(valuesAtTime);
 
-    LOG_info << millis() << " ms: handleValuesTimeSeries: Size valuesTimeSeries= " << (valuesTimeSeries.size() * sizeof(valuesAtTime)) << " / " << sizeof(valuesTimeSeries) << ", Size valuesAtTime= " << sizeof(valuesAtTime) << " \n"
-             << "Heap= " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << std::endl;
+    static ulong nextLog = 0;
+    if (millis() >= nextLog)
+    {
+      nextLog = millis() + 60000;
+      LOG_warn << millis() << " ms: handleValuesTimeSeries: Heap= " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << "; esp_get_minimum_free_heap_size()= " << esp_get_minimum_free_heap_size() << std::endl;
+      LOG_warn << millis() << " ms: OutputHandler::handleValuesTimeSeries: Taskname= " << pcTaskGetTaskName(NULL) << ", uxTaskGetStackHighWaterMark(NULL)= " << uxTaskGetStackHighWaterMark(NULL) << std::endl;
+    }
 
-    // reset for later error recognition ...
-    valuesAtTime = std::make_tuple(0, "0000-00-00, 00:00:00", emptyValuesPlaceholder);
+    // Version 2 with stored time series
+    //  LOG_debug << millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;
+
+    // // remove expired item (only one per function call -> should be enough)
+    // if (valuesTimeSeries.size() > 0)
+    // {
+    //   ulong firstStoredTime = std::get<0>(valuesTimeSeries.front());
+    //   auto deltaTime = millis() - firstStoredTime;
+    //   if (deltaTime > (fileOutputIntervallSec * 1000) && deltaTime > (MQTTOutputIntervallSec * 1000))
+    //   {
+    //     valuesTimeSeries.pop_front();
+    //   }
+    // }
+
+    // // store new values item
+    // std::get<2>(valuesAtTime) = values;
+    // valuesTimeSeries.push_back(valuesAtTime);
+
+    // LOG_info << millis() << " ms: handleValuesTimeSeries: Size valuesTimeSeries= " << (valuesTimeSeries.size() * sizeof(valuesAtTime)) << " / " << sizeof(valuesTimeSeries) << ", Size valuesAtTime= " << sizeof(valuesAtTime) << " \n"
+    //          << "Heap= " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << std::endl;
+
+    // // reset for later error recognition ...
+    // valuesAtTime = std::make_tuple(0, "0000-00-00, 00:00:00", emptyValuesPlaceholder);
   }
 
   /*********************************************************************
@@ -666,40 +478,44 @@ namespace radiator
    *              -> if greater than stored item range -> all values are averaged
    * @return 	last values tuple
    *********************************************************************/
-  OutputHandler::ValuesWithTime_t OutputHandler::getLastValuesAtTime(FilterMethod_t filterMethod, uint16_t intervallSec)
+  OutputHandler::ValuesWithTime_t OutputHandler::getLastValuesAtTime(const FilterMethod_t filterMethod, const uint16_t intervallSec)
   {
-    if (valuesTimeSeries.empty())
-    {
-      bufStr = std::to_string(millis()) + " ms: OutputHandler::getLastValuesAtTime: valuesTimeSeries is empty";
-      NetworkHandler::publishToMQTT(bufStr);
-      LOG_warn << bufStr;
+    // Version 1 WITHOUT stored time series
+    return valuesAtTime;
 
-      return valuesAtTime; // only for error condition
-    }
+    // Version 2 with stored time series
+    // if (valuesTimeSeries.empty())
+    // {
+    //   bufStr = std::to_string(millis()) + " ms: OutputHandler::getLastValuesAtTime: valuesTimeSeries is empty";
+    //   NetworkHandler::publishToMQTT(bufStr);
+    //   LOG_warn << bufStr;
 
-    switch (filterMethod)
-    {
-    case FilterMethod_t::ONCHANGE: // not yet implemented
+    //   return valuesAtTime; // only for error condition
+    // }
 
-      // TODO: checks values for change of defined amount
+    // switch (filterMethod)
+    // {
+    // case FilterMethod_t::ONCHANGE: // not yet implemented
 
-    case FilterMethod_t::AVERAGE:     // not yet implemented
-      return valuesTimeSeries.back(); // like drop -> only as placeholder
+    //   // TODO: checks values for change of defined amount
 
-      // TODO: averaging for all single values...
-      //  auto storedTimeString = std::get<1>(valuesTimeSeries.back());
-      //  for (auto rIter = valuesTimeSeries.rbegin(); // iterate backwards
-      //       rIter != valuesTimeSeries.rend();
-      //       ++rIter)
-      //  {
-      //  }
+    // case FilterMethod_t::AVERAGE:     // not yet implemented
+    //   return valuesTimeSeries.back(); // like drop -> only as placeholder
 
-      break;
-    case FilterMethod_t::DROP:
-    default:
-      return valuesTimeSeries.back();
-      break;
-    }
+    //   // TODO: averaging for all single values...
+    //   //  auto storedTimeString = std::get<1>(valuesTimeSeries.back());
+    //   //  for (auto rIter = valuesTimeSeries.rbegin(); // iterate backwards
+    //   //       rIter != valuesTimeSeries.rend();
+    //   //       ++rIter)
+    //   //  {
+    //   //  }
+
+    //   break;
+    // case FilterMethod_t::DROP:
+    // default:
+    //   return valuesTimeSeries.back();
+    //   break;
+    // }
   }
 
   /*********************************************************************
@@ -729,26 +545,24 @@ namespace radiator
     nextFileOutputSec = millis() / 1000 + fileOutputIntervallSec;
 
     auto valuesAtTimeForFile = getLastValuesAtTime(FilterMethod_t::DROP);
-    auto timeStringForValues = std::get<1>(valuesAtTimeForFile);
-    auto valuesForFile = std::get<2>(valuesAtTimeForFile);
-    auto outputForFile = formatValueDataForCSV(timeStringForValues, valuesForFile);
+    auto timeStringForValues = &std::get<1>(valuesAtTimeForFile);
+    auto valuesForFile = &std::get<2>(valuesAtTimeForFile);
 
     auto filenameTillNow = outputFilename;
-    if (handleFiles(deriveFilename(timeStringForValues)))
+    if (handleFiles(deriveFilename(*timeStringForValues)))
     {
       // check for new file to write the header only once
       if (filenameTillNow != outputFilename)
       {
-        auto headerForNewFile = formatValueDataHeaderForCSV(surveillance);
-        outputToFile(headerForNewFile + outputForFile);
+        outputToFile(formatValueDataHeaderForCSV(surveillance) + formatValueDataForCSV(*timeStringForValues, *valuesForFile));
       }
-      else
-        outputToFile(outputForFile); // without header
+      else // without header - only value data
+        outputToFile(formatValueDataForCSV(*timeStringForValues, *valuesForFile));
     }
-    else
+    else // problems with the file
     {
       bufStr = std::to_string(millis()) + " ms: ERROR saving to File";
-      NetworkHandler::publishToMQTT(bufStr, MQTT_TOPIC_SYSLOG);
+      NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
       LOG_error << bufStr;
     }
   }
@@ -760,27 +574,23 @@ namespace radiator
    * @return 	filename derived from input string like 22-09-01.log
    *          -> or  00-LOST.log  if not date found in input string
    *********************************************************************/
-  std::string OutputHandler::deriveFilename(std::string stringWithDate)
+  std::string OutputHandler::deriveFilename(const std::string &stringWithDate)
   {
     LOG_info << millis() << " ms: OutputHandler::deriveFilename: ";
 
     // derive filename from string with integrated date in format   yyyy-mm-dd
-    // auto toFind = std::regex("(2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)"); // finds date in string e.g.   2022-09-01
-    //                                                                                 // https://www.softwaretestinghelp.com/regex-in-cpp/
-    //                                                                                 // https://regexr.com
+    auto toFind = std::regex("(2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)"); // finds date in string e.g.   2022-09-01
+                                                                                    // https://www.softwaretestinghelp.com/regex-in-cpp/
+                                                                                    // https://regexr.com
 
     std::string filename;
-    // std::smatch result;
-    // if (std::regex_search(stringWithDate, result, toFind))
-    // {
-    //   // for (auto subres : result)
-    //   //   LOG_info << "subres.str()" << subres.str() << std::endl;
-    //   // filename = result[result.size() - 1].str() + ".log"; // use last match from stringWithDate
-    if (true)
+    std::smatch result;
+    if (std::regex_search(stringWithDate, result, toFind))
     {
-      // filename = result.str() + ".log"; // use first match from stringWithDate
-      filename = "1999-11-22.log"; // use first match from stringWithDate
-      LOG_info << " ->filename= " << filename << std::endl;
+      filename = result.str() + ".log"; // use first match from stringWithDate
+      LOG_info << "stringWithDate= " << stringWithDate
+               << ", regex_search->result= " << result.str()
+               << " ->filename= " << filename << std::endl;
     }
     else
     {
@@ -793,39 +603,6 @@ namespace radiator
 
     return filename;
   }
-  // std::string OutputHandler::deriveFilename(std::string stringWithDate)
-  // {
-  //   LOG_info << millis() << " ms: OutputHandler::deriveFilename: ";
-
-  //   // derive filename from string with integrated date in format   yyyy-mm-dd
-  //   auto toFind = std::regex("(2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)"); // finds date in string e.g.   2022-09-01
-  //                                                                                   // https://www.softwaretestinghelp.com/regex-in-cpp/
-  //                                                                                   // https://regexr.com
-
-  //   std::string filename;
-  //   std::smatch result;
-  //   if (std::regex_search(stringWithDate, result, toFind))
-  //   {
-  //     // for (auto subres : result)
-  //     //   LOG_info << "subres.str()" << subres.str() << std::endl;
-  //     // filename = result[result.size() - 1].str() + ".log"; // use last match from stringWithDate
-
-  //     filename = result.str() + ".log"; // use first match from stringWithDate
-  //     LOG_info << "stringWithDate= " << stringWithDate
-  //              << ", regex_search->result= " << result.str()
-  //              << " ->filename= " << filename << std::endl;
-  //   }
-  //   else
-  //   {
-  //     filename = "00-LOST.log";
-
-  //     bufStr = std::to_string(millis()) + " ms: deriveFilename(): No suitable date found in given stringWithDate for derivation of the filename ->  00-LOST.log   will be used";
-  //     NetworkHandler::publishToMQTT(bufStr);
-  //     LOG_error << bufStr;
-  //   }
-
-  //   return filename;
-  // }
 
   /*********************************************************************
    * @brief 	handle files for output stream
@@ -833,7 +610,7 @@ namespace radiator
    * @return 	true:  output file is opened and associated to class member outFileStream
    *          false: error opening file
    *********************************************************************/
-  bool OutputHandler::handleFiles(std::string filename)
+  bool OutputHandler::handleFiles(std::string_view filename)
   {
     LOG_info << millis() << " ms: OutputHandler::handleFiles: ";
 
@@ -847,25 +624,17 @@ namespace radiator
 
     // if change of filename due to change of date -> close the old file
     if (outFileStream.is_open())
-    {
       outFileStream.close();
-    }
 
     // new file or re-open previous file ...
-    auto outputPathWithFilename = outputPath + filename;
+    auto outputPathWithFilename = outputPath + static_cast<std::string>(filename);
     outFileStream.open(outputPathWithFilename, std::ofstream::out | std::ofstream::app);
     if (!outFileStream.is_open() || !outFileStream.good())
     {
       bufStr = std::to_string(millis()) + " ms: handleFiles(): ERROR opening file " + outputPathWithFilename + " !! NO VALUES ARE SAVED TO FILE !!";
-      NetworkHandler::publishToMQTT(bufStr, MQTT_TOPIC_SYSLOG);
+      NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
       LOG_error << bufStr;
       return false;
-    }
-
-    // new file
-    if (outputFilename != filename)
-    {
-      // TODO: -> check for left space of filesystem and delete old files -> is now realized with independent parallel task
     }
 
     outputFilename = filename;
@@ -884,7 +653,7 @@ namespace radiator
    *          -> longer values (e.g. 15 min = 900sec) are reducing the load of the storage medium (espc. good for flash)
    * @return 	void
    *********************************************************************/
-  void OutputHandler::outputToFile(std::string output, ulong writeToFileIntervalSec)
+  void OutputHandler::outputToFile(std::string_view output, const ulong writeToFileIntervalSec)
   {
     LOG_info << millis() << " ms: OutputHandler::outputToFile"
              << " -> ************* File output: *************\n"
@@ -895,7 +664,7 @@ namespace radiator
       bufStr = std::to_string(millis()) + " ms: outputToFile(): Can NOT SAVE to file " + (outputPath + outputFilename) +
                "(outFileStream.is_open()=" + std::to_string(outFileStream.is_open()) + ", outFileStream.good()=" + std::to_string(outFileStream.good()) + ")";
 
-      NetworkHandler::publishToMQTT(bufStr, MQTT_TOPIC_SYSLOG);
+      NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
       LOG_error << bufStr;
       return;
     }
@@ -915,7 +684,9 @@ namespace radiator
     }
     else
     {
-      LOG_info << millis() << " ms: File output data buffered for next file write in " << ((lastClose + writeToFileIntervalSec * 1000 - millis()) / 1000) << " seconds" << std::endl;
+      LOG_info << millis() << " ms: File output data buffered for next file write in "
+               << ((lastClose + writeToFileIntervalSec * 1000 - millis()) / 1000) << " seconds"
+               << std::endl;
     }
   }
 
@@ -925,7 +696,7 @@ namespace radiator
    * @param 	used instance of Surveillance -> for access to parameter names
    * @return 	void
    *********************************************************************/
-  void OutputHandler::handleValuesMQTTOutput(Surveillance &surveillance)
+  void OutputHandler::handleValuesMQTTOutput()
   {
     if (!toMQTT)
     {
@@ -938,19 +709,18 @@ namespace radiator
     if (millis() / 1000 < nextMQTTOutputSec)
     {
       LOG_debug << millis() << " ms: handleValuesMQTTOutput(): data buffered -> NO MQTT output (next in "
-                << (nextMQTTOutputSec - (millis() / 1000))
-                << " seconds)" << std::endl;
+                << (nextMQTTOutputSec - (millis() / 1000)) << " seconds)"
+                << std::endl;
       return;
     }
 
     nextMQTTOutputSec = millis() / 1000 + MQTTOutputIntervallSec;
 
     auto valuesAtTimeForMQTT = getLastValuesAtTime(FilterMethod_t::DROP);
-    auto timeStringForValues = std::get<1>(valuesAtTimeForMQTT);
-    auto valuesForMQTT = std::get<2>(valuesAtTimeForMQTT);
-    auto outputForMQTT = formatValueDataAsJSON(timeStringForValues, valuesForMQTT);
+    auto timeStringForValues = &std::get<1>(valuesAtTimeForMQTT);
+    auto valuesForMQTT = &std::get<2>(valuesAtTimeForMQTT);
 
-    outputToMQTT(outputForMQTT);
+    outputToMQTT(formatValueDataAsJSON(*timeStringForValues, *valuesForMQTT));
   }
 
   /*********************************************************************
@@ -958,9 +728,9 @@ namespace radiator
    * @param 	payload message
    * @return 	void
    *********************************************************************/
-  void OutputHandler::outputToMQTT(std::string output)
+  void OutputHandler::outputToMQTT(std::string_view output)
   {
-    radiator::NetworkHandler::publishToMQTT(output);
+    radiator::NetworkHandler::publishToMQTT(static_cast<std::string>(output));
   }
 
   /*********************************************************************
@@ -973,7 +743,7 @@ namespace radiator
    * @return 	true : radiator is burning
    *          false: radiator is NOT burning
    *********************************************************************/
-  bool OutputHandler::checkForRadiatorIsBurning(std::list<VALUE_DATA> values)
+  bool OutputHandler::checkForRadiatorIsBurning(const std::list<VALUE_DATA> &values)
   {
     LOG_debug << millis() << " ms: checkForRadiatorIsBurning= ";
 
@@ -1015,7 +785,7 @@ namespace radiator
    * @return 	false: limit NOT exceeded
    *          true : limit exceeded
    *********************************************************************/
-  bool OutputHandler::checkForLimit(std::list<VALUE_DATA> values, std::string parameterName, int limit, bool greaterThan)
+  bool OutputHandler::checkForLimit(const std::list<VALUE_DATA> &values, std::string_view parameterName, const int limit, const bool greaterThan)
   {
     LOG_debug << millis() << " ms: checkForLimit -> parameterName=" << parameterName << ", limit= " << limit << std::endl;
 
@@ -1025,20 +795,20 @@ namespace radiator
       {
         LOG_debug << millis() << " ms: parameterName=" << parameterName << ", el.name = " << el.name << std::endl;
 
+        // int valueAsInt = std::stoi(el.value);  //stoi can throw an expection -> so better to use atoi
         int valueAsInt = atoi(el.value.c_str());
-        // int valueAsInt = std::stoi(el.value);  //stoi can throw an expection
         LOG_debug << millis() << " ms: valueAsInt= " << valueAsInt << std::endl;
 
         if ((greaterThan && valueAsInt > limit) || (!greaterThan && valueAsInt < limit))
         {
           static ulong nextInfoOutputMs = 0;
-          static const int infoOutputIntervallSec = 30; // info output all 30 sec -> consider needed space when output is redirected to syslog file
+          static const int infoOutputIntervallSec = 60; // info output all 60 sec -> consider needed space when output is redirected to syslog file
 
           outputErrorToBuzzer(0, infoOutputIntervallSec - 1);
 
           if (millis() >= nextInfoOutputMs)
           {
-            bufStr = std::to_string(millis()) + " ms: !!!!! ALERT: LIMIT EXCEEDED !!!!! parameterName= " + parameterName + ", limit=" + std::to_string(limit) + ", actual value= " + std::to_string(valueAsInt);
+            bufStr = std::to_string(millis()) + " ms: !!!!! ALERT: LIMIT EXCEEDED !!!!! parameterName= " + static_cast<std::string>(parameterName) + ", limit=" + std::to_string(limit) + ", actual value= " + std::to_string(valueAsInt);
 
             std::cout << bufStr;
             LOG_error << bufStr;
@@ -1070,7 +840,7 @@ namespace radiator
    *          0 (standard): NO timeout
    * @return 	void
    *********************************************************************/
-  void OutputHandler::outputErrorToBuzzer(uint16_t _beepIntervallMs, int _timeoutSec)
+  void OutputHandler::outputErrorToBuzzer(const uint16_t _beepIntervallMs, const int _timeoutSec)
   {
     static TaskHandle_t Handle_xTaskBuzzer;
     static volatile bool quitButtonWasPressed;
@@ -1143,7 +913,7 @@ namespace radiator
       if (_Result != pdPASS)
       {
         bufStr = std::to_string(millis()) + " ms: outputErrorToBuzzer: Error creating xTask";
-        NetworkHandler::publishToMQTT(bufStr, MQTT_TOPIC_SYSLOG);
+        NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
         LOG_error << bufStr;
       }
     }
@@ -1154,7 +924,7 @@ namespace radiator
    * @param 	formatted string for output
    * @return 	void
    *********************************************************************/
-  void OutputHandler::outputToConsole(std::string output)
+  void OutputHandler::outputToConsole(std::string_view output)
   {
     std::cout << output;
   }

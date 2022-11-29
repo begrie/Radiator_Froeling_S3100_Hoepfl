@@ -14,11 +14,6 @@ namespace radiator
   {
   public:
     static bool initExternalSensors();
-    // static bool initExternalSensors(bool _dhtGPIO = GPIO_FOR_DHT11,
-    //                                 bool _ventilatorRelaisGPIO = GPIO_FOR_VENTILATOR_RELAIS,
-    //                                 bool _servoForAirInputFlapGPIO = GPIO_FOR_SERVO_FOR_AIR_INPUT_FLAP,
-    //                                 bool _leakWaterSensorGPIO = GPIO_FOR_LEAKWATER_SENSOR,
-    //                                 bool _acCurrentSensorGPIO = GPIO_FOR_AC_CURRENT_SENSOR);
 
     static std::string getSensorValues();
     static std::string getSensorValuesAsJSON();
@@ -32,7 +27,6 @@ namespace radiator
     static void xTaskExternalSensors(void *parameter);
     // we need a mutex semaphore to handle concurrent access from different tasks - otherwise "funny" crashes from bufferQueue-handling
     static SemaphoreHandle_t semaphoreExternalSensors;
-    // static std::stringstream bufferStringStream; // for all output functions instead to local vars
     static std::string messageBuf;
 
     static void autoControlVentilatorAndFlap();
@@ -69,12 +63,10 @@ namespace radiator
     static bool initAcCurrentSensor();
     static void IRAM_ATTR tickerCallbackForReadAndAverageAcCurrentSensor(); // used by ticker
     static double getAcCurrentAmpereRMS();
+    static std::string getAcCurrentAmpereRMSasString();
     static int acCurrentSensorGPIO;
-    // static uint16_t scaleForCurrentSensor;  // e.g. 30 Ampere/Volt
-    // static uint16_t offsetForCurrentSensor; // due to voltage divider to eliminate negative voltage
     static Ticker tickerForReadAcCurrentSensor;
     static volatile int16_t acCurrentAnalogReadAmplitudeMillivolt;
-    // static double acCurrentAmpere;
   };
 } // namespace radiator
 #endif //#ifndef __DH_EXTERNALSENSORS_H__

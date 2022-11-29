@@ -13,6 +13,10 @@ namespace radiator
 {
   class NetworkHandler
   {
+  public:
+    static bool init(const bool _outputToMQTT = false, const bool startWebServer = true);
+    static bool publishToMQTT(const std::string &payload, const std::string &subtopic = "", const uint8_t qos = 1, const bool retain = true);
+
   protected:
     static bool configureWiFiAndMQTT();
     static void inputMQTTconfig();
@@ -41,13 +45,11 @@ namespace radiator
 
     static void configureWebserver();
     static void sendLargeFile(AsyncWebServerRequest *request);
-    static std::string handleSysLogfilesForWebserver(std::string dirname, fs::FS &fs = FILESYSTEM_TO_USE);
-    static std::string handleLogfilesForWebserver(std::string dirname, fs::FS &fs = FILESYSTEM_TO_USE);
-    static std::string downloadLogfilesAsOne(std::string dirname, uint16_t NumberOfLogfiles = NUMBER_OF_LOGFILES_TO_COMBINE, fs::FS &fs = FILESYSTEM_TO_USE);
+    static std::string handleSysLogfilesForWebserver(const char *dirname, fs::FS &fs = FILESYSTEM_TO_USE);
+    static std::string handleLogfilesForWebserver(const char *dirname, fs::FS &fs = FILESYSTEM_TO_USE);
 
-  public:
-    static bool init(bool _outputToMQTT = false, bool startWebServer = true);
-    static bool publishToMQTT(std::string payload, std::string subtopic = "", uint8_t qos = 1, bool retain = true);
+    static std::string bufStr;              // as class member to avoid heap fragmentation
+    static std::ostringstream bufStrStream; // as class member to avoid heap fragmentation
   };
 }
 #endif //#ifndef __DH_NETWORK_H__

@@ -13,7 +13,7 @@ namespace radiator
   class SerialPort
   {
   public:
-    SerialPort(std::string devicename);
+    SerialPort(std::string_view devicename);
     virtual ~SerialPort();
 
     int write(const uint8_t *data, size_t len);
