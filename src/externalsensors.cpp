@@ -231,11 +231,11 @@ void radiator::ExternalSensors::xTaskExternalSensors(void *parameter)
     {
       xSemaphoreTake(semaphoreExternalSensors, portMAX_DELAY);
 
-      LOG_debug << millis() << " ms: start DHT reading" << std::endl;
+      RADIATOR_LOG_DEBUG(millis() << " ms: start DHT reading" << std::endl;)
       lastRoomTemperature = readTemp(); // reading with DHT11 can last up to 275 ms!
-      LOG_debug << millis() << " ms: lastRoomTemperature=" << lastRoomTemperature << std::endl;
+      RADIATOR_LOG_DEBUG(millis() << " ms: lastRoomTemperature=" << lastRoomTemperature << std::endl;)
       lastRoomHumidity = readHumidity(); // reading with DHT11 can last up to 275 ms
-      LOG_debug << millis() << " ms: lastRoomHumidity=" << lastRoomHumidity << std::endl;
+      RADIATOR_LOG_DEBUG(millis() << " ms: lastRoomHumidity=" << lastRoomHumidity << std::endl;)
       DHTreadTimestamp = millis();
 
       xSemaphoreGive(semaphoreExternalSensors);
@@ -285,15 +285,17 @@ void radiator::ExternalSensors::xTaskExternalSensors(void *parameter)
     //           << ", acCurrentAnalogReadAmplitudeMillivolt= " << acCurrentAnalogReadAmplitudeMillivolt << ", acCurrentAmpere= " << getAcCurrentAmpereRMS()
     //           << std::endl;
     //   radiator::NetworkHandler::publishToMQTT(message.str(), "/externalsensors", 1, false);
-    //   LOG_debug << message.str();
+    //   RADIATOR_LOG_DEBUG( message.str();
     // }
     // radiator::NetworkHandler::publishToMQTT("", "/externalsensors", 1, false);
-    static ulong nextLog = 0;
-    if (millis() >= nextLog)
-    {
-      nextLog = millis() + 60000;
-      LOG_warn << millis() << " ms: ExternalSensors::xTaskExternalSensors: uxTaskGetStackHighWaterMark(NULL)= " << uxTaskGetStackHighWaterMark(NULL) << std::endl;
-    }
+
+    // static ulong nextLog = 0;
+    // if (millis() >= nextLog)
+    // {
+    //   nextLog = millis() + 60000;
+    //   DEBUG_STACK_HIGH_WATERMARK
+    // }
+
     // try to hold the cycle time - independent from used working time
     int waitForMs = cycleTimestamp + cycleTimeMs - millis();
     if (waitForMs <= 0)
@@ -365,11 +367,11 @@ bool radiator::ExternalSensors::initTempHumidityDHTSensor()
   // Check if any reads failed and exit early (to try again).
   if (isnan(humid) || isnan(temp))
   {
-    LOG_error << millis() << " ms: initTempHumidityDHTSensor(): Failed to read from DHT sensor!" << std::endl;
+    RADIATOR_LOG_ERROR(millis() << " ms: initTempHumidityDHTSensor(): Failed to read from DHT sensor!" << std::endl;)
     return false;
   }
 
-  LOG_info << millis() << " ms: initTempHumidityDHTSensor(): Humidity= " << humid << "%, Temperature= " << temp << "°C" << std::endl;
+  RADIATOR_LOG_INFO(millis() << " ms: initTempHumidityDHTSensor(): Humidity= " << humid << "%, Temperature= " << temp << "°C" << std::endl;)
 
   return true;
 }
@@ -392,11 +394,11 @@ int16_t radiator::ExternalSensors::readTemp()
   {
     readErrors++;
     messageBuf = std::to_string(millis()) + " ms: readTemp: Failed to read temperature from DHT sensor (" + std::to_string(readErrors) + ")";
-    LOG_info << messageBuf << std::endl;
+    RADIATOR_LOG_INFO(messageBuf << std::endl;)
 
     if (readErrors >= 50)
     {
-      LOG_error << messageBuf << std::endl;
+      RADIATOR_LOG_ERROR(messageBuf << std::endl;)
       radiator::NetworkHandler::publishToMQTT(messageBuf, MQTT_SUBTOPIC_SYSLOG);
       readErrors = 0; // only to avoid too many messages
     }
@@ -425,11 +427,11 @@ int16_t radiator::ExternalSensors::readHumidity()
   {
     readErrors++;
     messageBuf = std::to_string(millis()) + " ms: readHumidity: Failed to read humidity from DHT sensor (" + std::to_string(readErrors) + ")";
-    LOG_info << messageBuf << std::endl;
+    RADIATOR_LOG_INFO(messageBuf << std::endl;)
 
     if (readErrors >= 100)
     {
-      LOG_error << messageBuf << std::endl;
+      RADIATOR_LOG_ERROR(messageBuf << std::endl;)
       radiator::NetworkHandler::publishToMQTT(messageBuf, MQTT_SUBTOPIC_SYSLOG);
       readErrors = 0; // only to avoid too many messages
     }
@@ -470,7 +472,7 @@ void radiator::ExternalSensors::setVentilatorOn()
   ventilatorRelaisState = VENTILATOR_ON;
   xSemaphoreGive(semaphoreExternalSensors);
 
-  LOG_info << millis() << " ms: Ventilator ON" << std::endl;
+  RADIATOR_LOG_INFO(millis() << " ms: Ventilator ON" << std::endl;)
 }
 
 /*********************************************************************
@@ -486,7 +488,7 @@ void radiator::ExternalSensors::setVentilatorOff()
   ventilatorRelaisState = VENTILATOR_OFF;
   xSemaphoreGive(semaphoreExternalSensors);
 
-  LOG_info << millis() << " ms: Ventilator OFF" << std::endl;
+  RADIATOR_LOG_INFO(millis() << " ms: Ventilator OFF" << std::endl;)
 }
 
 /*********************************************************************
@@ -521,7 +523,7 @@ void radiator::ExternalSensors::openAirInputFlap()
   airInputFlapIsOpen = AIR_INPUT_FLAP_OPENED; //... but state is set now
   xSemaphoreGive(semaphoreExternalSensors);
 
-  LOG_info << millis() << " ms: Air Input Flap OPENED" << std::endl;
+  RADIATOR_LOG_INFO(millis() << " ms: Air Input Flap OPENED" << std::endl;)
 }
 
 /*********************************************************************
@@ -537,7 +539,7 @@ void radiator::ExternalSensors::closeAirInputFlap()
   airInputFlapIsOpen = AIR_INPUT_FLAP_CLOSED; //... but state is set now
   xSemaphoreGive(semaphoreExternalSensors);
 
-  LOG_info << millis() << " ms: Air Input Flap CLOSED" << std::endl;
+  RADIATOR_LOG_INFO(millis() << " ms: Air Input Flap CLOSED" << std::endl;)
 }
 
 /*********************************************************************
@@ -555,7 +557,7 @@ bool radiator::ExternalSensors::initLeakWaterSensor()
   // pinMode(leakWaterSensorGPIO, INPUT_PULLUP);
 
   leakWaterDetected = !digitalRead(leakWaterSensorGPIO); // Raindrop sensor gives HIGH at NO WATER
-  LOG_info << millis() << " ms: initLeakWaterSensor(): leakWaterDetected= " << leakWaterDetected << std::endl;
+  RADIATOR_LOG_INFO(millis() << " ms: initLeakWaterSensor(): leakWaterDetected= " << leakWaterDetected << std::endl;)
 
   attachInterrupt(
       leakWaterSensorGPIO,

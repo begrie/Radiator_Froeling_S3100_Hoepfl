@@ -196,18 +196,11 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src/WiFiUdp.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Udp.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/cbuf.h \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient.h \
+ .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient.hpp \
  .pio/libdeps/esp32dev/AsyncTCP/src/AsyncTCP.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/pbuf.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/lwip/lwip/src/include/lwip/err.h \
- .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/ESPAsyncWebServer.h \
- .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/StringArray.h \
- .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/WebResponseImpl.h \
- .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/WebHandlerImpl.h \
- .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/AsyncWebSocket.h \
- .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/AsyncWebSynchronization.h \
- .pio/libdeps/esp32dev/ESP\ Async\ WebServer/src/AsyncEventSource.h \
- .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient.h \
- .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient.hpp \
  .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/Flags.hpp \
  .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/ParsingInformation.hpp \
  .pio/libdeps/esp32dev/AsyncMqttClient/src/AsyncMqttClient/MessageProperties.hpp \
@@ -239,7 +232,4 @@
  src/files.h lib/FS_Filehelper/FS_Filehelper.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LITTLEFS.h \
  src/externalsensors.h .pio/libdeps/esp32dev/DHT\ sensor\ library/DHT.h \
- lib/ESP32_Servo/ESP32_Servo.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp32/rom/rtc.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp32/rom/ets_sys.h \
- C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/rtc_cntl_reg.h
+ lib/ESP32_Servo/ESP32_Servo.h

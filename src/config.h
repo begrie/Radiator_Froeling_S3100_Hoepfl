@@ -54,8 +54,8 @@ namespace radiator
 
 #define USE_WIFI true
 #define WIFI_HOSTNAME "Heizung_Froeling_P2"
-#define START_WEBSERVER true             // needs activated WiFi (USE_WIFI true)
-#define NUMBER_OF_LOGFILES_TO_COMBINE 92 // download option for webserver: 3 month -> approx 92 day files
+#define START_WEBSERVER false // needs activated WiFi (USE_WIFI true)
+// #define NUMBER_OF_LOGFILES_TO_COMBINE 92 // download option for webserver: 3 month -> approx 92 day files
 
 // Where to write the values received from the radiator to:
 #define OUTPUT_TO_CONSOLE false
@@ -67,16 +67,17 @@ namespace radiator
 #define OUTPUT_TO_MQTT false  // needs activated WiFi
 #endif
 
-#define FILESYSTEM_TO_USE SD       // SD  (or  LittleFS  (or SPIFFS))
+#define FILESYSTEM_TO_USE SD       // SD  (or  LittleFS  (or SPIFFS)) -> errors are NOT HANDLED if filesystem not exists (or SD card not inserted)
 #define FILESYSTEM_BASE_PATH "/sd" // "/littlefs" or "/sd" (or "/spiffs") -> MUST CORRESPOND to above filesystem definition
 // #define FILESYSTEM_TO_USE LittleFS           // LittleFS or SD (or SPIFFS)
 // #define FILESYSTEM_BASE_PATH "/littlefs"     // "/littlefs" or "/sd" (or "/spiffs") -> must correspond to above filesystem definition
-#define DATA_DIRECTORY "/P2_Logging"                      // directory for radiator data
-                                                          // -> e.g. "/logging" or "" for root dir of used filesystem
-#define MIN_FREE_KILOBYTES_ON_FILESYSTEM 1000             // if limit is undercut -> oldest logfiles are deleted
-#define INTERVALL_FOR_FILESYSTEM_CHECK_SEC (12 * 60 * 60) // execute all 12 hours to check free space on filesystem
+#define DATA_DIRECTORY "/P2_Logging"                      // DATA_DIRECTORY: directory for data from radiator -> e.g. "/data" or "" for root dir of used filesystem
+                                                          // only one level is created automatically in initFilesystem()
+                                                          // ->all deeper directories in path must exist before instantiation of OutputHandler
+#define MIN_FREE_KILOBYTES_ON_FILESYSTEM 5000             // if limit is undercut -> oldest logfiles are deleted
+#define INTERVALL_FOR_FILESYSTEM_CHECK_SEC (24 * 60 * 60) // execute all 24 hours to check free space on filesystem
 
-#define FILE_OUTPUT_INTERVALL_SEC 30   // controls how often resp. how many of the received data is saved to a logfile
+#define FILE_OUTPUT_INTERVALL_SEC 60   // controls how often resp. how many of the received data is saved to a logfile
                                        // -> the radiator device sends every second one values data set and the
                                        //    filtering is made by dropping (standard) or averaging (not yet implemented)
                                        //    the values from the previous time series
@@ -95,12 +96,15 @@ namespace radiator
 
 #define MQTT_BROKER "broker.hivemq.com" //"broker.emqx.io"  //"broker.hivemq.com"
 // USE OF IP NOT IMPLEMENTED #define MQTT_BROKER_IP IPAddress(18, 196, 225, 29) //"broker.hivemq.com"
+#define MQTT_USER ""     // broker.hivemq.com works without credentials
+#define MQTT_PASSWORD "" // broker.hivemq.com works without credentials
 #define MQTT_PORT 1883
-#define MQTT_OUTPUTINTERVALL_SEC 15 // controls how often resp. how many of the received
+#define MQTT_OUTPUTINTERVALL_SEC 60 // controls how often resp. how many of the received
                                     // data is send to a MQTT broker
 #define MQTT_TOPIC WIFI_HOSTNAME    // use WiFi hostname as basic mqtt topic
 #define MQTT_SUBTOPIC_ONLINESTATUS "/onlinestatus"
 #define MQTT_SUBTOPIC_SYSLOG "/syslog"
+#define MQTT_SUBTOPIC_STATISTICS "/statistics"
 #define MQTT_SUBTOPIC_SYSINFO "/systeminfo"
 #define MQTT_INTERVALL_FOR_SYSINFO_SEC (1 * 60 * 60)       //(1 * 60 * 60)       // execute all 1 hours to send systeminfo to mqtt broker
 #define MQTT_KEEP_ALIVE (MQTT_OUTPUTINTERVALL_SEC * 2.5)   // must be valid together with MQTT_OUTPUTINTERVALL_SEC
@@ -121,10 +125,10 @@ namespace radiator
 #define DHTTYPE DHT11             // use type definition from DHT lib
 
 #define GPIO_FOR_VENTILATOR_RELAIS 22                                // GPIO 22  or 0 to deactivate
-#define MIN_TEMP_FOR_VENTILATOR_ON 25                                // °C
+#define MIN_TEMP_FOR_VENTILATOR_ON 26                                // °C
 #define MAX_TEMP_FOR_VENTILATOR_OFF (MIN_TEMP_FOR_VENTILATOR_ON - 2) // °C; hysterisis to avoid nervous switching
                                                                      // due to measurement fluctuations
-#define MAX_HUMIDITY_FOR_VENTILATOR_RUN 35                           // %
+#define MAX_HUMIDITY_FOR_VENTILATOR_RUN 25                           // %
 
 #define GPIO_FOR_SERVO_FOR_AIR_INPUT_FLAP 25              // GPIO 25  or  0 to deactivate
 #define CLOSED_ANGLE_FOR_SERVO_FOR_AIR_INPUT_FLAP 45      // °   angle in degree

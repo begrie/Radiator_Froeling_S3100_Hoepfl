@@ -14,6 +14,32 @@ float radiator::Analysis::minFuellstand;
 float radiator::Analysis::pelletConsumptionThisDayPercent;
 
 /*********************************************************************
+ * @brief 	description
+ * @param 	void
+ * @return 	void
+ *********************************************************************/
+void radiator::Analysis::analyseValues(std::string_view time, const std::list<VALUE_DATA> &values)
+{
+  // values.begin()->index;
+  // auto it = std::find_if(
+  //     values.begin(), values.end(),
+  //     [](auto el)
+  //     {
+  //       if (el->index == 1)
+  //         return true;
+  //       else
+  //         return false;
+  //     });
+
+  // for (auto el : values)
+  // {
+  //   el.index == 1;
+  // }
+
+  // setRadiatorStatus(time, values[1]);
+}
+
+/*********************************************************************
  * @brief 	sets a changed radiator status (like "Heizen", "Brenner Aus, ..." and analyse it
  * @param 	time string like 2022-11-26; 10:17:25
  * @return 	void

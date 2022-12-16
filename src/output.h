@@ -77,6 +77,10 @@ namespace radiator
     bool checkForRadiatorIsBurning(const std::list<VALUE_DATA> &values);
     bool checkForLimit(const std::list<VALUE_DATA> &values, std::string_view parameterName, const int limit, const bool greaterThan = true);
 
+    bool radiatorIsBurning = false;
+    std::string heatingStartTime;
+    std::string heatingEndTime;
+
     void outputErrorToBuzzer(const uint16_t _beepIntervallMs = BEEP_INTERVALL_RADIATOR_ERROR_MS, const int _timeoutSec = 0);
   };
 }

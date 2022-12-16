@@ -32,6 +32,8 @@ namespace radiator
     static void checkFilesystem();
     static void checkFreeSpaceOnFilesystem();
     static void createTestData();
+
+    static std::string message; // as class member to avoid heap fragmentation
   };
 } // namespace radiator
-#endif //#ifndef __DH_FILES_H__
+#endif // #ifndef __DH_FILES_H__

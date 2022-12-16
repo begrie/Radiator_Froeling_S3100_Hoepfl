@@ -2,9 +2,13 @@
 #define __DH_NETWORK_H__
 
 #include <WiFi.h>
-#include <AsyncTCP.h>
+
+#if START_WEBSERVER
 #include <ESPAsyncWebServer.h>
+#endif
+
 #include <AsyncMqttClient.h>
+
 #include <Ticker.h>
 
 #include "config.h"
@@ -19,9 +23,10 @@ namespace radiator
 
   protected:
     static bool configureWiFiAndMQTT();
-    static void inputMQTTconfig();
+    static bool inputMQTTconfig();
     static void installWiFiCallbacks();
 
+    static void loadMQTTConfigFromPreferences();
     static void configureMQTT();
     static std::string printMQTTConfig();
     static void onMqttConnect(bool sessionPresent);
@@ -40,13 +45,17 @@ namespace radiator
     static Ticker tickerSendSysinfoToMQTT;
     static std::string mqttTopic;
     static std::string mqttBroker;
+    static std::string mqttUser;
+    static std::string mqttPassword;
 
     static std::string get_System_Info();
 
+#if START_WEBSERVER
     static void configureWebserver();
     static void sendLargeFile(AsyncWebServerRequest *request);
     static std::string handleSysLogfilesForWebserver(const char *dirname, fs::FS &fs = FILESYSTEM_TO_USE);
     static std::string handleLogfilesForWebserver(const char *dirname, fs::FS &fs = FILESYSTEM_TO_USE);
+#endif
 
     static std::string bufStr;              // as class member to avoid heap fragmentation
     static std::ostringstream bufStrStream; // as class member to avoid heap fragmentation

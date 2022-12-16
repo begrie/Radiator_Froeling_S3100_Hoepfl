@@ -1,6 +1,7 @@
 #include "output.h"
 #include "debug.h"
 #include "externalsensors.h"
+#include "analysis.h"
 
 #include <fstream>
 #include <iomanip>
@@ -21,12 +22,11 @@ namespace radiator
   {
     outputPath.empty() ? toFile = false : toFile = true;
 
-    bufStr.reserve(2000);
+    bufStr.reserve(2000); // an attempt to avoid heap fragmentation
 
-    LOG_info
-        << millis() << " ms: Output to\tconsole: \t" << (toConsole ? "ON" : "OFF") << "\n"
-        << "                     \tfile: \t\t" << (toFile ? "ON" : "OFF") << "\n"
-        << "                     \tMQTT: \t\t" << (toMQTT ? "ON" : "OFF") << std::endl;
+    RADIATOR_LOG_INFO(millis() << " ms: Output to\tconsole: \t" << (toConsole ? "ON" : "OFF") << "\n"
+                               << "                     \tfile: \t\t" << (toFile ? "ON" : "OFF") << "\n"
+                               << "                     \tMQTT: \t\t" << (toMQTT ? "ON" : "OFF") << std::endl;)
 
     if (toFile)
     {
@@ -41,14 +41,14 @@ namespace radiator
       {
         bufStr = std::to_string(millis()) + " ms: Output path  " + outputPath + "  CAN NOT BE OPENED -> NO VALUES WILL BE SAVED TO FILE";
         NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
-        LOG_error << bufStr;
+        RADIATOR_LOG_ERROR(bufStr << std::endl;)
 
         ::perror("OutputHandler: Unable to open file for output");
         throw("Unable to open file for output");
       }
       outFileStream.close();
 
-      LOG_info << millis() << " ms: Files are saved to path   " << outputPath << std::endl;
+      RADIATOR_LOG_INFO(millis() << " ms: Files are saved to path   " << outputPath << std::endl;)
     }
   }
 
@@ -75,7 +75,7 @@ namespace radiator
                                  uint16_t year, uint8_t month, uint8_t day,
                                  uint8_t hour, uint8_t minute, uint8_t second)
   {
-    outStrStream.str("");
+    outStrStream.str(""); // delete stream content
 
     outStrStream << std::dec
                  << std::setw(4) << std::setfill('0') << (int)year << "-"
@@ -128,6 +128,24 @@ namespace radiator
     else
       radiator::ExternalSensors::setRadiatorFireIsOff();
 #endif
+
+    // det taugt noch nix...
+    //  bool check = checkForRadiatorIsBurning(values);
+
+    // if (radiatorIsBurning != check)
+    // {
+    //   radiatorIsBurning = check;
+    //   if (radiatorIsBurning)
+    //   {
+    //     heatingStartTime == std::get<1>(valuesAtTime);
+    //   }
+    //   else
+    //   {
+    //     heatingEndTime == std::get<1>(valuesAtTime);
+    //   }
+    // }
+
+    // radiator::Analysis::analyseValues(std::get<1>(valuesAtTime), std::get<2>(valuesAtTime));
   }
 
   /*********************************************************************
@@ -142,7 +160,7 @@ namespace radiator
                                   uint8_t hour, uint8_t minute, uint8_t second,
                                   std::string description)
   {
-    outStrStream.str("");
+    outStrStream.str(""); // delete stream content
 
     outStrStream << "[ERROR] "
                  << std::dec
@@ -158,7 +176,7 @@ namespace radiator
       outputToConsole(outStrStream.str());
 
     // signal errors with buzzer sound
-    if (description.find("Last errors") == std::string::npos) // no sound signal for "Last errors" from connection begin
+    if (description.find("Last errors") == std::string::npos) // NO sound signal for "Last errors" from connection begin
       outputErrorToBuzzer();
 
     if (toMQTT)
@@ -172,7 +190,7 @@ namespace radiator
       {
         bufStr = std::to_string(millis()) + " ms: handleError(): Can not save to File";
         NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
-        LOG_error << bufStr;
+        RADIATOR_LOG_ERROR(bufStr << std::endl;)
       }
     }
   }
@@ -367,7 +385,7 @@ namespace radiator
 
     bufStr += "\n";
 
-    LOG_info << "formatValueDataHeaderForCSV = " << bufStr << std::endl;
+    RADIATOR_LOG_INFO("formatValueDataHeaderForCSV = " << bufStr << std::endl;)
 
     return bufStr;
   }
@@ -412,7 +430,7 @@ namespace radiator
    *********************************************************************/
   void OutputHandler::handleValuesTimeSeries(std::string_view time)
   {
-    LOG_debug << millis() << " ms: OutputHandler::handleValuesTimeSeries -> TIME " << time << std::endl;
+    RADIATOR_LOG_DEBUG(millis() << " ms: OutputHandler::handleValuesTimeSeries -> TIME " << time << std::endl;)
 
     valuesAtTime = std::make_tuple(millis(), static_cast<std::string>(time), emptyValuesPlaceholder);
   }
@@ -429,21 +447,21 @@ namespace radiator
   void OutputHandler::handleValuesTimeSeries(const std::list<VALUE_DATA> &values)
   {
     // Version 1 WITHOUT stored time series
-    LOG_debug << millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;
+    RADIATOR_LOG_DEBUG(millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;)
 
     // store new values item
     std::get<2>(valuesAtTime) = values;
 
-    static ulong nextLog = 0;
-    if (millis() >= nextLog)
-    {
-      nextLog = millis() + 60000;
-      LOG_warn << millis() << " ms: handleValuesTimeSeries: Heap= " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << "; esp_get_minimum_free_heap_size()= " << esp_get_minimum_free_heap_size() << std::endl;
-      LOG_warn << millis() << " ms: OutputHandler::handleValuesTimeSeries: Taskname= " << pcTaskGetTaskName(NULL) << ", uxTaskGetStackHighWaterMark(NULL)= " << uxTaskGetStackHighWaterMark(NULL) << std::endl;
-    }
+    // static ulong nextLog = 0;
+    // if (millis() >= nextLog)
+    // {
+    //   nextLog = millis() + 60000;
+    //   RADIATOR_LOG_WARN(millis() << " ms: handleValuesTimeSeries: Heap= " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << "; esp_get_minimum_free_heap_size()= " << esp_get_minimum_free_heap_size() << std::endl;)
+    //   DEBUG_STACK_HIGH_WATERMARK
+    // }
 
     // Version 2 with stored time series
-    //  LOG_debug << millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;
+    //  RADIATOR_LOG_DEBUG(LOG_debug<< millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;)
 
     // // remove expired item (only one per function call -> should be enough)
     // if (valuesTimeSeries.size() > 0)
@@ -460,7 +478,7 @@ namespace radiator
     // std::get<2>(valuesAtTime) = values;
     // valuesTimeSeries.push_back(valuesAtTime);
 
-    // LOG_info << millis() << " ms: handleValuesTimeSeries: Size valuesTimeSeries= " << (valuesTimeSeries.size() * sizeof(valuesAtTime)) << " / " << sizeof(valuesTimeSeries) << ", Size valuesAtTime= " << sizeof(valuesAtTime) << " \n"
+    // RADIATOR_LOG_INFO( millis() << " ms: handleValuesTimeSeries: Size valuesTimeSeries= " << (valuesTimeSeries.size() * sizeof(valuesAtTime)) << " / " << sizeof(valuesTimeSeries) << ", Size valuesAtTime= " << sizeof(valuesAtTime) << " \n"
     //          << "Heap= " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << std::endl;
 
     // // reset for later error recognition ...
@@ -488,7 +506,7 @@ namespace radiator
     // {
     //   bufStr = std::to_string(millis()) + " ms: OutputHandler::getLastValuesAtTime: valuesTimeSeries is empty";
     //   NetworkHandler::publishToMQTT(bufStr);
-    //   LOG_warn << bufStr;
+    //   RADIATOR_LOG_WARN( bufStr;
 
     //   return valuesAtTime; // only for error condition
     // }
@@ -528,7 +546,7 @@ namespace radiator
   {
     if (!toFile)
     {
-      LOG_warn << "Output to file is disabled" << std::endl;
+      RADIATOR_LOG_WARN("Output to file is disabled" << std::endl;)
       return;
     }
 
@@ -536,9 +554,9 @@ namespace radiator
 
     if (millis() / 1000 < nextFileOutputSec)
     {
-      LOG_debug << millis() << " ms: data buffered -> NO file output (next in "
-                << (nextFileOutputSec - (millis() / 1000))
-                << " seconds)" << std::endl;
+      RADIATOR_LOG_DEBUG(millis() << " ms: data buffered -> NO file output (next in "
+                                  << (nextFileOutputSec - (millis() / 1000))
+                                  << " seconds)" << std::endl;)
       return;
     }
 
@@ -563,7 +581,7 @@ namespace radiator
     {
       bufStr = std::to_string(millis()) + " ms: ERROR saving to File";
       NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
-      LOG_error << bufStr;
+      RADIATOR_LOG_ERROR(bufStr << std::endl;)
     }
   }
 
@@ -576,7 +594,7 @@ namespace radiator
    *********************************************************************/
   std::string OutputHandler::deriveFilename(const std::string &stringWithDate)
   {
-    LOG_info << millis() << " ms: OutputHandler::deriveFilename: ";
+    RADIATOR_LOG_INFO(millis() << " ms: OutputHandler::deriveFilename: ";)
 
     // derive filename from string with integrated date in format   yyyy-mm-dd
     auto toFind = std::regex("(2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)"); // finds date in string e.g.   2022-09-01
@@ -588,9 +606,9 @@ namespace radiator
     if (std::regex_search(stringWithDate, result, toFind))
     {
       filename = result.str() + ".log"; // use first match from stringWithDate
-      LOG_info << "stringWithDate= " << stringWithDate
-               << ", regex_search->result= " << result.str()
-               << " ->filename= " << filename << std::endl;
+      RADIATOR_LOG_INFO("stringWithDate= " << stringWithDate
+                                           << ", regex_search->result= " << result.str()
+                                           << " ->filename= " << filename << std::endl;)
     }
     else
     {
@@ -598,7 +616,7 @@ namespace radiator
 
       bufStr = std::to_string(millis()) + " ms: deriveFilename(): No suitable date found in given stringWithDate for derivation of the filename ->  00-LOST.log   will be used";
       NetworkHandler::publishToMQTT(bufStr);
-      LOG_error << bufStr;
+      RADIATOR_LOG_ERROR(bufStr << std::endl;)
     }
 
     return filename;
@@ -612,12 +630,12 @@ namespace radiator
    *********************************************************************/
   bool OutputHandler::handleFiles(std::string_view filename)
   {
-    LOG_info << millis() << " ms: OutputHandler::handleFiles: ";
+    RADIATOR_LOG_INFO(millis() << " ms: OutputHandler::handleFiles: ";)
 
     // same filename as before -> continue saving to it
     if (filename == outputFilename && outFileStream && outFileStream.good())
     {
-      LOG_info << "The values will continue to be saved in file " << (outputPath + outputFilename) << std::endl;
+      RADIATOR_LOG_INFO("The values will continue to be saved in file " << (outputPath + outputFilename) << std::endl;)
       if (outFileStream.is_open())
         return true;
     }
@@ -633,13 +651,13 @@ namespace radiator
     {
       bufStr = std::to_string(millis()) + " ms: handleFiles(): ERROR opening file " + outputPathWithFilename + " !! NO VALUES ARE SAVED TO FILE !!";
       NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
-      LOG_error << bufStr;
+      RADIATOR_LOG_ERROR(bufStr << std::endl;)
       return false;
     }
 
     outputFilename = filename;
 
-    LOG_info << millis() << " ms: File " << outputPathWithFilename << " was opened" << std::endl;
+    RADIATOR_LOG_INFO(millis() << " ms: File " << outputPathWithFilename << " was opened" << std::endl;)
     return true;
   }
 
@@ -655,9 +673,9 @@ namespace radiator
    *********************************************************************/
   void OutputHandler::outputToFile(std::string_view output, const ulong writeToFileIntervalSec)
   {
-    LOG_info << millis() << " ms: OutputHandler::outputToFile"
-             << " -> ************* File output: *************\n"
-             << output << std::endl;
+    RADIATOR_LOG_INFO(millis() << " ms: OutputHandler::outputToFile"
+                               << " -> ************* File output: *************\n"
+                               << output << std::endl;)
 
     if (!outFileStream || !outFileStream.is_open() || !outFileStream.good())
     {
@@ -665,7 +683,7 @@ namespace radiator
                "(outFileStream.is_open()=" + std::to_string(outFileStream.is_open()) + ", outFileStream.good()=" + std::to_string(outFileStream.good()) + ")";
 
       NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
-      LOG_error << bufStr;
+      RADIATOR_LOG_ERROR(bufStr << std::endl;)
       return;
     }
 
@@ -678,15 +696,15 @@ namespace radiator
     {
       outFileStream.close(); // BUG (with LittleFS only)? -> files are only written at .close() (.flush() is not working)
       lastClose = millis();
-      LOG_info << lastClose << " ms: reached end of writeToFileIntervalSec= " << writeToFileIntervalSec
-               << " -> Buffered file output data is written to file"
-               << std::endl;
+      RADIATOR_LOG_INFO(lastClose << " ms: reached end of writeToFileIntervalSec= " << writeToFileIntervalSec
+                                  << " -> Buffered file output data is written to file"
+                                  << std::endl;)
     }
     else
     {
-      LOG_info << millis() << " ms: File output data buffered for next file write in "
-               << ((lastClose + writeToFileIntervalSec * 1000 - millis()) / 1000) << " seconds"
-               << std::endl;
+      RADIATOR_LOG_INFO(millis() << " ms: File output data buffered for next file write in "
+                                 << ((lastClose + writeToFileIntervalSec * 1000 - millis()) / 1000) << " seconds"
+                                 << std::endl;)
     }
   }
 
@@ -700,7 +718,7 @@ namespace radiator
   {
     if (!toMQTT)
     {
-      LOG_info << millis() << " ms: Output to MQTT is disabled" << std::endl;
+      RADIATOR_LOG_INFO(millis() << " ms: Output to MQTT is disabled" << std::endl;)
       return;
     }
 
@@ -708,9 +726,9 @@ namespace radiator
 
     if (millis() / 1000 < nextMQTTOutputSec)
     {
-      LOG_debug << millis() << " ms: handleValuesMQTTOutput(): data buffered -> NO MQTT output (next in "
-                << (nextMQTTOutputSec - (millis() / 1000)) << " seconds)"
-                << std::endl;
+      RADIATOR_LOG_DEBUG(millis() << " ms: handleValuesMQTTOutput(): data buffered -> NO MQTT output (next in "
+                                  << (nextMQTTOutputSec - (millis() / 1000)) << " seconds)"
+                                  << std::endl;)
       return;
     }
 
@@ -745,7 +763,7 @@ namespace radiator
    *********************************************************************/
   bool OutputHandler::checkForRadiatorIsBurning(const std::list<VALUE_DATA> &values)
   {
-    LOG_debug << millis() << " ms: checkForRadiatorIsBurning= ";
+    RADIATOR_LOG_DEBUG(millis() << " ms: checkForRadiatorIsBurning= ";)
 
     auto it = std::find_if(
         values.begin(), values.end(),
@@ -759,19 +777,19 @@ namespace radiator
 
     if (it == values.end())
     {
-      LOG_error << millis() << " ms: checkForRadiatorIsBurning(): Index 1 not found" << std::endl;
+      RADIATOR_LOG_ERROR(millis() << " ms: checkForRadiatorIsBurning(): Index 1 not found" << std::endl;)
       return true;
     }
 
-    LOG_debug << "it->index= " << it->index << ", name= " << it->name << ", value = " << it->value << std::endl;
+    RADIATOR_LOG_DEBUG("it->index= " << it->index << ", name= " << it->name << ", value = " << it->value << std::endl;)
 
     if (it->value.find("Brenner Aus") != std::string::npos)
     {
-      LOG_debug << "false (" << it->value << ")" << std::endl;
+      RADIATOR_LOG_DEBUG("false (" << it->value << ")" << std::endl;)
       return false;
     }
 
-    LOG_debug << "true (" << it->value << ")" << std::endl;
+    RADIATOR_LOG_DEBUG("true (" << it->value << ")" << std::endl;)
     return true;
   }
 
@@ -787,17 +805,17 @@ namespace radiator
    *********************************************************************/
   bool OutputHandler::checkForLimit(const std::list<VALUE_DATA> &values, std::string_view parameterName, const int limit, const bool greaterThan)
   {
-    LOG_debug << millis() << " ms: checkForLimit -> parameterName=" << parameterName << ", limit= " << limit << std::endl;
+    RADIATOR_LOG_DEBUG(millis() << " ms: checkForLimit -> parameterName=" << parameterName << ", limit= " << limit << std::endl;)
 
     for (auto el : values)
     {
       if (el.name.compare(0, parameterName.size(), parameterName) == 0) // compare from first pos until length of comparing string
       {
-        LOG_debug << millis() << " ms: parameterName=" << parameterName << ", el.name = " << el.name << std::endl;
+        RADIATOR_LOG_DEBUG(millis() << " ms: parameterName=" << parameterName << ", el.name = " << el.name << std::endl;)
 
         // int valueAsInt = std::stoi(el.value);  //stoi can throw an expection -> so better to use atoi
         int valueAsInt = atoi(el.value.c_str());
-        LOG_debug << millis() << " ms: valueAsInt= " << valueAsInt << std::endl;
+        RADIATOR_LOG_DEBUG(millis() << " ms: valueAsInt= " << valueAsInt << std::endl;)
 
         if ((greaterThan && valueAsInt > limit) || (!greaterThan && valueAsInt < limit))
         {
@@ -810,8 +828,8 @@ namespace radiator
           {
             bufStr = std::to_string(millis()) + " ms: !!!!! ALERT: LIMIT EXCEEDED !!!!! parameterName= " + static_cast<std::string>(parameterName) + ", limit=" + std::to_string(limit) + ", actual value= " + std::to_string(valueAsInt);
 
-            std::cout << bufStr;
-            LOG_error << bufStr;
+            std::cout << bufStr << std::endl;
+            RADIATOR_LOG_ERROR(bufStr << std::endl;)
             NetworkHandler::publishToMQTT(bufStr);
 
             nextInfoOutputMs = millis() + infoOutputIntervallSec * 1000;
@@ -820,13 +838,13 @@ namespace radiator
         }
         else // parameter found, limit not exceeded
         {
-          LOG_debug << millis() << " ms: Limit NOT exceeded " << std::endl;
+          RADIATOR_LOG_DEBUG(millis() << " ms: Limit NOT exceeded " << std::endl;)
           return false;
         }
       }
     }
 
-    LOG_error << millis() << " ms: checkForLimit(): NO PARAMETER    " << parameterName << "     FOUND to check limit    " << limit << std::endl;
+    RADIATOR_LOG_ERROR(millis() << " ms: checkForLimit(): NO PARAMETER    " << parameterName << "     FOUND to check limit    " << limit << std::endl;)
 
     return false;
   }
@@ -914,7 +932,7 @@ namespace radiator
       {
         bufStr = std::to_string(millis()) + " ms: outputErrorToBuzzer: Error creating xTask";
         NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
-        LOG_error << bufStr;
+        RADIATOR_LOG_ERROR(bufStr << std::endl;)
       }
     }
   }

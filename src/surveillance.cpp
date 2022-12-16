@@ -43,7 +43,7 @@ namespace radiator
 
     // Log in.
     this->state = ST_RA_SENT;
-    LOG_info << millis() << " ms: Send login command 'Ra' to radiator device" << std::endl;
+    RADIATOR_LOG_INFO(millis() << " ms: Send login command 'Ra' to radiator device" << std::endl;)
     if (this->fd.send_cmd((uint8_t *)"Ra", (uint8_t *)"\0\xff\xf9", 3) < 0)
     {
       perror("Failed to send login command - ");
@@ -68,7 +68,7 @@ namespace radiator
         this->state = ST_ERROR;
         break;
       case 0:
-        LOG_error << millis() << " ms: Timeout: P2/S3100 radiator device did not send any data within " << timeout << " ms" << std::endl;
+        RADIATOR_LOG_ERROR(millis() << " ms: Timeout: P2/S3100 radiator device did not send any data within " << timeout << " ms" << std::endl;)
         this->state = ST_ERROR;
         break;
       default:
@@ -96,7 +96,7 @@ namespace radiator
           if (buffer[2] == 1 && buffer[3] == 1)
           {
             // ACK.
-            LOG_trace << "Just an ACK, ignored." << std::endl;
+            RADIATOR_LOG_TRACE("Just an ACK, ignored." << std::endl;)
           }
           else
           {
@@ -108,20 +108,20 @@ namespace radiator
         }
         else
         {
-          LOG_error << millis() << " ms: Invalid response, checksum error." << std::endl;
+          RADIATOR_LOG_ERROR(millis() << " ms: Invalid response, checksum error." << std::endl;)
           this->state = ST_ERROR;
         }
       }
       }
-      static ulong nextLog = 0;
-      if (millis() >= nextLog)
-      {
-        nextLog = millis() + 60000;
-        LOG_warn << millis() << " ms: Surveillance::main_loop: uxTaskGetStackHighWaterMark(NULL)= " << uxTaskGetStackHighWaterMark(NULL) << std::endl;
-      }
+      // static ulong nextLog = 0;
+      // if (millis() >= nextLog)
+      // {
+      //   nextLog = millis() + 60000;
+      //   DEBUG_STACK_HIGH_WATERMARK
+      // }
     }
 
-    LOG_error << millis() << " ms: Froeling P2/S3100 protocol error" << std::endl;
+    RADIATOR_LOG_ERROR(millis() << " ms: Froeling P2/S3100 protocol error" << std::endl;)
   }
 
   /**
@@ -305,7 +305,7 @@ namespace radiator
   {
     if (command[2] != 7)
     {
-      LOG_error << "date/time message length invalid." << std::endl;
+      RADIATOR_LOG_ERROR("date/time message length invalid." << std::endl;)
       this->state = ST_ERROR;
       return;
     }
@@ -334,7 +334,7 @@ namespace radiator
 
     if (this->state == ST_RA_SENT)
     {
-      LOG_trace << "Sending 'Rb' command" << std::endl;
+      RADIATOR_LOG_TRACE("Sending 'Rb' command" << std::endl;)
       if (this->fd.send_cmd((uint8_t *)"Rb", (uint8_t *)"\0\0\0", 3) < 0)
       {
         ::perror("Failed to send Rb command");
@@ -349,7 +349,7 @@ namespace radiator
   {
     if (command[2] != 10)
     {
-      LOG_error << "Failure message length invalid." << std::endl;
+      RADIATOR_LOG_ERROR("Failure message length invalid." << std::endl;)
       this->state = ST_ERROR;
       return;
     }
@@ -553,18 +553,18 @@ namespace radiator
       {
       case 'A':
       {
-        LOG_debug << "M1 data:" << std::endl;
+        RADIATOR_LOG_DEBUG("M1 data:" << std::endl;)
         for (auto iter = this->parameterNames.begin();
              iter != this->parameterNames.end();
              ++iter)
         {
           if (iter->type == PNT_STRING)
           {
-            LOG_debug << "[STRING]" << std::endl;
+            RADIATOR_LOG_DEBUG("[STRING]" << std::endl;)
           }
           else
           {
-            LOG_debug << "[" << iter->name << "]" << std::endl;
+            RADIATOR_LOG_DEBUG("[" << iter->name << "]" << std::endl;)
           }
         }
 
@@ -572,7 +572,7 @@ namespace radiator
       }
       case 'B':
       {
-        LOG_debug << "Display texts:" << std::endl;
+        RADIATOR_LOG_DEBUG("Display texts:" << std::endl;)
         for (auto pageIter = this->displayTexts.begin();
              pageIter != this->displayTexts.end();
              ++pageIter)
@@ -601,7 +601,7 @@ namespace radiator
       }
       case 'C':
       {
-        LOG_debug << "Data formats:" << std::endl;
+        RADIATOR_LOG_DEBUG("Data formats:" << std::endl;)
         for (int i = 0; i < this->dataformats.size(); ++i)
         {
           DATAFORMATS dataformat = this->dataformats[i];
@@ -617,7 +617,7 @@ namespace radiator
         break;
       }
       case 'F':
-        LOG_debug << "Operation modes:" << std::endl;
+        RADIATOR_LOG_DEBUG("Operation modes:" << std::endl;)
         for (auto operationModeIter = this->operationModes.begin();
              operationModeIter != this->operationModes.end();
              ++operationModeIter)
@@ -631,7 +631,7 @@ namespace radiator
         }
         break;
       case 'T':
-        LOG_debug << "Errorcodes:" << std::endl;
+        RADIATOR_LOG_DEBUG("Errorcodes:" << std::endl;)
         for (auto errorMessageIter = this->errorMessages.begin();
              errorMessageIter != this->errorMessages.end();
              ++errorMessageIter)
@@ -671,7 +671,7 @@ namespace radiator
               << std::setfill('0') << std::setw(2) << (unsigned int)iter->second << "; "
               << description << std::endl;
         }
-        // LOG_info << allLastErrors.str();
+        // RADIATOR_LOG_INFO( allLastErrors.str();
 
         //"mis-use" handleError: send to output handler for information of restart, file saving etc.
         this->handler.handleError(*this,
