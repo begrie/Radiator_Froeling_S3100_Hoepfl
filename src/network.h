@@ -8,7 +8,6 @@
 #endif
 
 #include <AsyncMqttClient.h>
-
 #include <Ticker.h>
 
 #include "config.h"
@@ -56,9 +55,8 @@ namespace radiator
     static std::string handleSysLogfilesForWebserver(const char *dirname, fs::FS &fs = FILESYSTEM_TO_USE);
     static std::string handleLogfilesForWebserver(const char *dirname, fs::FS &fs = FILESYSTEM_TO_USE);
 #endif
-
     static std::string bufStr;              // as class member to avoid heap fragmentation
     static std::ostringstream bufStrStream; // as class member to avoid heap fragmentation
   };
 }
-#endif //#ifndef __DH_NETWORK_H__
+#endif // #ifndef __DH_NETWORK_H__

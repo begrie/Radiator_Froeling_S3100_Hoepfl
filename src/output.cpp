@@ -34,8 +34,6 @@ namespace radiator
         outputPath += "/";
 
       // check for path availability (with fstream only possible by usage of a testfile which cannot be deleted here...)
-      // std::ofstream testForDirectory(outputPath + "dirtest.tst");
-      // if (!testForDirectory)
       outFileStream.open(outputPath + "dirtest.tst");
       if (!outFileStream)
       {
@@ -94,12 +92,19 @@ namespace radiator
                       ", " + outStrStream.str());
     }
 
+    static ulong lastSystemTimeSet = 0;
+    if (millis() - lastSystemTimeSet >= (24 * 60 * 60 * 1000)) // set/synchronize every 24 hours
+    {
+      setSystemTimeFromRadiatorData(year, month, day, hour, minute, second);
+      lastSystemTimeSet = millis();
+    }
+
     handleValuesTimeSeries(outStrStream.str());
   }
 
   /*********************************************************************
    * @brief 	handling of the measurement values received (every 1 second) from the radiator
-   *          with the "M1" command
+   *          with the "M1" command after a M2 with the time
    * @param 	instance of Surveillance working class
    * @param 	list with values from radiator
    * @return 	void
@@ -118,15 +123,16 @@ namespace radiator
       handleValuesMQTTOutput();
 
     checkForLimit(values, "Kesseltemp", 90); // check against overheating if more than 90°
-                                             // // for testing only:
-                                             // if (millis() > 30000 && millis() < 60000)
-                                             //   checkForLimit(values, "Kesseltemp", 10);
 
 #if USE_EXTERNAL_SENSORS
     if (checkForRadiatorIsBurning(values))
       radiator::ExternalSensors::setRadiatorIsBurning();
     else
       radiator::ExternalSensors::setRadiatorFireIsOff();
+#endif
+
+#if ACTIVATE_ANALYSIS
+    radiator::Analysis::analyseValues(valuesAtTime);
 #endif
 
     // det taugt noch nix...
@@ -180,7 +186,7 @@ namespace radiator
       outputErrorToBuzzer();
 
     if (toMQTT)
-      outputToMQTT(outStrStream.str());
+      outputToMQTT(outStrStream.str(), MQTT_SUBTOPIC_ERRORLOG);
 
     if (toFile)
     {
@@ -193,6 +199,126 @@ namespace radiator
         RADIATOR_LOG_ERROR(bufStr << std::endl;)
       }
     }
+  }
+
+  /*********************************************************************
+   * @brief 	first step for creating a time series for the received radiator data
+   *          ->  the radiator sends every second a "M2" command with the actual time
+   *              followed by a "M1" command with the values at this time
+   *          ->  in this function the "M2" is handled by storing the radiator time
+   *              together with the microcontroller time and an empty values placeholder in the
+   *              class member variable valuesAtTime
+   *          ->  next function call must be the handling of the "M1" command -> see below
+   * @param 	string with time received from radiator; e.g.    [TIME] Thu, 2022-09-08, 11:58:19
+   * @return 	void
+   *********************************************************************/
+  void OutputHandler::handleValuesTimeSeries(std::string_view timeStr)
+  {
+    RADIATOR_LOG_DEBUG(millis() << " ms: OutputHandler::handleValuesTimeSeries -> TIME " << timeStr << std::endl;)
+
+    valuesAtTime = std::make_tuple(time(NULL), static_cast<std::string>(timeStr), emptyValuesPlaceholder); // time(NULL) gets actual system time
+    // valuesAtTime = std::make_tuple(millis(), static_cast<std::string>(time), emptyValuesPlaceholder);
+  }
+
+  /*********************************************************************
+   * @brief 	second step for creating the values time series (more explanation see above)
+   *          ->  adds values from "M1" command together with previous stored time data from "M2" command
+   *              to class member deque valuesTimeSeries
+   *          ->  expired items not needed anymore for later averaging etc. are deleted (only one per function call)
+   *              (older than fileOutputIntervallSec and MQTTOutputIntervallSec)
+   * @param 	list with values from radiator
+   * @return 	void
+   *********************************************************************/
+  void OutputHandler::handleValuesTimeSeries(const std::list<VALUE_DATA> &values)
+  {
+    // Version 1 WITHOUT stored time series
+    RADIATOR_LOG_DEBUG(millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;)
+
+    // store new values item
+    std::get<2>(valuesAtTime) = values;
+
+    // static ulong nextLog = 0;
+    // if (millis() >= nextLog)
+    // {
+    //   nextLog = millis() + 60000;
+    //   RADIATOR_LOG_WARN(millis() << " ms: handleValuesTimeSeries: Heap= " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << "; esp_get_minimum_free_heap_size()= " << esp_get_minimum_free_heap_size() << std::endl;)
+    //   DEBUG_STACK_HIGH_WATERMARK
+    // }
+
+    // Version 2 with stored time series
+    //  RADIATOR_LOG_DEBUG(LOG_debug<< millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;)
+
+    // // remove expired item (only one per function call -> should be enough)
+    // if (valuesTimeSeries.size() > 0)
+    // {
+    //   ulong firstStoredTime = std::get<0>(valuesTimeSeries.front());
+    //   auto deltaTime = millis() - firstStoredTime;
+    //   if (deltaTime > (fileOutputIntervallSec * 1000) && deltaTime > (MQTTOutputIntervallSec * 1000))
+    //   {
+    //     valuesTimeSeries.pop_front();
+    //   }
+    // }
+
+    // // store new values item
+    // std::get<2>(valuesAtTime) = values;
+    // valuesTimeSeries.push_back(valuesAtTime);
+
+    // RADIATOR_LOG_INFO( millis() << " ms: handleValuesTimeSeries: Size valuesTimeSeries= " << (valuesTimeSeries.size() * sizeof(valuesAtTime)) << " / " << sizeof(valuesTimeSeries) << ", Size valuesAtTime= " << sizeof(valuesAtTime) << " \n"
+    //          << "Heap= " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << std::endl;
+
+    // // reset for later error recognition ...
+    // valuesAtTime = std::make_tuple(0, "0000-00-00, 00:00:00", emptyValuesPlaceholder);
+  }
+
+  /*********************************************************************
+   * @brief 	get the last values item from the stored values time series
+   * @param   Filter method to reduce data amount
+   *          -> FilterMethod_t::DROP -> return newest values item from time series
+   *          -> FilterMethod_t::AVERAGING -> not yet implemented
+   *          -> FilterMethod_t::ONCHANGE -> not yet implemented
+   * @param 	-> not used for filter method "DROP"
+   *          -> only for "AVERAGING": time intervall for averaging of values
+   *              -> if greater than stored item range -> all values are averaged
+   * @return 	last values tuple
+   *********************************************************************/
+  OutputHandler::ValuesWithTime_t OutputHandler::getLastValuesAtTime(const FilterMethod_t filterMethod, const uint16_t intervallSec)
+  {
+    // Version 1 WITHOUT stored time series
+    return valuesAtTime;
+
+    // Version 2 with stored time series
+    // if (valuesTimeSeries.empty())
+    // {
+    //   bufStr = std::to_string(millis()) + " ms: OutputHandler::getLastValuesAtTime: valuesTimeSeries is empty";
+    //   NetworkHandler::publishToMQTT(bufStr);
+    //   RADIATOR_LOG_WARN( bufStr;
+
+    //   return valuesAtTime; // only for error condition
+    // }
+
+    // switch (filterMethod)
+    // {
+    // case FilterMethod_t::ONCHANGE: // not yet implemented
+
+    //   // TODO: checks values for change of defined amount
+
+    // case FilterMethod_t::AVERAGE:     // not yet implemented
+    //   return valuesTimeSeries.back(); // like drop -> only as placeholder
+
+    //   // TODO: averaging for all single values...
+    //   //  auto storedTimeString = std::get<1>(valuesTimeSeries.back());
+    //   //  for (auto rIter = valuesTimeSeries.rbegin(); // iterate backwards
+    //   //       rIter != valuesTimeSeries.rend();
+    //   //       ++rIter)
+    //   //  {
+    //   //  }
+
+    //   break;
+    // case FilterMethod_t::DROP:
+    // default:
+    //   return valuesTimeSeries.back();
+    //   break;
+    // }
   }
 
   /*********************************************************************
@@ -418,125 +544,6 @@ namespace radiator
   }
 
   /*********************************************************************
-   * @brief 	first step for creating a time series for the received radiator data
-   *          ->  the radiator sends every second a "M2" command with the actual time
-   *              followed by a "M1" command with the values at this time
-   *          ->  in this function the "M2" is handled by storing the radiator time
-   *              together with the microcontroller time and an empty values placeholder in the
-   *              class member variable valuesAtTime
-   *          ->  next function call must be the handling of the "M1" command -> see below
-   * @param 	string with time received from radiator; e.g.    [TIME] Thu, 2022-09-08, 11:58:19
-   * @return 	void
-   *********************************************************************/
-  void OutputHandler::handleValuesTimeSeries(std::string_view time)
-  {
-    RADIATOR_LOG_DEBUG(millis() << " ms: OutputHandler::handleValuesTimeSeries -> TIME " << time << std::endl;)
-
-    valuesAtTime = std::make_tuple(millis(), static_cast<std::string>(time), emptyValuesPlaceholder);
-  }
-
-  /*********************************************************************
-   * @brief 	second step for creating the values time series (more explanation see above)
-   *          ->  adds values from "M1" command together with previous stored time data from "M2" command
-   *              to class member deque valuesTimeSeries
-   *          ->  expired items not needed anymore for later averaging etc. are deleted (only one per function call)
-   *              (older than fileOutputIntervallSec and MQTTOutputIntervallSec)
-   * @param 	list with values from radiator
-   * @return 	void
-   *********************************************************************/
-  void OutputHandler::handleValuesTimeSeries(const std::list<VALUE_DATA> &values)
-  {
-    // Version 1 WITHOUT stored time series
-    RADIATOR_LOG_DEBUG(millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;)
-
-    // store new values item
-    std::get<2>(valuesAtTime) = values;
-
-    // static ulong nextLog = 0;
-    // if (millis() >= nextLog)
-    // {
-    //   nextLog = millis() + 60000;
-    //   RADIATOR_LOG_WARN(millis() << " ms: handleValuesTimeSeries: Heap= " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << "; esp_get_minimum_free_heap_size()= " << esp_get_minimum_free_heap_size() << std::endl;)
-    //   DEBUG_STACK_HIGH_WATERMARK
-    // }
-
-    // Version 2 with stored time series
-    //  RADIATOR_LOG_DEBUG(LOG_debug<< millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;)
-
-    // // remove expired item (only one per function call -> should be enough)
-    // if (valuesTimeSeries.size() > 0)
-    // {
-    //   ulong firstStoredTime = std::get<0>(valuesTimeSeries.front());
-    //   auto deltaTime = millis() - firstStoredTime;
-    //   if (deltaTime > (fileOutputIntervallSec * 1000) && deltaTime > (MQTTOutputIntervallSec * 1000))
-    //   {
-    //     valuesTimeSeries.pop_front();
-    //   }
-    // }
-
-    // // store new values item
-    // std::get<2>(valuesAtTime) = values;
-    // valuesTimeSeries.push_back(valuesAtTime);
-
-    // RADIATOR_LOG_INFO( millis() << " ms: handleValuesTimeSeries: Size valuesTimeSeries= " << (valuesTimeSeries.size() * sizeof(valuesAtTime)) << " / " << sizeof(valuesTimeSeries) << ", Size valuesAtTime= " << sizeof(valuesAtTime) << " \n"
-    //          << "Heap= " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << std::endl;
-
-    // // reset for later error recognition ...
-    // valuesAtTime = std::make_tuple(0, "0000-00-00, 00:00:00", emptyValuesPlaceholder);
-  }
-
-  /*********************************************************************
-   * @brief 	get the last values item from the stored values time series
-   * @param   Filter method to reduce data amount
-   *          -> FilterMethod_t::DROP -> return newest values item from time series
-   *          -> FilterMethod_t::AVERAGING -> not yet implemented
-   *          -> FilterMethod_t::ONCHANGE -> not yet implemented
-   * @param 	-> not used for filter method "DROP"
-   *          -> only for "AVERAGING": time intervall for averaging of values
-   *              -> if greater than stored item range -> all values are averaged
-   * @return 	last values tuple
-   *********************************************************************/
-  OutputHandler::ValuesWithTime_t OutputHandler::getLastValuesAtTime(const FilterMethod_t filterMethod, const uint16_t intervallSec)
-  {
-    // Version 1 WITHOUT stored time series
-    return valuesAtTime;
-
-    // Version 2 with stored time series
-    // if (valuesTimeSeries.empty())
-    // {
-    //   bufStr = std::to_string(millis()) + " ms: OutputHandler::getLastValuesAtTime: valuesTimeSeries is empty";
-    //   NetworkHandler::publishToMQTT(bufStr);
-    //   RADIATOR_LOG_WARN( bufStr;
-
-    //   return valuesAtTime; // only for error condition
-    // }
-
-    // switch (filterMethod)
-    // {
-    // case FilterMethod_t::ONCHANGE: // not yet implemented
-
-    //   // TODO: checks values for change of defined amount
-
-    // case FilterMethod_t::AVERAGE:     // not yet implemented
-    //   return valuesTimeSeries.back(); // like drop -> only as placeholder
-
-    //   // TODO: averaging for all single values...
-    //   //  auto storedTimeString = std::get<1>(valuesTimeSeries.back());
-    //   //  for (auto rIter = valuesTimeSeries.rbegin(); // iterate backwards
-    //   //       rIter != valuesTimeSeries.rend();
-    //   //       ++rIter)
-    //   //  {
-    //   //  }
-
-    //   break;
-    // case FilterMethod_t::DROP:
-    // default:
-    //   return valuesTimeSeries.back();
-    //   break;
-    // }
-  }
-
-  /*********************************************************************
    * @brief 	handle output of values to files
    *          -> inclusive check of fileOutputIntervallSec
    * @param 	used instance of Surveillance -> for access to parameter names
@@ -744,11 +751,12 @@ namespace radiator
   /*********************************************************************
    * @brief 	output string to MQTT as payload
    * @param 	payload message
+   * @param 	optional subtopic e.g. "/errorlog" (default "")
    * @return 	void
    *********************************************************************/
-  void OutputHandler::outputToMQTT(std::string_view output)
+  void OutputHandler::outputToMQTT(std::string_view output, std::string_view subtopic)
   {
-    radiator::NetworkHandler::publishToMQTT(static_cast<std::string>(output));
+    radiator::NetworkHandler::publishToMQTT(static_cast<std::string>(output), static_cast<std::string>(subtopic));
   }
 
   /*********************************************************************
@@ -795,6 +803,7 @@ namespace radiator
 
   /*********************************************************************
    * @brief 	checks one parameter from value data set for exceeding a limit
+   *          -> if limit is exceeded: buzzer will be activated and MQTT message is send
    * @param 	values from one timestamp
    * @param 	name of parameter to check
    * @param 	limit to check against
@@ -847,6 +856,34 @@ namespace radiator
     RADIATOR_LOG_ERROR(millis() << " ms: checkForLimit(): NO PARAMETER    " << parameterName << "     FOUND to check limit    " << limit << std::endl;)
 
     return false;
+  }
+
+  /*********************************************************************
+   * @brief 	set ESP system time from radiator data
+   * @param 	values from one timestamp
+   * @return 	void
+   *********************************************************************/
+  void OutputHandler::setSystemTimeFromRadiatorData(uint16_t year, uint8_t month, uint8_t day,
+                                                    uint8_t hour, uint8_t minute, uint8_t second)
+  {
+    tm tmTimeToSet;
+    tmTimeToSet.tm_year = year - 1900; // years since 1900
+    tmTimeToSet.tm_mon = month - 1;    // starts from 0
+    tmTimeToSet.tm_mday = day;         // starts from 1
+    tmTimeToSet.tm_hour = hour;
+    tmTimeToSet.tm_min = minute;
+    tmTimeToSet.tm_sec = second;
+
+    Serial.printf("Setting time: %s", asctime(&tmTimeToSet));
+
+    timeval timevalTimetoSet{0, 0}; // 0 - initializer are absolutely neccessary!!
+    timevalTimetoSet.tv_sec = mktime(&tmTimeToSet);
+    settimeofday(&timevalTimetoSet, 0);
+
+    // only for debugging:
+    time_t actTime_t = time(NULL);
+    tmTimeToSet = *localtime(&actTime_t);
+    Serial.printf("Getting time: %s", asctime(&tmTimeToSet));
   }
 
   /*********************************************************************

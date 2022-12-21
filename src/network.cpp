@@ -666,7 +666,9 @@ bool radiator::NetworkHandler::publishToMQTT(const std::string &payload, const s
 
   // ALL messages are pushed to the buffer queue
   RADIATOR_LOG_DEBUG(millis() << " ms: publishToMQTT: 1 before push_back-> bufferQueue.size=" << bufferQueue.size() << " ESP.getFreeHeap()=" << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << " bytes" << std::endl;)
+
   bufferQueue.push_back({payload, subtopic, qos, retain});
+
   RADIATOR_LOG_DEBUG(millis() << " ms: publishToMQTT: 2 after push_back-> bufferQueue.size=" << bufferQueue.size() << " ESP.getFreeHeap()=" << (ESP.getFreeHeap()) << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << " bytes" << std::endl;)
 
   // DEBUG_STACK_HIGH_WATERMARK

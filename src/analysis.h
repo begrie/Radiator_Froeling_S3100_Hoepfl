@@ -3,31 +3,55 @@
 
 #include "config.h"
 #include "network.h"
-
 #include "surveillance.h"
+#include "output.h"
 
 namespace radiator
 {
   class Analysis
   {
   public:
-    static void analyseValues(std::string_view time, const std::list<VALUE_DATA> &values);
+    static void analyseValues(radiator::OutputHandler::ValuesWithTime_t &valuesAtTime);
 
   protected:
-    static void setRadiatorStatus(std::string_view time, std::string_view status);
-    static void setFuellstand(std::string_view time, std::string_view fuellstand);
+    static void setValuesAtTime(radiator::OutputHandler::ValuesWithTime_t &valuesAtTime);
+    static radiator::OutputHandler::ValuesWithTime_t *ptrValuesAtTime;
+    static time_t *ptrValueTimet;
+    static std::string *ptrValueTimeStr;
+    static std::list<VALUE_DATA> *ptrValues;
 
-    static std::string getTimeDiff(std::string_view firstTime, std::string_view secondTime);
-    static int32_t getSecondsFromMidnight(std::string_view time);
+    static VALUE_DATA getElementWithParameterName(std::string_view parameterName);
+    static VALUE_DATA getElementWithValue(std::string_view valueToFind);
+    static VALUE_DATA getElementWithIndex(uint16_t indexToFind);
 
-    static std::string heatingStartTime;
-    static std::string heatingEndTime;
+    static bool checkForLimit(std::string_view parameterName, const int limit, const bool greaterThan);
+    static bool findValue(std::string_view valueToFind);
+    static bool checkForNewDay();
+    static void setNewDay();
+    static std::string actualDate;
+
+    static std::string checkRadiatorStatusForHeatingCycle();
+    static std::string analyseHeatingCyclesLastDayAndReset();
+
+    static time_t heatingStartTime;
+    static time_t heatingEndTime;
     static uint16_t heatingDurationThisDayMinutes;
     static uint8_t heatingStartsThisDay;
 
+    static float getFuellstand();
+    static std::string getFuellstandAsString();
+    static void traceFuellstand();
+    static std::string analyseFuellstandLastDayAndReset();
+
+    static float startFuellstand;
     static float minFuellstand;
+    static float refillFuellstandThisDay;
     static float pelletConsumptionThisDayPercent;
+
+    static void handleMessages();
+    static std::string bufStr;
+    static std::deque<std::string> messages;
   };
 }
 
-#endif //#ifndef __DH_ANALYSIS_H__
+#endif // #ifndef __DH_ANALYSIS_H__

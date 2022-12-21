@@ -45,7 +45,10 @@ namespace radiator
     uint16_t MQTTOutputIntervallSec = MQTT_OUTPUTINTERVALL_SEC;
     uint16_t fileOutputIntervallSec = FILE_OUTPUT_INTERVALL_SEC;
 
-    typedef std::tuple<ulong, std::string, std::list<VALUE_DATA>> ValuesWithTime_t;
+  public:
+    typedef std::tuple<time_t, std::string, std::list<VALUE_DATA>> ValuesWithTime_t;
+
+  protected:
     const std::list<VALUE_DATA> emptyValuesPlaceholder;
     ValuesWithTime_t valuesAtTime = std::make_tuple(0, "0000-00-00, 00:00:00", emptyValuesPlaceholder);
     // std::deque<ValuesWithTime_t> valuesTimeSeries;  // needed for buffering and averaging measured values
@@ -60,7 +63,7 @@ namespace radiator
     std::string formatValueDataHeaderForCSV(Surveillance &surveillance);
     std::string formatValueDataForCSV(std::string_view time, const std::list<VALUE_DATA> &values);
 
-    void handleValuesTimeSeries(std::string_view time);
+    void handleValuesTimeSeries(std::string_view timeStr);
     void handleValuesTimeSeries(const std::list<VALUE_DATA> &values);
     ValuesWithTime_t getLastValuesAtTime(const FilterMethod_t filterMethod = FilterMethod_t::DROP, const uint16_t intervallSec = 0);
 
@@ -72,10 +75,12 @@ namespace radiator
     void outputToFile(std::string_view output, const ulong writeToFileIntervalSec = WRITE_TO_FILE_INTERVAL_SEC); // writeToFileIntervalSec controls how often the streambuffer is written to file and how many data can get lost ...
 
     void handleValuesMQTTOutput();
-    void outputToMQTT(std::string_view output);
+    void outputToMQTT(std::string_view output, std::string_view subtopic = "");
 
     bool checkForRadiatorIsBurning(const std::list<VALUE_DATA> &values);
     bool checkForLimit(const std::list<VALUE_DATA> &values, std::string_view parameterName, const int limit, const bool greaterThan = true);
+
+    void setSystemTimeFromRadiatorData(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second);
 
     bool radiatorIsBurning = false;
     std::string heatingStartTime;
