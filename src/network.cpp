@@ -455,7 +455,9 @@ void radiator::NetworkHandler::onMqttConnect(bool sessionPresent)
         {
           mqttClient.publish((mqttTopic + MQTT_SUBTOPIC_SYSINFO).c_str(), 1, true, get_System_Info().c_str());
           // RADIATOR_LOG_WARN( get_System_Info();
-          RADIATOR_LOG_WARN(millis() << " ms: handleValuesTimeSeries: Uptime: " << (millis() / (1000 * 60)) << " min; MQTT status: " << (mqttClient.connected() ? "connected" : "NOT connected") << "; Heap : " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << std::endl;)
+          time_t rawtime;
+          time(&rawtime);
+          RADIATOR_LOG_WARN(millis() << " ms / " << ctime(&rawtime) << ": handleValuesTimeSeries: Uptime: " << (millis() / (1000 * 60)) << " min; MQTT status: " << (mqttClient.connected() ? "connected" : "NOT connected") << "; Heap: " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << std::endl;)
         });
   }
 
@@ -877,6 +879,10 @@ std::string radiator::NetworkHandler::get_System_Info()
   //          "MQTT reconnection timeout: " + std::to_string(MQTT_RECONNECTION_TIMEOUT_SEC) + " sec; \n";
 
   // return bufStr;
+}
+
+std::string radiator::getMillisAndTime()
+{
 }
 
 #if START_WEBSERVER

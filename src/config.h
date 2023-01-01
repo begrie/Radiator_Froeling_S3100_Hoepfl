@@ -35,7 +35,7 @@ namespace radiator
                         // 4 - Debug
                         // 5 - Trace
 
-#define REDIRECT_STD_ERR_TO_SYSLOG_FILE true     // debug output to file INSTEAD to console/Serial
+#define REDIRECT_STD_ERR_TO_SYSLOG_FILE false    // debug output to file INSTEAD to console/Serial
                                                  // -> do it only with D_DEBUG_LEVEL 0, 1 or 2
 #define SYSLOG_DIR "/syslog"                     // directory for syslog files
 #define SYSLOG_PATHNAME SYSLOG_DIR "/syslog.log" // name with path (only one directory level is created automatic)

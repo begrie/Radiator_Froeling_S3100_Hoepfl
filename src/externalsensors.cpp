@@ -149,7 +149,7 @@ std::string radiator::ExternalSensors::getSensorValuesAsJSON()
          "\"Zuluftklappe\": " + (std::string)(airInputFlapIsOpen ? "\"OFFEN\"," : "\"ZU\",") +
          "\"Leckwassersensor\": " + (std::string)(leakWaterDetected ? "\"!!!!! ALARM: LECKWASSER !!!!!\"," : "\"TROCKEN\",") +
          //  "\"Stromstaerke\": " + std::to_string(getAcCurrentAmpereRMS()) + "\"A\",";
-         "\"Stromstaerke\": " + getAcCurrentAmpereRMSasString() + "\"A\",";
+         "\"Stromstaerke\": \"" + getAcCurrentAmpereRMSasString() + "A\",";
 }
 
 /*********************************************************************

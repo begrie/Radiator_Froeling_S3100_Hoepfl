@@ -9,18 +9,18 @@ namespace radiator
    * STATIC DEFINITIONS
    *********************/
   radiator::OutputHandler::ValuesWithTime_t *Analysis::ptrValuesAtTime = NULL;
-  time_t *Analysis::ptrValueTimet;
+  time_t *Analysis::ptrValueTimet = NULL;
   std::string *Analysis::ptrValueTimeStr;
   std::list<VALUE_DATA> *Analysis::ptrValues;
   std::string Analysis::actualDate;
-  time_t Analysis::heatingStartTime;
-  time_t Analysis::heatingEndTime;
-  uint16_t Analysis::heatingDurationThisDayMinutes;
-  uint8_t Analysis::heatingStartsThisDay;
-  float Analysis::startFuellstand;
-  float Analysis::minFuellstand;
-  float Analysis::refillFuellstandThisDay;
-  float Analysis::pelletConsumptionThisDayPercent;
+  time_t Analysis::heatingStartTime = 0;
+  time_t Analysis::heatingEndTime = 0;
+  uint16_t Analysis::heatingDurationThisDayMinutes = 0;
+  uint8_t Analysis::heatingStartsThisDay = 0;
+  float Analysis::startFuellstand = 0.0;
+  float Analysis::minFuellstand = 0.0;
+  float Analysis::refillFuellstandThisDay = 0.0;
+  float Analysis::pelletConsumptionThisDayPercent = 0.0;
   std::string Analysis::bufStr;
   std::deque<std::string> Analysis::messages;
 
@@ -362,7 +362,7 @@ namespace radiator
    *********************************************************************/
   std::string Analysis::analyseFuellstandLastDayAndReset()
   {
-    pelletConsumptionThisDayPercent += refillFuellstandThisDay;
+    pelletConsumptionThisDayPercent += refillFuellstandThisDay - minFuellstand;
 
     // generate message
     bufStr = actualDate + ": Tages-Pelletsverbrauch= " + std::to_string(pelletConsumptionThisDayPercent) + "% \n";
