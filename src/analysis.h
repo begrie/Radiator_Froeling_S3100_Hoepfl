@@ -6,14 +6,19 @@
 #include "surveillance.h"
 #include "output.h"
 
+#include <Preferences.h>
+
 namespace radiator
 {
   class Analysis
   {
   public:
+    static void init();
     static void analyseValues(radiator::OutputHandler::ValuesWithTime_t &valuesAtTime);
 
   protected:
+    static Preferences preferences;
+
     static void setValuesAtTime(radiator::OutputHandler::ValuesWithTime_t &valuesAtTime);
     static radiator::OutputHandler::ValuesWithTime_t *ptrValuesAtTime;
     static time_t *ptrValueTimet;
@@ -30,12 +35,16 @@ namespace radiator
     static void setNewDay();
     static std::string actualDate;
 
+    //    static void saveKeyValueToPreferences();
+
     static std::string checkRadiatorStatusForHeatingCycle();
     static std::string analyseHeatingCyclesLastDayAndReset();
 
+    static std::string lastRadiatorStatus;
     static time_t heatingStartTime;
     static time_t heatingEndTime;
     static uint16_t heatingDurationThisDayMinutes;
+    static uint16_t heatingPauseMinutes;
     static uint8_t heatingStartsThisDay;
 
     static float getFuellstand();

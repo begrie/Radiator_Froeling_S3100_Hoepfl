@@ -129,7 +129,7 @@ std::string radiator::ExternalSensors::getSensorValues()
  *                  "Stromstaerke": "3.12A",
 
  *********************************************************************/
-std::string radiator::ExternalSensors::getSensorValuesAsJSON()
+std::string radiator::ExternalSensors::getSensorValuesForJSON()
 {
   // xSemaphoreTake(semaphoreExternalSensors, portMAX_DELAY);
   // bufferStringStream.str(""); // empties content
@@ -148,8 +148,11 @@ std::string radiator::ExternalSensors::getSensorValuesAsJSON()
          "\"Ventilator\": " + (std::string)(ventilatorRelaisState ? "\"AN\"," : "\"AUS\",") +
          "\"Zuluftklappe\": " + (std::string)(airInputFlapIsOpen ? "\"OFFEN\"," : "\"ZU\",") +
          "\"Leckwassersensor\": " + (std::string)(leakWaterDetected ? "\"!!!!! ALARM: LECKWASSER !!!!!\"," : "\"TROCKEN\",") +
-         //  "\"Stromstaerke\": " + std::to_string(getAcCurrentAmpereRMS()) + "\"A\",";
-         "\"Stromstaerke\": \"" + getAcCurrentAmpereRMSasString() + "A\",";
+         "\"Stromstaerke\": \"" + getAcCurrentAmpereRMSasString() + "A\"," +
+         "\"Uptime\": \"" + std::to_string(millis() / (1000 * 60)) + "min\"," +
+         "\"ESP.getFreeHeap()\": \"" + std::to_string(ESP.getFreeHeap()) + "bytes\"," +
+         "\"ESP.getMinFreeHeap()\": \"" + std::to_string(ESP.getMinFreeHeap()) + "bytes\"," +
+         "\"ESP.getMaxAllocHeap()\": \"" + std::to_string(ESP.getMaxAllocHeap()) + "bytes\",";
 }
 
 /*********************************************************************
@@ -231,11 +234,11 @@ void radiator::ExternalSensors::xTaskExternalSensors(void *parameter)
     {
       xSemaphoreTake(semaphoreExternalSensors, portMAX_DELAY);
 
-      RADIATOR_LOG_DEBUG(millis() << " ms: start DHT reading" << std::endl;)
+      RADIATOR_LOG_DEBUG(getMillisAndTime() << "start DHT reading" << std::endl;)
       lastRoomTemperature = readTemp(); // reading with DHT11 can last up to 275 ms!
-      RADIATOR_LOG_DEBUG(millis() << " ms: lastRoomTemperature=" << lastRoomTemperature << std::endl;)
+      RADIATOR_LOG_DEBUG(getMillisAndTime() << "lastRoomTemperature=" << lastRoomTemperature << std::endl;)
       lastRoomHumidity = readHumidity(); // reading with DHT11 can last up to 275 ms
-      RADIATOR_LOG_DEBUG(millis() << " ms: lastRoomHumidity=" << lastRoomHumidity << std::endl;)
+      RADIATOR_LOG_DEBUG(getMillisAndTime() << "lastRoomHumidity=" << lastRoomHumidity << std::endl;)
       DHTreadTimestamp = millis();
 
       xSemaphoreGive(semaphoreExternalSensors);
@@ -250,7 +253,7 @@ void radiator::ExternalSensors::xTaskExternalSensors(void *parameter)
         digitalWrite(BUZZER_PIN, HIGH);
         buzzerIsRunning = true;
 
-        messageBuf = std::to_string(millis()) + " ms: !!!!!!!! LEAK WATER DETECTED  !!!!!!!!";
+        messageBuf = getMillisAndTime() + "!!!!!!!! LEAK WATER DETECTED  !!!!!!!!";
         std::cout << messageBuf << std::endl;
         LOG_fatal << messageBuf << std::endl;
         radiator::NetworkHandler::publishToMQTT(messageBuf);
@@ -261,7 +264,7 @@ void radiator::ExternalSensors::xTaskExternalSensors(void *parameter)
         digitalWrite(BUZZER_PIN, LOW);
         buzzerIsRunning = false;
 
-        messageBuf = std::to_string(millis()) + " ms: #### END leak water detected ####";
+        messageBuf = getMillisAndTime() + "#### END leak water detected ####";
         std::cout << messageBuf << std::endl;
         LOG_fatal << messageBuf << std::endl;
         radiator::NetworkHandler::publishToMQTT(messageBuf);
@@ -367,11 +370,11 @@ bool radiator::ExternalSensors::initTempHumidityDHTSensor()
   // Check if any reads failed and exit early (to try again).
   if (isnan(humid) || isnan(temp))
   {
-    RADIATOR_LOG_ERROR(millis() << " ms: initTempHumidityDHTSensor(): Failed to read from DHT sensor!" << std::endl;)
+    RADIATOR_LOG_ERROR(getMillisAndTime() << "initTempHumidityDHTSensor(): Failed to read from DHT sensor!" << std::endl;)
     return false;
   }
 
-  RADIATOR_LOG_INFO(millis() << " ms: initTempHumidityDHTSensor(): Humidity= " << humid << "%, Temperature= " << temp << "°C" << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "initTempHumidityDHTSensor(): Humidity= " << humid << "%, Temperature= " << temp << "°C" << std::endl;)
 
   return true;
 }
@@ -393,7 +396,7 @@ int16_t radiator::ExternalSensors::readTemp()
   if (isnan(temp)) // Check if reads failed and return "old" temperature
   {
     readErrors++;
-    messageBuf = std::to_string(millis()) + " ms: readTemp: Failed to read temperature from DHT sensor (" + std::to_string(readErrors) + ")";
+    messageBuf = getMillisAndTime() + "readTemp: Failed to read temperature from DHT sensor (" + std::to_string(readErrors) + ")";
     RADIATOR_LOG_INFO(messageBuf << std::endl;)
 
     if (readErrors >= 50)
@@ -426,7 +429,7 @@ int16_t radiator::ExternalSensors::readHumidity()
   if (isnan(humid)) // Check if reads failed and return "old" humidity
   {
     readErrors++;
-    messageBuf = std::to_string(millis()) + " ms: readHumidity: Failed to read humidity from DHT sensor (" + std::to_string(readErrors) + ")";
+    messageBuf = getMillisAndTime() + "readHumidity: Failed to read humidity from DHT sensor (" + std::to_string(readErrors) + ")";
     RADIATOR_LOG_INFO(messageBuf << std::endl;)
 
     if (readErrors >= 100)
@@ -472,7 +475,7 @@ void radiator::ExternalSensors::setVentilatorOn()
   ventilatorRelaisState = VENTILATOR_ON;
   xSemaphoreGive(semaphoreExternalSensors);
 
-  RADIATOR_LOG_INFO(millis() << " ms: Ventilator ON" << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "Ventilator ON" << std::endl;)
 }
 
 /*********************************************************************
@@ -488,7 +491,7 @@ void radiator::ExternalSensors::setVentilatorOff()
   ventilatorRelaisState = VENTILATOR_OFF;
   xSemaphoreGive(semaphoreExternalSensors);
 
-  RADIATOR_LOG_INFO(millis() << " ms: Ventilator OFF" << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "Ventilator OFF" << std::endl;)
 }
 
 /*********************************************************************
@@ -523,7 +526,7 @@ void radiator::ExternalSensors::openAirInputFlap()
   airInputFlapIsOpen = AIR_INPUT_FLAP_OPENED; //... but state is set now
   xSemaphoreGive(semaphoreExternalSensors);
 
-  RADIATOR_LOG_INFO(millis() << " ms: Air Input Flap OPENED" << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "Air Input Flap OPENED" << std::endl;)
 }
 
 /*********************************************************************
@@ -539,7 +542,7 @@ void radiator::ExternalSensors::closeAirInputFlap()
   airInputFlapIsOpen = AIR_INPUT_FLAP_CLOSED; //... but state is set now
   xSemaphoreGive(semaphoreExternalSensors);
 
-  RADIATOR_LOG_INFO(millis() << " ms: Air Input Flap CLOSED" << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "Air Input Flap CLOSED" << std::endl;)
 }
 
 /*********************************************************************
@@ -557,7 +560,7 @@ bool radiator::ExternalSensors::initLeakWaterSensor()
   // pinMode(leakWaterSensorGPIO, INPUT_PULLUP);
 
   leakWaterDetected = !digitalRead(leakWaterSensorGPIO); // Raindrop sensor gives HIGH at NO WATER
-  RADIATOR_LOG_INFO(millis() << " ms: initLeakWaterSensor(): leakWaterDetected= " << leakWaterDetected << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "initLeakWaterSensor(): leakWaterDetected= " << leakWaterDetected << std::endl;)
 
   attachInterrupt(
       leakWaterSensorGPIO,
@@ -705,5 +708,5 @@ double radiator::ExternalSensors::getAcCurrentAmpereRMS()
 std::string radiator::ExternalSensors::getAcCurrentAmpereRMSasString()
 {
   messageBuf = std::to_string(getAcCurrentAmpereRMS()); // delivers 6 digits
-  return messageBuf.substr(0, messageBuf.length() - 4);
+  return messageBuf.substr(0, messageBuf.length() - 4); // remove last 4
 }

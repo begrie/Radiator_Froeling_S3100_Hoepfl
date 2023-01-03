@@ -9,6 +9,7 @@
 
 #include <AsyncMqttClient.h>
 #include <Ticker.h>
+// #include <chrono>
 
 #include "config.h"
 
@@ -58,7 +59,5 @@ namespace radiator
     static std::string bufStr;              // as class member to avoid heap fragmentation
     static std::ostringstream bufStrStream; // as class member to avoid heap fragmentation
   };
-
-  static std::string getMillisAndTime();
 }
 #endif // #ifndef __DH_NETWORK_H__

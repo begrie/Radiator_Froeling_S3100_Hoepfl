@@ -6,6 +6,8 @@
 #include <iostream>
 #include <sstream>
 
+#include <Arduino.h>
+
 // nur temporär für debugging -> kann dann wieder wech ...
 #define DEBUG_STACK_HIGH_WATERMARK RADIATOR_LOG_WARN(millis() << " ms: " << uxTaskGetStackHighWaterMark(NULL) << " -> uxTaskGetStackHighWaterMark (" << pcTaskGetTaskName(NULL) << ")" << std::endl;);
 
@@ -62,7 +64,10 @@ void dump_string(const char *prefix,
                  int len,
                  std::ostream &ostream = LOG_debug);
 
-#endif
+std::string getActualTimeAsStr();
+std::string getMillisAndTime();
+
+#endif //__DH_DEBUG_H__
 
 // only for debugging ...
 // #include "esp32/rom/rtc.h" //to get and print the reset reason

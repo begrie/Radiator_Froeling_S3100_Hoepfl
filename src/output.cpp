@@ -24,9 +24,9 @@ namespace radiator
 
     bufStr.reserve(2000); // an attempt to avoid heap fragmentation
 
-    RADIATOR_LOG_INFO(millis() << " ms: Output to\tconsole: \t" << (toConsole ? "ON" : "OFF") << "\n"
-                               << "                     \tfile: \t\t" << (toFile ? "ON" : "OFF") << "\n"
-                               << "                     \tMQTT: \t\t" << (toMQTT ? "ON" : "OFF") << std::endl;)
+    RADIATOR_LOG_INFO(getMillisAndTime() << "Output to\tconsole: \t" << (toConsole ? "ON" : "OFF") << "\n"
+                                         << "                     \tfile: \t\t" << (toFile ? "ON" : "OFF") << "\n"
+                                         << "                     \tMQTT: \t\t" << (toMQTT ? "ON" : "OFF") << std::endl;)
 
     if (toFile)
     {
@@ -37,7 +37,7 @@ namespace radiator
       outFileStream.open(outputPath + "dirtest.tst");
       if (!outFileStream)
       {
-        bufStr = std::to_string(millis()) + " ms: Output path  " + outputPath + "  CAN NOT BE OPENED -> NO VALUES WILL BE SAVED TO FILE";
+        bufStr = getMillisAndTime() + "Output path  " + outputPath + "  CAN NOT BE OPENED -> NO VALUES WILL BE SAVED TO FILE";
         NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
         RADIATOR_LOG_ERROR(bufStr << std::endl;)
 
@@ -46,7 +46,7 @@ namespace radiator
       }
       outFileStream.close();
 
-      RADIATOR_LOG_INFO(millis() << " ms: Files are saved to path   " << outputPath << std::endl;)
+      RADIATOR_LOG_INFO(getMillisAndTime() << "Files are saved to path   " << outputPath << std::endl;)
     }
   }
 
@@ -97,6 +97,7 @@ namespace radiator
     {
       setSystemTimeFromRadiatorData(year, month, day, hour, minute, second);
       lastSystemTimeSet = millis();
+      radiator::Analysis::init();
     }
 
     handleValuesTimeSeries(outStrStream.str());
@@ -194,7 +195,7 @@ namespace radiator
         outputToFile(outStrStream.str());
       else
       {
-        bufStr = std::to_string(millis()) + " ms: handleError(): Can not save to File";
+        bufStr = getMillisAndTime() + "handleError(): Can not save to File";
         NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
         RADIATOR_LOG_ERROR(bufStr << std::endl;)
       }
@@ -214,7 +215,7 @@ namespace radiator
    *********************************************************************/
   void OutputHandler::handleValuesTimeSeries(std::string_view timeStr)
   {
-    RADIATOR_LOG_DEBUG(millis() << " ms: OutputHandler::handleValuesTimeSeries -> TIME " << timeStr << std::endl;)
+    RADIATOR_LOG_DEBUG(getMillisAndTime() << "OutputHandler::handleValuesTimeSeries -> TIME " << timeStr << std::endl;)
 
     valuesAtTime = std::make_tuple(time(NULL), static_cast<std::string>(timeStr), emptyValuesPlaceholder); // time(NULL) gets actual system time
     // valuesAtTime = std::make_tuple(millis(), static_cast<std::string>(time), emptyValuesPlaceholder);
@@ -232,7 +233,7 @@ namespace radiator
   void OutputHandler::handleValuesTimeSeries(const std::list<VALUE_DATA> &values)
   {
     // Version 1 WITHOUT stored time series
-    RADIATOR_LOG_DEBUG(millis() << " ms: OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;)
+    RADIATOR_LOG_DEBUG(getMillisAndTime() << "OutputHandler::handleValuesTimeSeries -> VALUES ..." << std::endl;)
 
     // store new values item
     std::get<2>(valuesAtTime) = values;
@@ -465,7 +466,7 @@ namespace radiator
     }
 
 #if USE_EXTERNAL_SENSORS
-    bufStr += radiator::ExternalSensors::getSensorValuesAsJSON();
+    bufStr += radiator::ExternalSensors::getSensorValuesForJSON();
 #endif
     bufStr.pop_back(); // remove last "," (, must exist and no spaces behind)
     // auto pos = bufStr.find_last_of(","); // remove last "," (missing and spaces behind allowed)
@@ -553,7 +554,7 @@ namespace radiator
   {
     if (!toFile)
     {
-      RADIATOR_LOG_WARN("Output to file is disabled" << std::endl;)
+      RADIATOR_LOG_WARN(getMillisAndTime() << "Output to file is disabled" << std::endl;)
       return;
     }
 
@@ -561,9 +562,9 @@ namespace radiator
 
     if (millis() / 1000 < nextFileOutputSec)
     {
-      RADIATOR_LOG_DEBUG(millis() << " ms: data buffered -> NO file output (next in "
-                                  << (nextFileOutputSec - (millis() / 1000))
-                                  << " seconds)" << std::endl;)
+      RADIATOR_LOG_DEBUG(getMillisAndTime() << "data buffered -> NO file output (next in "
+                                            << (nextFileOutputSec - (millis() / 1000))
+                                            << " seconds)" << std::endl;)
       return;
     }
 
@@ -586,7 +587,7 @@ namespace radiator
     }
     else // problems with the file
     {
-      bufStr = std::to_string(millis()) + " ms: ERROR saving to File";
+      bufStr = getMillisAndTime() + "ERROR saving to File";
       NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
       RADIATOR_LOG_ERROR(bufStr << std::endl;)
     }
@@ -601,7 +602,7 @@ namespace radiator
    *********************************************************************/
   std::string OutputHandler::deriveFilename(const std::string &stringWithDate)
   {
-    RADIATOR_LOG_INFO(millis() << " ms: OutputHandler::deriveFilename: ";)
+    RADIATOR_LOG_INFO(getMillisAndTime() << "OutputHandler::deriveFilename: ";)
 
     // derive filename from string with integrated date in format   yyyy-mm-dd
     auto toFind = std::regex("(2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)"); // finds date in string e.g.   2022-09-01
@@ -621,7 +622,7 @@ namespace radiator
     {
       filename = "00-LOST.log";
 
-      bufStr = std::to_string(millis()) + " ms: deriveFilename(): No suitable date found in given stringWithDate for derivation of the filename ->  00-LOST.log   will be used";
+      bufStr = getMillisAndTime() + "deriveFilename(): No suitable date found in given stringWithDate for derivation of the filename ->  00-LOST.log   will be used";
       NetworkHandler::publishToMQTT(bufStr);
       RADIATOR_LOG_ERROR(bufStr << std::endl;)
     }
@@ -637,7 +638,7 @@ namespace radiator
    *********************************************************************/
   bool OutputHandler::handleFiles(std::string_view filename)
   {
-    RADIATOR_LOG_INFO(millis() << " ms: OutputHandler::handleFiles: ";)
+    RADIATOR_LOG_INFO(getMillisAndTime() << "OutputHandler::handleFiles: ";)
 
     // same filename as before -> continue saving to it
     if (filename == outputFilename && outFileStream && outFileStream.good())
@@ -656,7 +657,7 @@ namespace radiator
     outFileStream.open(outputPathWithFilename, std::ofstream::out | std::ofstream::app);
     if (!outFileStream.is_open() || !outFileStream.good())
     {
-      bufStr = std::to_string(millis()) + " ms: handleFiles(): ERROR opening file " + outputPathWithFilename + " !! NO VALUES ARE SAVED TO FILE !!";
+      bufStr = getMillisAndTime() + "handleFiles(): ERROR opening file " + outputPathWithFilename + " !! NO VALUES ARE SAVED TO FILE !!";
       NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
       RADIATOR_LOG_ERROR(bufStr << std::endl;)
       return false;
@@ -664,7 +665,7 @@ namespace radiator
 
     outputFilename = filename;
 
-    RADIATOR_LOG_INFO(millis() << " ms: File " << outputPathWithFilename << " was opened" << std::endl;)
+    RADIATOR_LOG_INFO(getMillisAndTime() << "File " << outputPathWithFilename << " was opened" << std::endl;)
     return true;
   }
 
@@ -680,13 +681,13 @@ namespace radiator
    *********************************************************************/
   void OutputHandler::outputToFile(std::string_view output, const ulong writeToFileIntervalSec)
   {
-    RADIATOR_LOG_INFO(millis() << " ms: OutputHandler::outputToFile"
-                               << " -> ************* File output: *************\n"
-                               << output << std::endl;)
+    RADIATOR_LOG_INFO(getMillisAndTime() << "OutputHandler::outputToFile"
+                                         << " -> ************* File output: *************\n"
+                                         << output << std::endl;)
 
     if (!outFileStream || !outFileStream.is_open() || !outFileStream.good())
     {
-      bufStr = std::to_string(millis()) + " ms: outputToFile(): Can NOT SAVE to file " + (outputPath + outputFilename) +
+      bufStr = getMillisAndTime() + "outputToFile(): Can NOT SAVE to file " + (outputPath + outputFilename) +
                "(outFileStream.is_open()=" + std::to_string(outFileStream.is_open()) + ", outFileStream.good()=" + std::to_string(outFileStream.good()) + ")";
 
       NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_SYSLOG);
@@ -709,9 +710,9 @@ namespace radiator
     }
     else
     {
-      RADIATOR_LOG_INFO(millis() << " ms: File output data buffered for next file write in "
-                                 << ((lastClose + writeToFileIntervalSec * 1000 - millis()) / 1000) << " seconds"
-                                 << std::endl;)
+      RADIATOR_LOG_INFO(getMillisAndTime() << "File output data buffered for next file write in "
+                                           << ((lastClose + writeToFileIntervalSec * 1000 - millis()) / 1000) << " seconds"
+                                           << std::endl;)
     }
   }
 
@@ -725,7 +726,7 @@ namespace radiator
   {
     if (!toMQTT)
     {
-      RADIATOR_LOG_INFO(millis() << " ms: Output to MQTT is disabled" << std::endl;)
+      RADIATOR_LOG_INFO(getMillisAndTime() << "Output to MQTT is disabled" << std::endl;)
       return;
     }
 
@@ -733,9 +734,9 @@ namespace radiator
 
     if (millis() / 1000 < nextMQTTOutputSec)
     {
-      RADIATOR_LOG_DEBUG(millis() << " ms: handleValuesMQTTOutput(): data buffered -> NO MQTT output (next in "
-                                  << (nextMQTTOutputSec - (millis() / 1000)) << " seconds)"
-                                  << std::endl;)
+      RADIATOR_LOG_DEBUG(getMillisAndTime() << "handleValuesMQTTOutput(): data buffered -> NO MQTT output (next in "
+                                            << (nextMQTTOutputSec - (millis() / 1000)) << " seconds)"
+                                            << std::endl;)
       return;
     }
 
@@ -771,7 +772,7 @@ namespace radiator
    *********************************************************************/
   bool OutputHandler::checkForRadiatorIsBurning(const std::list<VALUE_DATA> &values)
   {
-    RADIATOR_LOG_DEBUG(millis() << " ms: checkForRadiatorIsBurning= ";)
+    RADIATOR_LOG_DEBUG(getMillisAndTime() << "checkForRadiatorIsBurning= ";)
 
     auto it = std::find_if(
         values.begin(), values.end(),
@@ -785,7 +786,7 @@ namespace radiator
 
     if (it == values.end())
     {
-      RADIATOR_LOG_ERROR(millis() << " ms: checkForRadiatorIsBurning(): Index 1 not found" << std::endl;)
+      RADIATOR_LOG_ERROR(getMillisAndTime() << "checkForRadiatorIsBurning(): Index 1 not found" << std::endl;)
       return true;
     }
 
@@ -814,17 +815,17 @@ namespace radiator
    *********************************************************************/
   bool OutputHandler::checkForLimit(const std::list<VALUE_DATA> &values, std::string_view parameterName, const int limit, const bool greaterThan)
   {
-    RADIATOR_LOG_DEBUG(millis() << " ms: checkForLimit -> parameterName=" << parameterName << ", limit= " << limit << std::endl;)
+    RADIATOR_LOG_DEBUG(getMillisAndTime() << "checkForLimit -> parameterName=" << parameterName << ", limit= " << limit << std::endl;)
 
     for (auto el : values)
     {
       if (el.name.compare(0, parameterName.size(), parameterName) == 0) // compare from first pos until length of comparing string
       {
-        RADIATOR_LOG_DEBUG(millis() << " ms: parameterName=" << parameterName << ", el.name = " << el.name << std::endl;)
+        RADIATOR_LOG_DEBUG(getMillisAndTime() << "parameterName=" << parameterName << ", el.name = " << el.name << std::endl;)
 
         // int valueAsInt = std::stoi(el.value);  //stoi can throw an expection -> so better to use atoi
         int valueAsInt = atoi(el.value.c_str());
-        RADIATOR_LOG_DEBUG(millis() << " ms: valueAsInt= " << valueAsInt << std::endl;)
+        RADIATOR_LOG_DEBUG(getMillisAndTime() << "valueAsInt= " << valueAsInt << std::endl;)
 
         if ((greaterThan && valueAsInt > limit) || (!greaterThan && valueAsInt < limit))
         {
@@ -835,7 +836,7 @@ namespace radiator
 
           if (millis() >= nextInfoOutputMs)
           {
-            bufStr = std::to_string(millis()) + " ms: !!!!! ALERT: LIMIT EXCEEDED !!!!! parameterName= " + static_cast<std::string>(parameterName) + ", limit=" + std::to_string(limit) + ", actual value= " + std::to_string(valueAsInt);
+            bufStr = getMillisAndTime() + "!!!!! ALERT: LIMIT EXCEEDED !!!!! parameterName= " + static_cast<std::string>(parameterName) + ", limit=" + std::to_string(limit) + ", actual value= " + std::to_string(valueAsInt);
 
             std::cout << bufStr << std::endl;
             RADIATOR_LOG_ERROR(bufStr << std::endl;)
@@ -847,13 +848,13 @@ namespace radiator
         }
         else // parameter found, limit not exceeded
         {
-          RADIATOR_LOG_DEBUG(millis() << " ms: Limit NOT exceeded " << std::endl;)
+          RADIATOR_LOG_DEBUG(getMillisAndTime() << "Limit NOT exceeded " << std::endl;)
           return false;
         }
       }
     }
 
-    RADIATOR_LOG_ERROR(millis() << " ms: checkForLimit(): NO PARAMETER    " << parameterName << "     FOUND to check limit    " << limit << std::endl;)
+    RADIATOR_LOG_ERROR(getMillisAndTime() << "checkForLimit(): NO PARAMETER    " << parameterName << "     FOUND to check limit    " << limit << std::endl;)
 
     return false;
   }
@@ -874,7 +875,8 @@ namespace radiator
     tmTimeToSet.tm_min = minute;
     tmTimeToSet.tm_sec = second;
 
-    Serial.printf("Setting time: %s", asctime(&tmTimeToSet));
+    RADIATOR_LOG_INFO(getMillisAndTime() << "Setting system time to " << asctime(&tmTimeToSet));
+    // Serial.printf("Setting time: %s", asctime(&tmTimeToSet));
 
     timeval timevalTimetoSet{0, 0}; // 0 - initializer are absolutely neccessary!!
     timevalTimetoSet.tv_sec = mktime(&tmTimeToSet);
@@ -882,8 +884,11 @@ namespace radiator
 
     // only for debugging:
     time_t actTime_t = time(NULL);
-    tmTimeToSet = *localtime(&actTime_t);
-    Serial.printf("Getting time: %s", asctime(&tmTimeToSet));
+    RADIATOR_LOG_DEBUG(getMillisAndTime() << "Getting system time: " << ctime(&actTime_t));
+    // Serial.printf("Getting time: %s \n", ctime(&actTime_t));
+
+    // tmTimeToSet = *localtime(&actTime_t);
+    // Serial.printf("Getting time: %s \n", asctime(&tmTimeToSet));
   }
 
   /*********************************************************************

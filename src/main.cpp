@@ -68,7 +68,7 @@ void setup()
 
   if (pathnameToDataDirectory.empty())
   {
-    std::cout << "ERROR MOUNTING FILESYSTEM !!! -> Instead: data output to console (std::cout)" << std::endl;
+    std::cout << getMillisAndTime() << "ERROR MOUNTING FILESYSTEM !!! -> Instead: data output to console (std::cout)" << std::endl;
     outputToConsole = true;
   }
   else // filesystem successfull mounted
@@ -92,8 +92,8 @@ void setup()
                                               outputToConsole,
                                               outputToMQTT);
 
-  RADIATOR_LOG_INFO("\n" << millis()
-                         << " ms: ***************************************** END STARTUP OF ESP32 *****************************************" << std::endl;)
+  RADIATOR_LOG_INFO("\n" << getMillisAndTime()
+                         << "***************************************** END STARTUP OF ESP32 *****************************************" << std::endl;)
 }
 
 /*********************************************************************
@@ -109,7 +109,7 @@ void loop()
 
   try
   {
-    message = std::to_string(millis()) + " ms: ##### Start connecting to Froeling P2/S3100 ##### \n";
+    message = getMillisAndTime() + "##### Start connecting to Froeling P2/S3100 ##### \n";
     netHandler.publishToMQTT(message, MQTT_SUBTOPIC_SYSLOG);
     RADIATOR_LOG_WARN(message << std::endl;)
     if (REDIRECT_STD_ERR_TO_SYSLOG_FILE) // for better user info also to console
@@ -120,7 +120,7 @@ void loop()
         []()
         {
           char msg[80];
-          snprintf(msg, sizeof(msg), "%lu ms: ##### CONNECTED to Froeling P2/S3100 #####", millis());
+          snprintf(msg, sizeof(msg), "%s ##### CONNECTED to Froeling P2/S3100 #####", getMillisAndTime().c_str());
           // std::string msg;
           // msg = std::to_string(millis()) + " ms: ##### CONNECTED to Froeling P2/S3100 #####";
           netHandler.publishToMQTT(msg, MQTT_SUBTOPIC_SYSLOG);
@@ -134,7 +134,7 @@ void loop()
 
     tickerConnectToRadiatorInfo.detach();
 
-    message = std::to_string(millis()) + " ms: ##### Cannot establish connection to Froeling P2/S3100 -> retry in 10s ##### \n";
+    message = getMillisAndTime() + "##### Cannot establish connection to Froeling P2/S3100 -> retry in 10s ##### \n";
     netHandler.publishToMQTT(message, MQTT_SUBTOPIC_SYSLOG);
     RADIATOR_LOG_WARN(message << std::endl;)
     if (REDIRECT_STD_ERR_TO_SYSLOG_FILE) // for better user info also to console
@@ -146,7 +146,7 @@ void loop()
   }
   catch (const char *&error)
   {
-    message = std::to_string(millis()) +
+    message = getMillisAndTime() +
               " ms: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
               "!!!!! *&error= " +
               *&error + ", error= " + error +

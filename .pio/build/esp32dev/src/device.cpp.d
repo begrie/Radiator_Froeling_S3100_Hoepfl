@@ -106,4 +106,27 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-rgb-led.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-cpu.h \
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/HWCDC.h \
- src/debug.h
+ src/debug.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp_arduino_version.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp8266-compat.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/stdlib_noniso.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/binary.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/WCharacter.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/IPAddress.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/WString.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Printable.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Client.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Server.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Udp.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Stream.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/IPAddress.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/HardwareSerial.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/Esp.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_partition.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_flash.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/hal/include/hal/spi_flash_types.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/hal/include/hal/esp_flash_err.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/spi_flash/include/esp_spi_flash_counters.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_hw_support/include/soc/esp32/spiram.h

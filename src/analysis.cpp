@@ -13,16 +13,56 @@ namespace radiator
   std::string *Analysis::ptrValueTimeStr;
   std::list<VALUE_DATA> *Analysis::ptrValues;
   std::string Analysis::actualDate;
+  std::string Analysis::lastRadiatorStatus = "";
   time_t Analysis::heatingStartTime = 0;
   time_t Analysis::heatingEndTime = 0;
   uint16_t Analysis::heatingDurationThisDayMinutes = 0;
+  uint16_t Analysis::heatingPauseMinutes = 0;
   uint8_t Analysis::heatingStartsThisDay = 0;
-  float Analysis::startFuellstand = 0.0;
-  float Analysis::minFuellstand = 0.0;
+  float Analysis::startFuellstand = 100.0;
+  float Analysis::minFuellstand = 100.0;
   float Analysis::refillFuellstandThisDay = 0.0;
   float Analysis::pelletConsumptionThisDayPercent = 0.0;
   std::string Analysis::bufStr;
   std::deque<std::string> Analysis::messages;
+
+  /*********************************************************************
+   * @brief 	init after startup of ESP
+   *          -> should only be called after setting/synchronization of system time to radiator time
+   *          -> loads last infos for analysis from preferences
+   * @param 	void
+   * @return 	void
+   *********************************************************************/
+  void Analysis::init()
+  {
+    static bool initWasDone = false;
+
+    if (time(NULL) < 1640991600) // check against time_t of 01.01.2022
+    {
+      RADIATOR_LOG_ERROR(getMillisAndTime() << "Cannot load data for analysis from preferences, because ESP time is not synchronized to radiator time");
+      return;
+    }
+
+    if (initWasDone)
+      return;
+
+    preferences.begin(PREFERENCES_NAMESPACE);
+
+    heatingStartTime = preferences.getLong("heatingStartTim", 0);
+    heatingEndTime = preferences.getLong("heatingEndTime", 0);
+    heatingDurationThisDayMinutes = preferences.getUShort("heatingDuration", 0);
+    heatingPauseMinutes = preferences.getUShort("heatingPauseMin", 0);
+    heatingStartsThisDay = preferences.getUChar("heatingStartsTh", 0);
+
+    startFuellstand = preferences.getFloat("startFuellstand", 0);
+    minFuellstand = preferences.getFloat("minFuellstand", 0);
+    refillFuellstandThisDay = preferences.getFloat("refillFuellstan", 0);
+    pelletConsumptionThisDayPercent = preferences.getFloat("pelletConsumpti", 0);
+
+    preferences.end();
+
+    initWasDone = true;
+  }
 
   /*********************************************************************
    * @brief 	analyse valuse from one timestamp
@@ -104,12 +144,12 @@ namespace radiator
     {
       if (el.name.find(parameterName) != std::string::npos) // find instead to == due to some possible leading or ending spaces in el.name
       {
-        RADIATOR_LOG_DEBUG(millis() << " ms: parameterName=" << parameterName << ", el.name = " << el.name << std::endl;)
+        RADIATOR_LOG_DEBUG(getMillisAndTime() << "parameterName=" << parameterName << ", el.name = " << el.name << std::endl;)
         return el;
       }
     }
-    RADIATOR_LOG_ERROR(millis() << " ms: getElementWithParameterName(): NO PARAMETER    " << parameterName << "     FOUND" << std::endl;)
 
+    RADIATOR_LOG_ERROR(getMillisAndTime() << "getElementWithParameterName(): NO PARAMETER    " << parameterName << "     FOUND" << std::endl;)
     VALUE_DATA emptyElement{};
     return emptyElement;
   }
@@ -126,7 +166,7 @@ namespace radiator
     {
       if (it->index == indexToFind)
       {
-        RADIATOR_LOG_DEBUG(millis() << " ms: index=" << indexToFind << ", it->name = " << it->name << std::endl;)
+        RADIATOR_LOG_DEBUG(getMillisAndTime() << "index=" << indexToFind << ", it->name = " << it->name << std::endl;)
         return *it;
       }
     }
@@ -139,8 +179,8 @@ namespace radiator
     //     return el;
     //   }
     // }
-    RADIATOR_LOG_ERROR(millis() << " ms: getElementWithIndex(): NO INDEX    " << indexToFind << "     FOUND" << std::endl;)
 
+    RADIATOR_LOG_ERROR(getMillisAndTime() << "getElementWithIndex(): NO INDEX    " << indexToFind << "     FOUND" << std::endl;)
     VALUE_DATA emptyElement{};
     return emptyElement;
   }
@@ -177,26 +217,26 @@ namespace radiator
    *********************************************************************/
   bool Analysis::checkForLimit(std::string_view parameterName, const int limit, const bool greaterThan)
   {
-    RADIATOR_LOG_DEBUG(millis() << " ms: checkForLimit -> parameterName=" << parameterName << ", limit= " << limit << std::endl;)
+    RADIATOR_LOG_DEBUG(getMillisAndTime() << "checkForLimit -> parameterName=" << parameterName << ", limit= " << limit << std::endl;)
 
     auto el = getElementWithParameterName(parameterName);
-    RADIATOR_LOG_DEBUG(millis() << " ms: parameterName=" << parameterName << ", el.name = " << el.name << std::endl;)
+    RADIATOR_LOG_DEBUG(getMillisAndTime() << "parameterName=" << parameterName << ", el.name = " << el.name << std::endl;)
 
     if (el.name.empty()) // parameterName not found
       return false;      //-> therefore the limit is not exceeded ...
 
     // int valueAsInt = std::stoi(el.value);  //stoi can throw an expection -> so better to use atoi
     int valueAsInt = atoi(el.value.c_str());
-    RADIATOR_LOG_DEBUG(millis() << " ms: valueAsInt= " << valueAsInt << std::endl;)
+    RADIATOR_LOG_DEBUG(getMillisAndTime() << "valueAsInt= " << valueAsInt << std::endl;)
 
     if ((greaterThan && valueAsInt > limit) || (!greaterThan && valueAsInt < limit))
     {
-      RADIATOR_LOG_DEBUG(millis() << " ms: Limit EXCEEDED" << std::endl;)
+      RADIATOR_LOG_DEBUG(getMillisAndTime() << "Limit EXCEEDED" << std::endl;)
       return true;
     }
     else // parameter found, limit not exceeded
     {
-      RADIATOR_LOG_DEBUG(millis() << " ms: Limit NOT exceeded " << std::endl;)
+      RADIATOR_LOG_DEBUG(getMillisAndTime() << "Limit NOT exceeded " << std::endl;)
       return false;
     }
   }
@@ -252,24 +292,36 @@ namespace radiator
    *********************************************************************/
   std::string Analysis::checkRadiatorStatusForHeatingCycle()
   {
-    static std::string lastStatus = "";
-
     auto status = getElementWithIndex(1).value;
 
-    if (lastStatus.find(status) == std::string::npos) // not found -> status was changed
+    if (lastRadiatorStatus.find(status) == std::string::npos) // not found -> status was changed
     {
-      lastStatus = status;
+      lastRadiatorStatus = status;
       if (status.find("Heizen") != std::string::npos)
       {
         heatingStartTime = time(NULL);
+        heatingPauseMinutes = (heatingEndTime - heatingStartTime) / 60;
         heatingStartsThisDay++;
 
-        return (*ptrValueTimeStr + ": Start Heizen (Fuellst.= " + getFuellstandAsString() + ") \n");
+        preferences.begin(PREFERENCES_NAMESPACE);
+        preferences.putString("lastRadiatorSta", lastRadiatorStatus.c_str());
+        preferences.putLong("heatingStartTim", heatingStartTime);
+        preferences.putUShort("heatingPauseMin", heatingPauseMinutes);
+        preferences.putUChar("heatingStartsTh", heatingStartsThisDay);
+        preferences.end();
+
+        return (*ptrValueTimeStr + ": Start Heizen (Fuellst.= " + getFuellstandAsString() + "), letzte Heizpause= " + std::to_string(heatingPauseMinutes) + " Minuten \n");
       }
       else if (status.find("Brenner Aus") != std::string::npos)
       {
         heatingEndTime = time(NULL);
         heatingDurationThisDayMinutes += (heatingEndTime - heatingStartTime) / 60;
+
+        preferences.begin(PREFERENCES_NAMESPACE);
+        preferences.putString("lastRadiatorSta", lastRadiatorStatus.c_str());
+        preferences.putLong("heatingEndTime", heatingEndTime);
+        preferences.putUShort("heatingDuration", heatingDurationThisDayMinutes);
+        preferences.end();
 
         return (*ptrValueTimeStr + ": Brenner Aus (Fuellst.= " + getFuellstandAsString() + "), letzte Heizdauer= " + std::to_string((heatingEndTime - heatingStartTime) / 60) + " Minuten) \n");
       }
@@ -280,8 +332,8 @@ namespace radiator
 
   /*********************************************************************
    * @brief 	analyse heating cycles for the last day
-   *          to calculate runtime
-   *          and resets all relevant values for the next day
+   *          -> to calculate runtime
+   *          -> and resets all relevant values for the next day
    * @param 	void
    * @return 	string with message about heating cycles
    *********************************************************************/
@@ -293,6 +345,11 @@ namespace radiator
     // reset values
     heatingDurationThisDayMinutes = 0;
     heatingStartsThisDay = 0;
+
+    preferences.begin(PREFERENCES_NAMESPACE);
+    preferences.putUShort("heatingDuration", heatingDurationThisDayMinutes);
+    preferences.putUChar("heatingStartsTh", heatingStartsThisDay);
+    preferences.end();
 
     return bufStr;
   }
@@ -341,36 +398,64 @@ namespace radiator
   {
     auto fuellstand = getFuellstand();
 
+    static time_t timeLastChange = 0;
+
+    if (fuellstand == minFuellstand)
+    {
+      if (time(NULL) - timeLastChange > 300) // save only after 5 minutes with same values to take care for the flash memory write cycles
+      {
+        timeLastChange = LONG_MAX;
+        preferences.begin(PREFERENCES_NAMESPACE);
+        preferences.putFloat("startFuellstand", startFuellstand);
+        preferences.putFloat("minFuellstand", minFuellstand);
+        preferences.putFloat("refillFuellstan", refillFuellstandThisDay);
+        preferences.end();
+      }
+      return;
+    }
+
     if (fuellstand < minFuellstand)
     {
       minFuellstand = fuellstand;
-      pelletConsumptionThisDayPercent = startFuellstand - minFuellstand;
+      // pelletConsumptionThisDayPercent = startFuellstand - minFuellstand;
+      timeLastChange = time(NULL);
     }
     else if (fuellstand > minFuellstand) // refill was made
     {
       refillFuellstandThisDay += fuellstand - minFuellstand; // += for more than 1 refills per day
       minFuellstand = startFuellstand = fuellstand;
+      timeLastChange = time(NULL);
     }
   }
 
   /*********************************************************************
    * @brief 	analyse traced fuellstand values for the last day
-   *          to calculate pellets consumption
-   *          and resets all relevant values for the next day
+   *          -> to calculate pellets consumption
+   *          -> and resets all relevant values for the next day
    * @param 	void
    * @return 	string with message about pellets consumption
    *********************************************************************/
   std::string Analysis::analyseFuellstandLastDayAndReset()
   {
-    pelletConsumptionThisDayPercent += refillFuellstandThisDay - minFuellstand;
+    pelletConsumptionThisDayPercent = refillFuellstandThisDay + (startFuellstand - getFuellstand());
+    // pelletConsumptionThisDayPercent += refillFuellstandThisDay + (startFuellstand - minFuellstand);
 
     // generate message
     bufStr = actualDate + ": Tages-Pelletsverbrauch= " + std::to_string(pelletConsumptionThisDayPercent) + "% \n";
 
     // reset values
-    pelletConsumptionThisDayPercent = 0.0;
+    // pelletConsumptionThisDayPercent = 0.0;
     refillFuellstandThisDay = 0.0;
-    minFuellstand = startFuellstand = getFuellstand();
+    startFuellstand = getFuellstand();
+    // minFuellstand = startFuellstand = getFuellstand();
+
+    // save to NVS
+    preferences.begin(PREFERENCES_NAMESPACE);
+    preferences.putFloat("startFuellstand", startFuellstand);
+    // preferences.putFloat("minFuellstand", minFuellstand);
+    preferences.putFloat("refillFuellstan", refillFuellstandThisDay);
+    // preferences.putFloat("pelletConsumpti", pelletConsumptionThisDayPercent);
+    preferences.end();
 
     return bufStr;
   }

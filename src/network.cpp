@@ -223,36 +223,6 @@ bool radiator::NetworkHandler::inputMQTTconfig()
   configureMQTT();
 
   return true;
-
-  // with regex check of hostname:
-  //  auto toFind = std::regex("([a-zA-Z0-9-.]{2,256}\\.[a-z]{2,5})"); // finds url in string e.g.   broker.hivemq.com   or homeassistant.local
-  //                                                                   // https://regexr.com
-  //  std::smatch result;
-
-  // std::cout << printMQTTConfig() << std::endl;
-  // do
-  // {
-  //   std::cout << "Set MQTT broker (ENTER to use actual) hostname: " << std::endl;
-
-  //   bufStr = Serial.readStringUntil('\r').c_str();
-  //   auto res = std::regex_search(bufStr, result, toFind);
-  //   RADIATOR_LOG_ERROR("strInput=" << bufStr << ", regex_search->result=" << result.str() << std::endl;)
-
-  // } while (result.empty() && bufStr.size() > 1);
-
-  // if (!result.empty())
-  // {
-  //   mqttBroker = result.str();
-
-  //   Preferences mqttPrefs;
-  //   mqttPrefs.begin(PREFERENCES_NAMESPACE);
-  //   mqttPrefs.putString("mqttBroker", mqttBroker.c_str());
-  //   mqttPrefs.end();
-
-  //   RADIATOR_LOG_INFO("Saved mqttBroker hostname to preferences in NVS" << std::endl;)
-
-  //   configureMQTT();
-  //}
 }
 
 /*********************************************************************
@@ -266,13 +236,11 @@ void radiator::NetworkHandler::installWiFiCallbacks()
   WiFi.onEvent(
       [](WiFiEvent_t _WiFi_Event, WiFiEventInfo_t _WiFi_Event_Info)
       {
-        bufStr = "\nWiFi connected to... \n" +
+        bufStr = "\n" + getMillisAndTime() +
+                 "WiFi connected to... \n" +
                  (std::string) "\t WLAN / SSID: \t" + WiFi.SSID().c_str() + "\n" +
                  "\t Signal: \tRSSI " + std::to_string(WiFi.RSSI()) + "\n" +
-                 "\t Hostname: \t" + WiFi.getHostname() + "\n" +
-                 "\t IP address: \t" + WiFi.localIP().toString().c_str() + "\n" +
-                 "\t Gateway IP: \t" + WiFi.gatewayIP().toString().c_str() + "\n" +
-                 "\t Network IP: \t" + WiFi.networkID().toString().c_str() + "\n";
+                 "\t Hostname: \t" + WiFi.getHostname() + "\n";
         RADIATOR_LOG_WARN(bufStr << std::endl;)
 
         if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
@@ -300,8 +268,8 @@ void radiator::NetworkHandler::installWiFiCallbacks()
         if (WiFi.status() == WL_CONNECTION_LOST)
         {
           timeConnectionLostMs = millis();
-          bufStr = "\nWiFi was DISCONNECTED from WLAN. System is trying to reconnect in a background task ... \n"
-                   "(Info: Change WiFi or MQTT settings by pressing the big yellow button at startup of the ESP32)\n";
+          bufStr = "\n" + getMillisAndTime() + "WiFi was DISCONNECTED from WLAN. System is trying to reconnect in a background task ... \n"
+                                               "(Info: Change WiFi or MQTT settings by pressing the big yellow button at startup of the ESP32)\n";
           RADIATOR_LOG_WARN(bufStr << std::endl;)
 
           if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
@@ -313,8 +281,8 @@ void radiator::NetworkHandler::installWiFiCallbacks()
 
         if (WiFi.status() == WL_NO_SSID_AVAIL && millis() >= nextInfoOutputMs)
         {
-          bufStr = "\nWiFi is NOT CONNECTED to WLAN -> SSID not available. The system keeps trying to reconnect in a background task ... \n"
-                   "\t(Connection was lost " +
+          bufStr = "\n" + getMillisAndTime() + "WiFi is NOT CONNECTED to WLAN -> SSID not available. The system keeps trying to reconnect in a background task ... \n"
+                                               "\t(Connection was lost " +
                    std::to_string((millis() - timeConnectionLostMs) / (1000 * 60)) +
                    " minutes ago.)\n"
                    "\t(Info: Change WiFi or MQTT settings by pressing the big yellow button at startup of the ESP32)\n";
@@ -343,7 +311,7 @@ void radiator::NetworkHandler::installWiFiCallbacks()
   WiFi.onEvent(
       [](WiFiEvent_t _WiFi_Event, WiFiEventInfo_t _WiFi_Event_Info)
       {
-        bufStr = "\nWiFi:\tGot IP address:\t" + (std::string)WiFi.localIP().toString().c_str() + "\n" +
+        bufStr = "\n" + getMillisAndTime() + "WiFi:\tGot IP address:\t" + (std::string)WiFi.localIP().toString().c_str() + "\n" +
                  "\tGateway IP: \t" + WiFi.gatewayIP().toString().c_str() + "\n" +
                  "\tNetwork IP: \t" + WiFi.networkID().toString().c_str() + "\n";
 
@@ -396,7 +364,8 @@ void radiator::NetworkHandler::configureMQTT()
   mqttClient.setCredentials(mqttUser.c_str(), mqttPassword.c_str());
 
   mqttClient.setKeepAlive(MQTT_KEEP_ALIVE);
-  mqttClient.setCleanSession(false); // hold queued messages after disconnect -> consider needed ram at longer disconnection intervals
+  mqttClient.setCleanSession(true); // true: DID NOT hold queued messages after disconnect
+  // mqttClient.setCleanSession(false); // hold queued messages after disconnect -> consider needed ram at longer disconnection intervals
 
   static std::string lastWillTopic = mqttTopic + MQTT_SUBTOPIC_ONLINESTATUS;
   static std::string lastWill = (std::string)mqttClient.getClientId() + ": offline";
@@ -406,7 +375,7 @@ void radiator::NetworkHandler::configureMQTT()
 
   if (mqttBroker.empty())
   {
-    RADIATOR_LOG_ERROR(millis() << " ms: NO MQTT broker address -> MQTT is deactivated! To activate push the big yellow button at startup of ESP" << std::endl;)
+    RADIATOR_LOG_ERROR(getMillisAndTime() << "NO MQTT broker address -> MQTT is deactivated! To activate push the big yellow button at startup of ESP" << std::endl;)
     outputToMQTT = false;
     // return;
   }
@@ -435,15 +404,19 @@ std::string radiator::NetworkHandler::printMQTTConfig()
  *********************************************************************/
 void radiator::NetworkHandler::onMqttConnect(bool sessionPresent)
 {
-  bufStr = std::to_string(millis()) + " ms: Connected to MQTT: Broker= " + mqttBroker +
+  bufStr = getMillisAndTime() + "Connected to MQTT: Broker= " + mqttBroker +
            ", Session present= " + std::to_string(sessionPresent) +
            ", mqttClient.getClientId()=" + mqttClient.getClientId();
+  // bufStr = std::to_string(millis()) + " ms: Connected to MQTT: Broker= " + mqttBroker +
+  //          ", Session present= " + std::to_string(sessionPresent) +
+  //          ", mqttClient.getClientId()=" + mqttClient.getClientId();
   RADIATOR_LOG_WARN(bufStr << std::endl;)
 
   if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
     std::cout << bufStr << std::endl; // for better user info also to console
 
-  bufStr = std::to_string(millis()) + " ms: " + (std::string)mqttClient.getClientId() + ": online";
+  bufStr = getMillisAndTime() + (std::string)mqttClient.getClientId() + ": online";
+  // bufStr = std::to_string(millis()) + " ms: " + (std::string)mqttClient.getClientId() + ": online";
   mqttClient.publish((mqttTopic + MQTT_SUBTOPIC_ONLINESTATUS).c_str(), 1, true, bufStr.c_str());
   mqttClient.publish((mqttTopic + MQTT_SUBTOPIC_SYSINFO).c_str(), 1, true, get_System_Info().c_str());
 
@@ -455,9 +428,8 @@ void radiator::NetworkHandler::onMqttConnect(bool sessionPresent)
         {
           mqttClient.publish((mqttTopic + MQTT_SUBTOPIC_SYSINFO).c_str(), 1, true, get_System_Info().c_str());
           // RADIATOR_LOG_WARN( get_System_Info();
-          time_t rawtime;
-          time(&rawtime);
-          RADIATOR_LOG_WARN(millis() << " ms / " << ctime(&rawtime) << ": handleValuesTimeSeries: Uptime: " << (millis() / (1000 * 60)) << " min; MQTT status: " << (mqttClient.connected() ? "connected" : "NOT connected") << "; Heap: " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << std::endl;)
+          RADIATOR_LOG_WARN(getMillisAndTime() << "Uptime: " << (millis() / (1000 * 60)) << " min; MQTT status: " << (mqttClient.connected() ? "connected" : "NOT connected") << "; Heap: " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << std::endl;)
+          // RADIATOR_LOG_WARN(millis() << " ms / " << getActualTimeAsStr() << ": handleValuesTimeSeries: Uptime: " << (millis() / (1000 * 60)) << " min; MQTT status: " << (mqttClient.connected() ? "connected" : "NOT connected") << "; Heap: " << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << std::endl;)
         });
   }
 
@@ -471,7 +443,7 @@ void radiator::NetworkHandler::onMqttConnect(bool sessionPresent)
  *********************************************************************/
 void radiator::NetworkHandler::onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
 {
-  bufStr = std::to_string(millis()) + " ms: Disconnected from MQTT: reason = ";
+  bufStr = getMillisAndTime() + "Disconnected from MQTT: reason = ";
 
   switch (reason)
   {
@@ -511,7 +483,7 @@ void radiator::NetworkHandler::onMqttDisconnect(AsyncMqttClientDisconnectReason 
 
   if (WiFi.isConnected() && outputToMQTT)
   {
-    bufStr = std::to_string(millis()) + " ms: Start ticker for reconnect to MQTT broker in " + std::to_string(MQTT_RECONNECTION_TIMEOUT_SEC) + " sec.";
+    bufStr = getMillisAndTime() + "Start ticker for reconnect to MQTT broker in " + std::to_string(MQTT_RECONNECTION_TIMEOUT_SEC) + " sec.";
     RADIATOR_LOG_INFO(bufStr << std::endl;)
 
     if (REDIRECT_STD_ERR_TO_SYSLOG_FILE)
@@ -529,7 +501,7 @@ void radiator::NetworkHandler::onMqttDisconnect(AsyncMqttClientDisconnectReason 
  *********************************************************************/
 void radiator::NetworkHandler::onMqttSubscribe(uint16_t packetId, uint8_t qos)
 {
-  RADIATOR_LOG_INFO(millis() << " ms: Subscribe acknowledged: packetId= " << packetId << ", qos= " << (int)qos << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "Subscribe acknowledged: packetId= " << packetId << ", qos= " << (int)qos << std::endl;)
 }
 
 /*********************************************************************
@@ -539,7 +511,7 @@ void radiator::NetworkHandler::onMqttSubscribe(uint16_t packetId, uint8_t qos)
  *********************************************************************/
 void radiator::NetworkHandler::onMqttUnsubscribe(uint16_t packetId)
 {
-  RADIATOR_LOG_INFO(millis() << " ms: Unsubscribe acknowledged: packetId= " << packetId << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "Unsubscribe acknowledged: packetId= " << packetId << std::endl;)
 }
 
 /*********************************************************************
@@ -555,8 +527,8 @@ void radiator::NetworkHandler::onMqttUnsubscribe(uint16_t packetId)
  *********************************************************************/
 void radiator::NetworkHandler::onMqttMessage(char *topic, char *payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total)
 {
-  RADIATOR_LOG_INFO(millis()
-                        << " ms: Published message received: \n"
+  RADIATOR_LOG_INFO(getMillisAndTime()
+                        << "Published message received: \n"
                         << "\t topic= " << topic << "\n"
                         << "\t payload= " << payload << "\n"
                         << "\t qos= " << (int)properties.qos << "\n"
@@ -575,7 +547,7 @@ void radiator::NetworkHandler::onMqttMessage(char *topic, char *payload, AsyncMq
  *********************************************************************/
 void radiator::NetworkHandler::onMqttPublish(uint16_t packetId)
 {
-  RADIATOR_LOG_INFO(millis() << " ms: MQTT Publish acknowledged for packetId= " << packetId << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "MQTT Publish acknowledged for packetId= " << packetId << std::endl;)
 }
 
 /*********************************************************************
@@ -587,19 +559,19 @@ void radiator::NetworkHandler::connectToMqtt()
 {
   if (!outputToMQTT)
   {
-    RADIATOR_LOG_WARN(millis() << " ms: Output to MQTT is disabled by config (outputToMQTT=false)" << std::endl;)
+    RADIATOR_LOG_WARN(getMillisAndTime() << "Output to MQTT is disabled by config (outputToMQTT=false)" << std::endl;)
     return;
   }
 
   if (mqttClient.connected())
   {
-    RADIATOR_LOG_INFO(millis() << " ms: MQTT client is already connected" << std::endl;)
+    RADIATOR_LOG_INFO(getMillisAndTime() << "MQTT client is already connected" << std::endl;)
     return;
   }
 
   // mqttClient.clearQueue();
 
-  RADIATOR_LOG_INFO(millis() << " ms: Connecting to MQTT broker    " << mqttBroker << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "Connecting to MQTT broker    " << mqttBroker << std::endl;)
   mqttClient.connect();
 }
 
@@ -610,11 +582,11 @@ void radiator::NetworkHandler::connectToMqtt()
  *********************************************************************/
 void radiator::NetworkHandler::disconnectMqtt()
 {
-  RADIATOR_LOG_INFO(millis() << " ms: DISconnecting MQTT: client ID=" << mqttClient.getClientId() << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "DISconnecting MQTT: client ID=" << mqttClient.getClientId() << std::endl;)
 
   if (!mqttClient.connected())
   {
-    RADIATOR_LOG_INFO(millis() << " ms: ... MQTT client is NOT connected" << std::endl;)
+    RADIATOR_LOG_INFO(getMillisAndTime() << "... MQTT client is NOT connected" << std::endl;)
     return;
   }
 
@@ -634,7 +606,7 @@ bool radiator::NetworkHandler::publishToMQTT(const std::string &payload, const s
 {
   if (!outputToMQTT)
   {
-    RADIATOR_LOG_WARN(millis() << " ms: Output to MQTT is disabled by config" << std::endl;)
+    RADIATOR_LOG_WARN(getMillisAndTime() << "Output to MQTT is disabled by config" << std::endl;)
     return false;
   }
 
@@ -656,7 +628,8 @@ bool radiator::NetworkHandler::publishToMQTT(const std::string &payload, const s
   // ensure a size limit for buffered data by conditional deleting of buffer items
   while (ESP.getMaxAllocHeap() < MIN_FREE_HEAPSIZE_FOR_MQTT_BUFFERQUEUE_BYTES) // ESP.getFreeHeap() or ESP.getMinFreeHeap() or ESP.getMaxAllocHeap()
   {
-    RADIATOR_LOG_WARN("Old MQTT messages cannot be buffered any more due to low free heap size: ESP.getFreeHeap()="
+    RADIATOR_LOG_WARN(getMillisAndTime()
+                          << "Old MQTT messages cannot be buffered any more due to low free heap size: ESP.getFreeHeap()="
                           << ESP.getFreeHeap() << " bytes, ESP.getMinFreeHeap()=" << ESP.getMinFreeHeap() << " bytes, ***ESP.getMaxAllocHeap()=" << ESP.getMaxAllocHeap() << " bytes***, "
                           << " -> oldest buffered message will be deleted (bufferQueue.size=" << bufferQueue.size() << " elements)" << std::endl;)
 
@@ -667,18 +640,18 @@ bool radiator::NetworkHandler::publishToMQTT(const std::string &payload, const s
   }
 
   // ALL messages are pushed to the buffer queue
-  RADIATOR_LOG_DEBUG(millis() << " ms: publishToMQTT: 1 before push_back-> bufferQueue.size=" << bufferQueue.size() << " ESP.getFreeHeap()=" << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << " bytes" << std::endl;)
+  RADIATOR_LOG_DEBUG(getMillisAndTime() << "publishToMQTT: 1 before push_back-> bufferQueue.size=" << bufferQueue.size() << " ESP.getFreeHeap()=" << ESP.getFreeHeap() << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << " bytes" << std::endl;)
 
   bufferQueue.push_back({payload, subtopic, qos, retain});
 
-  RADIATOR_LOG_DEBUG(millis() << " ms: publishToMQTT: 2 after push_back-> bufferQueue.size=" << bufferQueue.size() << " ESP.getFreeHeap()=" << (ESP.getFreeHeap()) << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << " bytes" << std::endl;)
+  RADIATOR_LOG_DEBUG(getMillisAndTime() << "publishToMQTT: 2 after push_back-> bufferQueue.size=" << bufferQueue.size() << " ESP.getFreeHeap()=" << (ESP.getFreeHeap()) << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap() << " bytes" << std::endl;)
 
   // DEBUG_STACK_HIGH_WATERMARK
 
   if (!mqttClient.connected())
   {
-    RADIATOR_LOG_INFO(millis() << " ms: Cannot publish to MQTT broker (" << mqttBroker << ") -> mqttClient is not connected (WiFi.isConnected()="
-                               << WiFi.isConnected() << ")" << std::endl;)
+    RADIATOR_LOG_INFO(getMillisAndTime() << "Cannot publish to MQTT broker (" << mqttBroker << ") -> mqttClient is not connected (WiFi.isConnected()="
+                                         << WiFi.isConnected() << ")" << std::endl;)
     RADIATOR_LOG_DEBUG("\t -> message is buffered (queue size=" << bufferQueue.size()
                                                                 << ", ESP.getFreeHeap()=" << (ESP.getFreeHeap()) << " / " << ESP.getMinFreeHeap() << " / " << ESP.getMaxAllocHeap()
                                                                 << ") and send at reconnection \n"
@@ -700,11 +673,11 @@ bool radiator::NetworkHandler::publishToMQTT(const std::string &payload, const s
                                   bufferQueue.front().retain,
                                   bufferQueue.front().payload.c_str());
 
-    RADIATOR_LOG_INFO(millis() << " ms: publishToMQTT: broker = " << mqttBroker
-                               << ", topic = " << (mqttTopic + bufferQueue.front().subtopic)
-                               << ", Quality of service = " << (int)bufferQueue.front().qos
-                               << ", retain = " << bufferQueue.front().retain << ", packetId = " << packetId
-                               << ", \n\tpayload=\n\t" << bufferQueue.front().payload << std::endl;)
+    RADIATOR_LOG_INFO(getMillisAndTime() << "publishToMQTT: broker = " << mqttBroker
+                                         << ", topic = " << (mqttTopic + bufferQueue.front().subtopic)
+                                         << ", Quality of service = " << (int)bufferQueue.front().qos
+                                         << ", retain = " << bufferQueue.front().retain << ", packetId = " << packetId
+                                         << ", \n\tpayload=\n\t" << bufferQueue.front().payload << std::endl;)
 
     bufferQueue.pop_front(); // remove sent message from buffer queue
   }
@@ -721,7 +694,7 @@ bool radiator::NetworkHandler::publishToMQTT(const std::string &payload, const s
  *********************************************************************/
 std::string radiator::NetworkHandler::get_System_Info()
 {
-  RADIATOR_LOG_INFO("NetworkHandler::get_System_Info()" << std::endl;)
+  RADIATOR_LOG_INFO(getMillisAndTime() << "NetworkHandler::get_System_Info()" << std::endl;)
 
   // Version 1 with local std::stringstream object -> watch for heap fragmentation!
   // std::stringstream systemInfo;
@@ -729,7 +702,16 @@ std::string radiator::NetworkHandler::get_System_Info()
 
   // systemInfo
   bufStrStream
-      << millis() << " ms: Microcontroller ESP32: \n"
+      << getMillisAndTime() << "Microcontroller ESP32: \n"
+      << "Uptime             : " << (millis() / (1000 * 60)) << " min; \n"
+      << "Heapsize           : " << (ESP.getHeapSize() / 1024) << " kBytes; \n"
+      << "Free heap          : " << (ESP.getFreeHeap() / 1024) << " kBytes; \n"
+      << "Min. free heap     : " << (ESP.getMinFreeHeap() / 1024) << " kBytes; \n"
+      << "Max. alloc heap    : " << (ESP.getMaxAllocHeap() / 1024) << " kBytes; \n"
+      << "Free PSRAM         : " << ESP.getFreePsram() << " Bytes; \n"
+
+      << "\n"
+
       << "ESP32 chip model   : " << ESP.getChipModel() << "; \n"
       << "Chip Revision      : " << ((int)ESP.getChipRevision()) << "; \n"
       << "CPU Frequency      : " << ESP.getCpuFreqMHz() << " MHz; \n"
@@ -739,15 +721,6 @@ std::string radiator::NetworkHandler::get_System_Info()
       << "Sketch size        : " << (ESP.getSketchSize() / 1024) << " kBytes; \n"
       << "Free sketch space  : " << (ESP.getFreeSketchSpace() / 1024) << " kBytes; \n"
       << "SDK version        : " << ESP.getSdkVersion() << "; \n"
-
-      << "\n"
-
-      << "Uptime             : " << (millis() / (1000 * 60)) << " min; \n"
-      << "Heapsize           : " << (ESP.getHeapSize() / 1024) << " kBytes; \n"
-      << "Free heap          : " << (ESP.getFreeHeap() / 1024) << " kBytes; \n"
-      << "Min. free heap     : " << (ESP.getMinFreeHeap() / 1024) << " kBytes; \n"
-      << "Max. alloc heap    : " << (ESP.getMaxAllocHeap() / 1024) << " kBytes; \n"
-      << "Free PSRAM         : " << ESP.getFreePsram() << " Bytes; \n"
 
       << "\n"
 
@@ -879,10 +852,6 @@ std::string radiator::NetworkHandler::get_System_Info()
   //          "MQTT reconnection timeout: " + std::to_string(MQTT_RECONNECTION_TIMEOUT_SEC) + " sec; \n";
 
   // return bufStr;
-}
-
-std::string radiator::getMillisAndTime()
-{
 }
 
 #if START_WEBSERVER

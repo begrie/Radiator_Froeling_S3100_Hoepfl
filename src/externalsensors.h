@@ -16,7 +16,7 @@ namespace radiator
     static bool initExternalSensors();
 
     static std::string getSensorValues();
-    static std::string getSensorValuesAsJSON();
+    static std::string getSensorValuesForJSON();
     static std::string getSensorValueHeaderForCSV();
     static std::string getSensorValueDataForCSV();
 
@@ -69,4 +69,4 @@ namespace radiator
     static volatile int16_t acCurrentAnalogReadAmplitudeMillivolt;
   };
 } // namespace radiator
-#endif //#ifndef __DH_EXTERNALSENSORS_H__
+#endif // #ifndef __DH_EXTERNALSENSORS_H__
