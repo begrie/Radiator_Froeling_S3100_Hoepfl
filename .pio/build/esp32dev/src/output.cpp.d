@@ -232,4 +232,5 @@
  C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/cores/esp32/HardwareSerial.h \
  src/debug.h src/externalsensors.h \
  .pio/libdeps/esp32dev/DHT\ sensor\ library/DHT.h \
- lib/ESP32_Servo/ESP32_Servo.h src/analysis.h
+ lib/ESP32_Servo/ESP32_Servo.h src/analysis.h \
+ C:/Users/Bernd/.platformio/packages/framework-arduinoespressif32/libraries/Preferences/src/Preferences.h

@@ -92,6 +92,8 @@ void setup()
                                               outputToConsole,
                                               outputToMQTT);
 
+  // ptrOutHandler->setSystemTimeFromRadiatorData(2024, 9, 8, 7, 55, 44);
+
   RADIATOR_LOG_INFO("\n" << getMillisAndTime()
                          << "***************************************** END STARTUP OF ESP32 *****************************************" << std::endl;)
 }

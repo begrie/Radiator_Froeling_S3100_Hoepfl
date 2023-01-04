@@ -311,7 +311,8 @@ void radiator::NetworkHandler::installWiFiCallbacks()
   WiFi.onEvent(
       [](WiFiEvent_t _WiFi_Event, WiFiEventInfo_t _WiFi_Event_Info)
       {
-        bufStr = "\n" + getMillisAndTime() + "WiFi:\tGot IP address:\t" + (std::string)WiFi.localIP().toString().c_str() + "\n" +
+        bufStr = "\n" + getMillisAndTime() + "WiFi:\n" +
+                 "\tGot IP address:\t" + (std::string)WiFi.localIP().toString().c_str() + "\n" +
                  "\tGateway IP: \t" + WiFi.gatewayIP().toString().c_str() + "\n" +
                  "\tNetwork IP: \t" + WiFi.networkID().toString().c_str() + "\n";
 
@@ -702,16 +703,16 @@ std::string radiator::NetworkHandler::get_System_Info()
 
   // systemInfo
   bufStrStream
-      << getMillisAndTime() << "Microcontroller ESP32: \n"
+      << getMillisAndTime()
       << "Uptime             : " << (millis() / (1000 * 60)) << " min; \n"
       << "Heapsize           : " << (ESP.getHeapSize() / 1024) << " kBytes; \n"
       << "Free heap          : " << (ESP.getFreeHeap() / 1024) << " kBytes; \n"
       << "Min. free heap     : " << (ESP.getMinFreeHeap() / 1024) << " kBytes; \n"
       << "Max. alloc heap    : " << (ESP.getMaxAllocHeap() / 1024) << " kBytes; \n"
-      << "Free PSRAM         : " << ESP.getFreePsram() << " Bytes; \n"
 
       << "\n"
 
+      << "Microcontroller ESP32: \n"
       << "ESP32 chip model   : " << ESP.getChipModel() << "; \n"
       << "Chip Revision      : " << ((int)ESP.getChipRevision()) << "; \n"
       << "CPU Frequency      : " << ESP.getCpuFreqMHz() << " MHz; \n"
@@ -720,6 +721,7 @@ std::string radiator::NetworkHandler::get_System_Info()
       << "Flash chip speed   : " << (ESP.getFlashChipSpeed() / 1000000) << " MHz; \n"
       << "Sketch size        : " << (ESP.getSketchSize() / 1024) << " kBytes; \n"
       << "Free sketch space  : " << (ESP.getFreeSketchSpace() / 1024) << " kBytes; \n"
+      << "Free PSRAM         : " << ESP.getFreePsram() << " Bytes; \n"
       << "SDK version        : " << ESP.getSdkVersion() << "; \n"
 
       << "\n"

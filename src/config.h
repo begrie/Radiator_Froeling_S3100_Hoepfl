@@ -76,7 +76,7 @@ namespace radiator
                                                           // only one level is created automatically in initFilesystem()
                                                           // ->all deeper directories in path must exist before instantiation of OutputHandler
 #define MIN_FREE_KILOBYTES_ON_FILESYSTEM 5000             // if limit is undercut -> oldest logfiles are deleted
-#define INTERVALL_FOR_FILESYSTEM_CHECK_SEC (24 * 60 * 60) // execute all 24 hours to check free space on filesystem
+#define INTERVALL_FOR_FILESYSTEM_CHECK_SEC (36 * 60 * 60) // execute all 24 hours to check free space on filesystem
 
 #define FILE_OUTPUT_INTERVALL_SEC 60   // controls how often resp. how many of the received data is saved to a logfile
                                        // -> the radiator device sends every second one values data set and the

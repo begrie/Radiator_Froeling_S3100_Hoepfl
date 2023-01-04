@@ -144,7 +144,7 @@ radiator::FilesystemHandler::initFilesystem(std::string dataDirectory)
  **********************************************************************/
 void radiator::FilesystemHandler::xTaskFilesWatchdog(void *parameter)
 {
-  vTaskDelay(pdMS_TO_TICKS(30000)); // wait 10 sec. at startup
+  vTaskDelay(pdMS_TO_TICKS(30000)); // wait 30 sec. at startup
 
   const auto intervallForFilesystemCheckSec = INTERVALL_FOR_FILESYSTEM_CHECK_SEC;
   ulong nextFilesystemCheck = 0;

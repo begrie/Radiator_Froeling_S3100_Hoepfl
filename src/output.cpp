@@ -92,12 +92,12 @@ namespace radiator
                       ", " + outStrStream.str());
     }
 
-    static ulong lastSystemTimeSet = 0;
-    if (millis() - lastSystemTimeSet >= (24 * 60 * 60 * 1000)) // set/synchronize every 24 hours
+    static ulong nextSystemTimeSet = 0;
+    if (millis() >= nextSystemTimeSet) // set/synchronize every 48 hours
     {
       setSystemTimeFromRadiatorData(year, month, day, hour, minute, second);
-      lastSystemTimeSet = millis();
       radiator::Analysis::init();
+      nextSystemTimeSet = millis() + 48 * 60 * 60 * 1000; // set/synchronize every 48 hours
     }
 
     handleValuesTimeSeries(outStrStream.str());
@@ -867,7 +867,7 @@ namespace radiator
   void OutputHandler::setSystemTimeFromRadiatorData(uint16_t year, uint8_t month, uint8_t day,
                                                     uint8_t hour, uint8_t minute, uint8_t second)
   {
-    tm tmTimeToSet;
+    tm tmTimeToSet{0};                 // 0 - initializer is absolutely neccessary!!
     tmTimeToSet.tm_year = year - 1900; // years since 1900
     tmTimeToSet.tm_mon = month - 1;    // starts from 0
     tmTimeToSet.tm_mday = day;         // starts from 1
@@ -876,7 +876,7 @@ namespace radiator
     tmTimeToSet.tm_sec = second;
 
     RADIATOR_LOG_INFO(getMillisAndTime() << "Setting system time to " << asctime(&tmTimeToSet));
-    // Serial.printf("Setting time: %s", asctime(&tmTimeToSet));
+    Serial.printf("Setting time: %s \n", asctime(&tmTimeToSet));
 
     timeval timevalTimetoSet{0, 0}; // 0 - initializer are absolutely neccessary!!
     timevalTimetoSet.tv_sec = mktime(&tmTimeToSet);
@@ -885,7 +885,7 @@ namespace radiator
     // only for debugging:
     time_t actTime_t = time(NULL);
     RADIATOR_LOG_DEBUG(getMillisAndTime() << "Getting system time: " << ctime(&actTime_t));
-    // Serial.printf("Getting time: %s \n", ctime(&actTime_t));
+    Serial.printf("%s Getting time= %s \n", getMillisAndTime().c_str(), ctime(&actTime_t));
 
     // tmTimeToSet = *localtime(&actTime_t);
     // Serial.printf("Getting time: %s \n", asctime(&tmTimeToSet));

@@ -8,6 +8,7 @@ namespace radiator
   /*********************
    * STATIC DEFINITIONS
    *********************/
+  Preferences Analysis::preferences;
   radiator::OutputHandler::ValuesWithTime_t *Analysis::ptrValuesAtTime = NULL;
   time_t *Analysis::ptrValueTimet = NULL;
   std::string *Analysis::ptrValueTimeStr;
@@ -37,6 +38,8 @@ namespace radiator
   {
     static bool initWasDone = false;
 
+    bufStr.reserve(3000);
+
     if (time(NULL) < 1640991600) // check against time_t of 01.01.2022
     {
       RADIATOR_LOG_ERROR(getMillisAndTime() << "Cannot load data for analysis from preferences, because ESP time is not synchronized to radiator time");
@@ -54,12 +57,25 @@ namespace radiator
     heatingPauseMinutes = preferences.getUShort("heatingPauseMin", 0);
     heatingStartsThisDay = preferences.getUChar("heatingStartsTh", 0);
 
-    startFuellstand = preferences.getFloat("startFuellstand", 0);
-    minFuellstand = preferences.getFloat("minFuellstand", 0);
+    startFuellstand = preferences.getFloat("startFuellstand", 100);
+    minFuellstand = preferences.getFloat("minFuellstand", 100);
     refillFuellstandThisDay = preferences.getFloat("refillFuellstan", 0);
     pelletConsumptionThisDayPercent = preferences.getFloat("pelletConsumpti", 0);
 
+    bufStr = (preferences.getString("analyseMessages", "")).c_str();
+
     preferences.end();
+
+    if (!bufStr.empty())
+    {
+      size_t posStart, posEnd = 0;
+      while (posEnd = bufStr.find("\n", posStart) != std::string::npos)
+      {
+        Serial.printf("AAAA: %s \n", bufStr.substr(posStart, posEnd - posStart + 1).c_str());
+        messages.push_back(bufStr.substr(posStart, posEnd - posStart + 1));
+        posStart = posEnd + 1;
+      }
+    }
 
     initWasDone = true;
   }
@@ -105,7 +121,7 @@ namespace radiator
    *********************************************************************/
   void Analysis::handleMessages()
   {
-    while (messages.size() > 30)
+    while (messages.size() > MAX_ANALYSE_MESSAGES)
     {
       messages.pop_front();
     }
@@ -117,6 +133,10 @@ namespace radiator
     }
 
     NetworkHandler::publishToMQTT(bufStr, MQTT_SUBTOPIC_ANAYLYSIS);
+
+    preferences.begin(PREFERENCES_NAMESPACE);
+    preferences.putString("analyseMessages", bufStr.c_str());
+    preferences.end();
   }
 
   /*********************************************************************
@@ -294,9 +314,17 @@ namespace radiator
   {
     auto status = getElementWithIndex(1).value;
 
-    if (lastRadiatorStatus.find(status) == std::string::npos) // not found -> status was changed
+    if (lastRadiatorStatus.find(status) == std::string::npos // not found -> status was changed
+        && status.find("Abreinigen") == std::string::npos)   // ignorieren von "Abreinigen" -> erfolgt innerhalb eines Heizzyklus - d.h. "Heizen" -"Abreinigen" - "Heizen" - ... - "Brenner Aus"
     {
+      // bool abreinigen;
+      // if (lastRadiatorStatus.find("Abreinigen") == std::string::npos) //"Abreinigen" erfolgt innerhalb eines Heizzyklus - d.h. "Heizen" -"Abreinigen" - "Heizen" - ... - "Brenner Aus"
+      //   abreinigen = false;
+      // else
+      //   abreinigen = true;
+
       lastRadiatorStatus = status;
+      // if (status.find("Heizen") != std::string::npos && lastRadiatorStatus.find("Abreinigen") == std::string::npos) //"Abreinigen" erfolgt innerhalb eines Heizzyklus - d.h. "Heizen" -"Abreinigen" - "Heizen" - ... - "Brenner Aus"
       if (status.find("Heizen") != std::string::npos)
       {
         heatingStartTime = time(NULL);
@@ -310,7 +338,7 @@ namespace radiator
         preferences.putUChar("heatingStartsTh", heatingStartsThisDay);
         preferences.end();
 
-        return (*ptrValueTimeStr + ": Start Heizen (Fuellst.= " + getFuellstandAsString() + "), letzte Heizpause= " + std::to_string(heatingPauseMinutes) + " Minuten \n");
+        return (*ptrValueTimeStr + ": Start Heizen (Fuellst.= " + getFuellstandAsString() + "), letzte Heizpause= " + std::to_string(heatingPauseMinutes) + " Minuten" DELIMITER_FOR_CSV_FILE "\n");
       }
       else if (status.find("Brenner Aus") != std::string::npos)
       {
@@ -323,7 +351,7 @@ namespace radiator
         preferences.putUShort("heatingDuration", heatingDurationThisDayMinutes);
         preferences.end();
 
-        return (*ptrValueTimeStr + ": Brenner Aus (Fuellst.= " + getFuellstandAsString() + "), letzte Heizdauer= " + std::to_string((heatingEndTime - heatingStartTime) / 60) + " Minuten) \n");
+        return (*ptrValueTimeStr + ": Brenner Aus (Fuellst.= " + getFuellstandAsString() + "), letzte Heizdauer= " + std::to_string((heatingEndTime - heatingStartTime) / 60) + " Minuten)" DELIMITER_FOR_CSV_FILE "\n");
       }
     }
 
@@ -340,12 +368,13 @@ namespace radiator
   std::string Analysis::analyseHeatingCyclesLastDayAndReset()
   {
     // generate message
-    bufStr = actualDate + ": Tages-Heizdauer= " + std::to_string(heatingDurationThisDayMinutes) + " Minuten, Brennerstarts= " + std::to_string(heatingStartsThisDay) + " \n";
+    bufStr = actualDate + ": Tages-Heizdauer= " + std::to_string(heatingDurationThisDayMinutes) + " Minuten, Brennerstarts= " + std::to_string(heatingStartsThisDay) + DELIMITER_FOR_CSV_FILE "\n";
 
     // reset values
     heatingDurationThisDayMinutes = 0;
     heatingStartsThisDay = 0;
 
+    // save to NVS
     preferences.begin(PREFERENCES_NAMESPACE);
     preferences.putUShort("heatingDuration", heatingDurationThisDayMinutes);
     preferences.putUChar("heatingStartsTh", heatingStartsThisDay);
@@ -402,7 +431,7 @@ namespace radiator
 
     if (fuellstand == minFuellstand)
     {
-      if (time(NULL) - timeLastChange > 300) // save only after 5 minutes with same values to take care for the flash memory write cycles
+      if (time(NULL) - timeLastChange > 120) // save only after 2 minutes with same values to take care for the flash memory write cycles
       {
         timeLastChange = LONG_MAX;
         preferences.begin(PREFERENCES_NAMESPACE);
@@ -441,7 +470,7 @@ namespace radiator
     // pelletConsumptionThisDayPercent += refillFuellstandThisDay + (startFuellstand - minFuellstand);
 
     // generate message
-    bufStr = actualDate + ": Tages-Pelletsverbrauch= " + std::to_string(pelletConsumptionThisDayPercent) + "% \n";
+    bufStr = actualDate + ": Tages-Pelletsverbrauch= " + std::to_string(pelletConsumptionThisDayPercent) + "%" DELIMITER_FOR_CSV_FILE "\n";
 
     // reset values
     // pelletConsumptionThisDayPercent = 0.0;

@@ -10,6 +10,9 @@
 
 namespace radiator
 {
+
+#define MAX_ANALYSE_MESSAGES 30
+
   class Analysis
   {
   public:
@@ -34,8 +37,6 @@ namespace radiator
     static bool checkForNewDay();
     static void setNewDay();
     static std::string actualDate;
-
-    //    static void saveKeyValueToPreferences();
 
     static std::string checkRadiatorStatusForHeatingCycle();
     static std::string analyseHeatingCyclesLastDayAndReset();

@@ -8,7 +8,6 @@
 #include "network.h"
 #include "surveillance.h"
 
-
 namespace radiator
 {
   class OutputHandler : public radiator::SurveillanceHandler
@@ -29,6 +28,8 @@ namespace radiator
                              uint8_t hour, uint8_t minute, uint8_t second,
                              std::string description);
 
+    typedef std::tuple<time_t, std::string, std::list<VALUE_DATA>> ValuesWithTime_t;
+
   protected:
     enum struct FilterMethod_t
     {
@@ -45,9 +46,6 @@ namespace radiator
 
     uint16_t MQTTOutputIntervallSec = MQTT_OUTPUTINTERVALL_SEC;
     uint16_t fileOutputIntervallSec = FILE_OUTPUT_INTERVALL_SEC;
-
-  public:
-    typedef std::tuple<time_t, std::string, std::list<VALUE_DATA>> ValuesWithTime_t;
 
   protected:
     const std::list<VALUE_DATA> emptyValuesPlaceholder;
@@ -81,6 +79,7 @@ namespace radiator
     bool checkForRadiatorIsBurning(const std::list<VALUE_DATA> &values);
     bool checkForLimit(const std::list<VALUE_DATA> &values, std::string_view parameterName, const int limit, const bool greaterThan = true);
 
+public:
     void setSystemTimeFromRadiatorData(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second);
 
     bool radiatorIsBurning = false;
