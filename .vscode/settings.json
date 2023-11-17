@@ -63,5 +63,6 @@
     "mutex": "cpp",
     "thread": "cpp",
     "ledc.h": "c"
-  }
+  },
+  "cmake.configureOnOpen": false
 }

@@ -76,7 +76,7 @@ namespace radiator
                                                           // only one level is created automatically in initFilesystem()
                                                           // ->all deeper directories in path must exist before instantiation of OutputHandler
 #define MIN_FREE_KILOBYTES_ON_FILESYSTEM 5000             // if limit is undercut -> oldest logfiles are deleted
-#define INTERVALL_FOR_FILESYSTEM_CHECK_SEC (36 * 60 * 60) // execute all 24 hours to check free space on filesystem
+#define INTERVALL_FOR_FILESYSTEM_CHECK_SEC (36 * 60 * 60) // execute all 36 hours to check free space on filesystem
 
 #define FILE_OUTPUT_INTERVALL_SEC 60   // controls how often resp. how many of the received data is saved to a logfile
                                        // -> the radiator device sends every second one values data set and the
@@ -104,10 +104,10 @@ namespace radiator
                                     // data is send to a MQTT broker
 #define MQTT_TOPIC WIFI_HOSTNAME    // use WiFi hostname as basic mqtt topic
 #define MQTT_SUBTOPIC_ONLINESTATUS "/onlinestatus"
-#define MQTT_SUBTOPIC_SYSLOG "/syslog"
-#define MQTT_SUBTOPIC_ERRORLOG "/errorlog"
-#define MQTT_SUBTOPIC_ANAYLYSIS "/analysis"
 #define MQTT_SUBTOPIC_SYSINFO "/systeminfo"
+#define MQTT_SUBTOPIC_ERRORLOG "/errorlog"
+#define MQTT_SUBTOPIC_SYSLOG "/syslog"
+#define MQTT_SUBTOPIC_ANAYLYSIS "/analysis"
 #define MQTT_INTERVALL_FOR_SYSINFO_SEC (1 * 60 * 60)       //(1 * 60 * 60)       // execute all 1 hours to send systeminfo to mqtt broker
 #define MQTT_KEEP_ALIVE (MQTT_OUTPUTINTERVALL_SEC * 2.5)   // must be valid together with MQTT_OUTPUTINTERVALL_SEC
 #define MQTT_RECONNECTION_TIMEOUT_SEC 15                   // timeout after disconnection from MQTT broker

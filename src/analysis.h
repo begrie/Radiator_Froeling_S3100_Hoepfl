@@ -37,6 +37,7 @@ namespace radiator
     static bool checkForNewDay();
     static void setNewDay();
     static std::string actualDate;
+    static time_t changeOfDayTimet;
 
     static std::string checkRadiatorStatusForHeatingCycle();
     static std::string analyseHeatingCyclesLastDayAndReset();
@@ -56,7 +57,7 @@ namespace radiator
     static float startFuellstand;
     static float minFuellstand;
     static float refillFuellstandThisDay;
-    static float pelletConsumptionThisDayPercent;
+    // static float pelletConsumptionThisDayPercent;
 
     static void handleMessages();
     static std::string bufStr;

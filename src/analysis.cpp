@@ -14,6 +14,7 @@ namespace radiator
   std::string *Analysis::ptrValueTimeStr;
   std::list<VALUE_DATA> *Analysis::ptrValues;
   std::string Analysis::actualDate;
+  time_t Analysis::changeOfDayTimet = 0;
   std::string Analysis::lastRadiatorStatus = "";
   time_t Analysis::heatingStartTime = 0;
   time_t Analysis::heatingEndTime = 0;
@@ -23,7 +24,7 @@ namespace radiator
   float Analysis::startFuellstand = 100.0;
   float Analysis::minFuellstand = 100.0;
   float Analysis::refillFuellstandThisDay = 0.0;
-  float Analysis::pelletConsumptionThisDayPercent = 0.0;
+  // float Analysis::pelletConsumptionThisDayPercent = 0.0;
   std::string Analysis::bufStr;
   std::deque<std::string> Analysis::messages;
 
@@ -51,6 +52,7 @@ namespace radiator
 
     preferences.begin(PREFERENCES_NAMESPACE);
 
+    changeOfDayTimet = preferences.getLong("changeOfDayTime", 0);
     heatingStartTime = preferences.getLong("heatingStartTim", 0);
     heatingEndTime = preferences.getLong("heatingEndTime", 0);
     heatingDurationThisDayMinutes = preferences.getUShort("heatingDuration", 0);
@@ -60,7 +62,7 @@ namespace radiator
     startFuellstand = preferences.getFloat("startFuellstand", 100);
     minFuellstand = preferences.getFloat("minFuellstand", 100);
     refillFuellstandThisDay = preferences.getFloat("refillFuellstan", 0);
-    pelletConsumptionThisDayPercent = preferences.getFloat("pelletConsumpti", 0);
+    // pelletConsumptionThisDayPercent = preferences.getFloat("pelletConsumpti", 0);
 
     bufStr = (preferences.getString("analyseMessages", "")).c_str();
 
@@ -68,13 +70,18 @@ namespace radiator
 
     if (!bufStr.empty())
     {
+      // Serial.printf("bufStr= %s \n", bufStr.c_str());
       size_t posStart, posEnd = 0;
-      while (posEnd = bufStr.find("\n", posStart) != std::string::npos)
+      while ((posEnd = bufStr.find("\n", posStart)) != std::string::npos)
       {
-        Serial.printf("AAAA: %s \n", bufStr.substr(posStart, posEnd - posStart + 1).c_str());
-        messages.push_back(bufStr.substr(posStart, posEnd - posStart + 1));
+        // Serial.printf("XX posStart=%d, posEnd=%d \n", posStart, posEnd);
+        //  Serial.printf("AAAA: %s \n", bufStr.substr(posStart, posEnd - posStart).c_str());
+        messages.push_back(bufStr.substr(posStart, posEnd - posStart));
         posStart = posEnd + 1;
+        // Serial.printf("YY posStart=%d, posEnd=%d \n", posStart, posEnd);
       }
+      // // To get the last substring (or only, if delimiter is not found)
+      // messages.push_back(bufStr.substr(posStart));
     }
 
     initWasDone = true;
@@ -328,7 +335,7 @@ namespace radiator
       if (status.find("Heizen") != std::string::npos)
       {
         heatingStartTime = time(NULL);
-        heatingPauseMinutes = (heatingEndTime - heatingStartTime) / 60;
+        heatingPauseMinutes = (heatingStartTime - heatingEndTime) / 60;
         heatingStartsThisDay++;
 
         preferences.begin(PREFERENCES_NAMESPACE);
@@ -343,7 +350,10 @@ namespace radiator
       else if (status.find("Brenner Aus") != std::string::npos)
       {
         heatingEndTime = time(NULL);
-        heatingDurationThisDayMinutes += (heatingEndTime - heatingStartTime) / 60;
+        if (heatingStartTime < changeOfDayTimet) // "Heizen" during day change
+          heatingDurationThisDayMinutes += (heatingEndTime - changeOfDayTimet) / 60;
+        else
+          heatingDurationThisDayMinutes += (heatingEndTime - heatingStartTime) / 60;
 
         preferences.begin(PREFERENCES_NAMESPACE);
         preferences.putString("lastRadiatorSta", lastRadiatorStatus.c_str());
@@ -367,6 +377,13 @@ namespace radiator
    *********************************************************************/
   std::string Analysis::analyseHeatingCyclesLastDayAndReset()
   {
+    changeOfDayTimet = time(NULL);
+
+    if (heatingEndTime < heatingStartTime) // actual in state "Heizen"
+    {
+      heatingDurationThisDayMinutes += (changeOfDayTimet - heatingStartTime) / 60;
+    }
+
     // generate message
     bufStr = actualDate + ": Tages-Heizdauer= " + std::to_string(heatingDurationThisDayMinutes) + " Minuten, Brennerstarts= " + std::to_string(heatingStartsThisDay) + DELIMITER_FOR_CSV_FILE "\n";
 
@@ -378,6 +395,7 @@ namespace radiator
     preferences.begin(PREFERENCES_NAMESPACE);
     preferences.putUShort("heatingDuration", heatingDurationThisDayMinutes);
     preferences.putUChar("heatingStartsTh", heatingStartsThisDay);
+    preferences.putLong("changeOfDayTime", changeOfDayTimet);
     preferences.end();
 
     return bufStr;
@@ -433,7 +451,10 @@ namespace radiator
     {
       if (time(NULL) - timeLastChange > 120) // save only after 2 minutes with same values to take care for the flash memory write cycles
       {
-        timeLastChange = LONG_MAX;
+        Serial.printf("%s Control for traceFuellstand -> save preferences: should only be one time!!! startFuellstand=%f, minFuellstand=%f, refillFuellstandThisDay=%f, fuellstand=%f",
+                      getMillisAndTime().c_str(), startFuellstand, minFuellstand, refillFuellstandThisDay, fuellstand);
+
+        timeLastChange = LONG_MAX; // save only one time !!
         preferences.begin(PREFERENCES_NAMESPACE);
         preferences.putFloat("startFuellstand", startFuellstand);
         preferences.putFloat("minFuellstand", minFuellstand);
@@ -466,24 +487,21 @@ namespace radiator
    *********************************************************************/
   std::string Analysis::analyseFuellstandLastDayAndReset()
   {
-    pelletConsumptionThisDayPercent = refillFuellstandThisDay + (startFuellstand - getFuellstand());
-    // pelletConsumptionThisDayPercent += refillFuellstandThisDay + (startFuellstand - minFuellstand);
+    float pelletConsumptionThisDayPercent = 0.0;
+    if (heatingStartsThisDay != 0) // calculation makes no sense without heating starts
+      refillFuellstandThisDay + (startFuellstand - getFuellstand());
 
     // generate message
     bufStr = actualDate + ": Tages-Pelletsverbrauch= " + std::to_string(pelletConsumptionThisDayPercent) + "%" DELIMITER_FOR_CSV_FILE "\n";
 
     // reset values
-    // pelletConsumptionThisDayPercent = 0.0;
     refillFuellstandThisDay = 0.0;
     startFuellstand = getFuellstand();
-    // minFuellstand = startFuellstand = getFuellstand();
 
     // save to NVS
     preferences.begin(PREFERENCES_NAMESPACE);
     preferences.putFloat("startFuellstand", startFuellstand);
-    // preferences.putFloat("minFuellstand", minFuellstand);
     preferences.putFloat("refillFuellstan", refillFuellstandThisDay);
-    // preferences.putFloat("pelletConsumpti", pelletConsumptionThisDayPercent);
     preferences.end();
 
     return bufStr;

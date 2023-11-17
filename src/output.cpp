@@ -876,16 +876,16 @@ namespace radiator
     tmTimeToSet.tm_sec = second;
 
     RADIATOR_LOG_INFO(getMillisAndTime() << "Setting system time to " << asctime(&tmTimeToSet));
-    Serial.printf("Setting time: %s \n", asctime(&tmTimeToSet));
+    // Serial.printf("Setting time: %s \n", asctime(&tmTimeToSet));
 
     timeval timevalTimetoSet{0, 0}; // 0 - initializer are absolutely neccessary!!
     timevalTimetoSet.tv_sec = mktime(&tmTimeToSet);
     settimeofday(&timevalTimetoSet, 0);
 
-    // only for debugging:
-    time_t actTime_t = time(NULL);
-    RADIATOR_LOG_DEBUG(getMillisAndTime() << "Getting system time: " << ctime(&actTime_t));
-    Serial.printf("%s Getting time= %s \n", getMillisAndTime().c_str(), ctime(&actTime_t));
+    // // only for debugging:
+    // time_t actTime_t = time(NULL);
+    // RADIATOR_LOG_DEBUG(getMillisAndTime() << "Getting system time: " << ctime(&actTime_t));
+    // Serial.printf("%s Getting time= %s \n", getMillisAndTime().c_str(), ctime(&actTime_t));
 
     // tmTimeToSet = *localtime(&actTime_t);
     // Serial.printf("Getting time: %s \n", asctime(&tmTimeToSet));

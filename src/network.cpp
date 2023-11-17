@@ -444,6 +444,8 @@ void radiator::NetworkHandler::onMqttConnect(bool sessionPresent)
  *********************************************************************/
 void radiator::NetworkHandler::onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
 {
+  tickerSendSysinfoToMQTT.detach();
+
   bufStr = getMillisAndTime() + "Disconnected from MQTT: reason = ";
 
   switch (reason)
@@ -693,7 +695,7 @@ bool radiator::NetworkHandler::publishToMQTT(const std::string &payload, const s
  * @param   void
  * @return 	systeminfo
  *********************************************************************/
-std::string radiator::NetworkHandler::get_System_Info()
+std::string radiator::NetworkHandler::get_System_Info(bool longVersion)
 {
   RADIATOR_LOG_INFO(getMillisAndTime() << "NetworkHandler::get_System_Info()" << std::endl;)
 
@@ -712,69 +714,71 @@ std::string radiator::NetworkHandler::get_System_Info()
 
       << "\n"
 
-      << "Microcontroller ESP32: \n"
-      << "ESP32 chip model   : " << ESP.getChipModel() << "; \n"
-      << "Chip Revision      : " << ((int)ESP.getChipRevision()) << "; \n"
-      << "CPU Frequency      : " << ESP.getCpuFreqMHz() << " MHz; \n"
-      << "Chip cores         : " << ((int)ESP.getChipCores()) << "; \n"
-      << "Flash chip size    : " << (ESP.getFlashChipSize() / 1024) << " kBytes; \n"
-      << "Flash chip speed   : " << (ESP.getFlashChipSpeed() / 1000000) << " MHz; \n"
-      << "Sketch size        : " << (ESP.getSketchSize() / 1024) << " kBytes; \n"
-      << "Free sketch space  : " << (ESP.getFreeSketchSpace() / 1024) << " kBytes; \n"
-      << "Free PSRAM         : " << ESP.getFreePsram() << " Bytes; \n"
-      << "SDK version        : " << ESP.getSdkVersion() << "; \n"
-
-      << "\n"
-
-      << "WiFi IP            : " << WiFi.localIP().toString().c_str() << "; \n"
-      << "WiFi hostname      : " << WiFi.getHostname() << "; \n"
-      << "WiFi SSID          : " << WiFi.SSID().c_str() << "; \n"
-      << "WiFi status        : " << WiFi.status() << "; \n"
-      << "WiFi strength RSSI : " << ((int)WiFi.RSSI()) << " dB; \n"
-      << "WiFi MAC           : " << WiFi.macAddress().c_str() << "; \n"
-      << "WiFi subnet        : " << WiFi.subnetMask().toString().c_str() << "; \n"
-      << "WiFi gateway       : " << WiFi.gatewayIP().toString().c_str() << "; \n"
-      << "WiFi DNS 1         : " << WiFi.dnsIP(0).toString().c_str() << "; \n"
-      << "WiFi DNS 2         : " << WiFi.dnsIP(1).toString().c_str() << "; \n"
-      << "Webserver          : " << (START_WEBSERVER ? "Started" : "NOT started") << "; \n"
-
-      << "\n"
-
       << "Filesystem               : " << XSTRINGIFY(FILESYSTEM_TO_USE) << "; \n"
       << "Basepath(Mountpoint)     : " << FILESYSTEM_BASE_PATH << "; \n"
       << "Filesystem total         : " << (FILESYSTEM_TO_USE.totalBytes() / 1024) << " kBytes; \n"
       << "Used Filesystem          : " << (FILESYSTEM_TO_USE.usedBytes() / 1024) << " kBytes; \n"
-      << "Free Filesystem          : " << ((FILESYSTEM_TO_USE.totalBytes() - FILESYSTEM_TO_USE.usedBytes()) / 1024) << " kBytes; \n"
+      << "Free Filesystem          : " << ((FILESYSTEM_TO_USE.totalBytes() - FILESYSTEM_TO_USE.usedBytes()) / 1024) << " kBytes; \n";
 
-      << "\n"
+  if (longVersion)
+  {
+    bufStrStream
+        << "Data directory           : " << DATA_DIRECTORY << "; \n"
+        << "File output interval     : " << FILE_OUTPUT_INTERVALL_SEC << " sec; \n"
+        << "Write to file interval   : " << WRITE_TO_FILE_INTERVAL_SEC << " sec; \n"
+        << "Filesystem check interval: " << INTERVALL_FOR_FILESYSTEM_CHECK_SEC << " sec; \n"
 
-      << "Data directory           : " << DATA_DIRECTORY << "; \n"
-      << "File output interval     : " << FILE_OUTPUT_INTERVALL_SEC << " sec; \n"
-      << "Write to file interval   : " << WRITE_TO_FILE_INTERVAL_SEC << " sec; \n"
-      << "Filesystem check interval: " << INTERVALL_FOR_FILESYSTEM_CHECK_SEC << " sec; \n"
+        << "\n"
 
-      << "\n"
+        << "Redirect to syslog file  : " << (REDIRECT_STD_ERR_TO_SYSLOG_FILE ? "On" : "Off") << "; \n"
+        << "Syslog filename          : " << SYSLOG_PATHNAME << " \n"
+        << "Write to syslog interval : " << WRITE_TO_SYSLOGFILE_INTERVAL_SEC << " sec; \n"
+        << "Syslog max. filesize     : " << MAX_SYSLOG_FILE_SIZE_BYTES << " bytes; \n"
+        << "Syslog max. files        : " << MAX_OLD_SYSLOG_FILES << "; \n"
 
-      << "Redirect to syslog file  : " << (REDIRECT_STD_ERR_TO_SYSLOG_FILE ? "On" : "Off") << "; \n"
-      << "Syslog filename          : " << SYSLOG_PATHNAME << " \n"
-      << "Write to syslog interval : " << WRITE_TO_SYSLOGFILE_INTERVAL_SEC << " sec; \n"
-      << "Syslog max. filesize     : " << MAX_SYSLOG_FILE_SIZE_BYTES << " bytes; \n"
-      << "Syslog max. files        : " << MAX_OLD_SYSLOG_FILES << "; \n"
+        << "\n"
 
-      << "\n"
+        << "MQTT output              : " << (outputToMQTT ? "activated" : "NOT activated") << "; \n"
+        << "MQTT broker              : " << mqttBroker << "; \n"
+        << "MQTT port                : " << MQTT_PORT << "; \n"
+        << "MQTT status              : " << (mqttClient.connected() ? "connected" : "NOT connected") << "; \n"
+        << "MQTT client ID           : " << mqttClient.getClientId() << "; \n"
+        << "MQTT topic               : " << mqttTopic << "; \n"
+        << "MQTT syslog subtopic     : " << MQTT_SUBTOPIC_SYSLOG << "; \n"
+        << "MQTT output interval     : " << MQTT_OUTPUTINTERVALL_SEC << " sec; \n"
+        << "MQTT keep alive          : " << MQTT_KEEP_ALIVE << " sec; \n"
+        << "MQTT reconnection timeout: " << MQTT_RECONNECTION_TIMEOUT_SEC << " sec; \n"
 
-      << "MQTT output              : " << (outputToMQTT ? "activated" : "NOT activated") << "; \n"
-      << "MQTT broker              : " << mqttBroker << "; \n"
-      << "MQTT port                : " << MQTT_PORT << "; \n"
-      << "MQTT status              : " << (mqttClient.connected() ? "connected" : "NOT connected") << "; \n"
-      << "MQTT client ID           : " << mqttClient.getClientId() << "; \n"
-      << "MQTT topic               : " << mqttTopic << "; \n"
-      << "MQTT syslog subtopic     : " << MQTT_SUBTOPIC_SYSLOG << "; \n"
-      << "MQTT output interval     : " << MQTT_OUTPUTINTERVALL_SEC << " sec; \n"
-      << "MQTT keep alive          : " << MQTT_KEEP_ALIVE << " sec; \n"
-      << "MQTT reconnection timeout: " << MQTT_RECONNECTION_TIMEOUT_SEC << " sec; \n"
+        << "\n"
 
-      << std::endl;
+        << "WiFi IP            : " << WiFi.localIP().toString().c_str() << "; \n"
+        << "WiFi hostname      : " << WiFi.getHostname() << "; \n"
+        << "WiFi SSID          : " << WiFi.SSID().c_str() << "; \n"
+        << "WiFi status        : " << WiFi.status() << "; \n"
+        << "WiFi strength RSSI : " << ((int)WiFi.RSSI()) << " dB; \n"
+        << "WiFi MAC           : " << WiFi.macAddress().c_str() << "; \n"
+        << "WiFi subnet        : " << WiFi.subnetMask().toString().c_str() << "; \n"
+        << "WiFi gateway       : " << WiFi.gatewayIP().toString().c_str() << "; \n"
+        << "WiFi DNS 1         : " << WiFi.dnsIP(0).toString().c_str() << "; \n"
+        << "WiFi DNS 2         : " << WiFi.dnsIP(1).toString().c_str() << "; \n"
+        << "Webserver          : " << (START_WEBSERVER ? "Started" : "NOT started") << "; \n"
+
+        << "\n"
+
+        << "Microcontroller ESP32: \n"
+        << "ESP32 chip model   : " << ESP.getChipModel() << "; \n"
+        << "Chip Revision      : " << ((int)ESP.getChipRevision()) << "; \n"
+        << "CPU Frequency      : " << ESP.getCpuFreqMHz() << " MHz; \n"
+        << "Chip cores         : " << ((int)ESP.getChipCores()) << "; \n"
+        << "Flash chip size    : " << (ESP.getFlashChipSize() / 1024) << " kBytes; \n"
+        << "Flash chip speed   : " << (ESP.getFlashChipSpeed() / 1000000) << " MHz; \n"
+        << "Sketch size        : " << (ESP.getSketchSize() / 1024) << " kBytes; \n"
+        << "Free sketch space  : " << (ESP.getFreeSketchSpace() / 1024) << " kBytes; \n"
+        << "Free PSRAM         : " << ESP.getFreePsram() << " Bytes; \n"
+        << "SDK version        : " << ESP.getSdkVersion() << "; \n";
+  }
+
+  bufStrStream << std::endl;
 
   // return systemInfo.str();
   return bufStrStream.str();

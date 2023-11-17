@@ -48,7 +48,7 @@ namespace radiator
     static std::string mqttUser;
     static std::string mqttPassword;
 
-    static std::string get_System_Info();
+    static std::string get_System_Info(bool longVersion = false);
 
 #if START_WEBSERVER
     static void configureWebserver();
