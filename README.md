@@ -1,6 +1,6 @@
 # Überwachungstool für Fröling P2 / Lambdatronic S 3100 — ESP32-Adaptation
 
-> **ESP32-Adaptation** von Bernd Griesbach (BeGrie) — basierend auf dem ursprünglichen Raspberry-Pi-Projekt von [Daniel Höpfl (dhoepfl/Radiator)](https://github.com/dhoepfl/Radiator).
+> **ESP32-Adaptation** von BeGrie — basierend auf dem ursprünglichen Raspberry-Pi-Projekt von [Daniel Höpfl (dhoepfl/Radiator)](https://github.com/dhoepfl/Radiator).
 
 ## Anpassung für ESP32 (BeGrie, Sept./Okt. 2022)
 
